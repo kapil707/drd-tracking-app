@@ -42,6 +42,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.ResponseBody;
@@ -55,8 +56,8 @@ public class BackgroundLocationUpdateService extends Service implements GoogleAp
     <service android:name=".BackgroundLocationUpdateService"/>
     */
 
-    private final String TAG = "BackgroundLocationUpdateService";
-    private final String TAG_LOCATION = "TAG_LOCATION";
+    private final String TAG = "Bg-service";
+    private final String TAG_LOCATION = "Bg-service";
     private Context context;
     private boolean stopService = false;
 
@@ -70,7 +71,7 @@ public class BackgroundLocationUpdateService extends Service implements GoogleAp
     private LocationRequest mLocationRequest;
     private Location mCurrentLocation;
     /* For Google Fused API */
-
+    UserSessionManager session;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -124,7 +125,7 @@ public class BackgroundLocationUpdateService extends Service implements GoogleAp
     }
 
     private void StartForeground() {
-        /*Intent intent = new Intent(context, MainActivity.class);
+        Intent intent = new Intent(context, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 , intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
 
@@ -144,7 +145,7 @@ public class BackgroundLocationUpdateService extends Service implements GoogleAp
             builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID);
         }
 
-        builder.setContentTitle("Your title");
+        builder.setContentTitle("Drd Master App");
         builder.setContentText("You are now online");
         Uri notificationSound = RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_NOTIFICATION);
         builder.setSound(notificationSound);
@@ -152,7 +153,7 @@ public class BackgroundLocationUpdateService extends Service implements GoogleAp
         builder.setSmallIcon(R.drawable.ic_launcher_background);
         builder.setContentIntent(pendingIntent);
         Notification notification = builder.build();
-        startForeground(101, notification);*/
+        startForeground(101, notification);
     }
 
     @Override
@@ -168,8 +169,13 @@ public class BackgroundLocationUpdateService extends Service implements GoogleAp
             Log.e(TAG_LOCATION, "Latitude : " + location.getLatitude() + "\tLongitude : " + location.getLongitude());
         }
 
+        session = new UserSessionManager(getApplicationContext());
+        HashMap<String, String> user = session.getUserDetails();
+        String user_code = user.get(UserSessionManager.KEY_USERCODE);
+        String firebase_token = user.get(UserSessionManager.KEY_FIREBASE_TOKEN);
+
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-        Call<ResponseBody> call = apiService.update_api("chemist", String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
+        Call<ResponseBody> call = apiService.update_user_location(user_code, String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()),firebase_token);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override

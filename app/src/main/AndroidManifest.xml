@@ -25,6 +25,11 @@
         android:theme="@style/Theme.DrdTrackingApp"
         tools:targetApi="24">
         <activity
+            android:name=".Home_page"
+            android:exported="false"
+            android:label="@string/title_activity_home_page"
+            android:theme="@style/Theme.DrdTrackingApp.NoActionBar" />
+        <activity
             android:name=".Login_page"
             android:exported="false" />
         <!--

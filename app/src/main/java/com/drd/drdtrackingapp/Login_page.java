@@ -34,8 +34,10 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -59,6 +61,7 @@ public class Login_page extends AppCompatActivity {
     TextView alert;
     EditText user_name,password;
     String user_name1 = "",password1 = "",firebase_token = "";
+    UserSessionManager session;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,8 +107,7 @@ public class Login_page extends AppCompatActivity {
             }
         });
 
-
-        firebase_token = "xxx";
+        session = new UserSessionManager(getApplicationContext());
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -124,8 +126,9 @@ public class Login_page extends AppCompatActivity {
                                 NetworkInfo ni = cm.getActiveNetworkInfo();
                                 if (ni != null) {
                                     try {
-                                        login_funcation();
+                                        login_funcation(user_name1,password1,firebase_token);
                                         login_btn1.setVisibility(View.VISIBLE);
+                                        progressBar2.setVisibility(View.VISIBLE);
                                         login_btn.setVisibility(View.GONE);
                                     } catch (Exception e) {
                                         // TODO: handle exception
@@ -149,71 +152,95 @@ public class Login_page extends AppCompatActivity {
                 }
             }
         });
+        getFCMToken();
     }
 
-    private void login_funcation(){
+    void getFCMToken() {
+
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                String token = task.getResult();
+                Log.d("Bg-service", "FirebaseMessaging Token - " + token);
+                firebase_token = token;
+            }
+        });
+    }
+
+    private void login_funcation(String _user_name,String _password,String _firebase_token){
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
 
-        /*RequestBody requestBody = new FormBody.Builder()
-                .add("submit", "98c08565401579448aad7c64033dcb4081906dcb")
-                .add("user_name", user_name1)
-                .add("password", password1)
-                .add("getfcmtoken", firebase_token)
-                .build();*/
-
-        Login_model modal = new Login_model();
-        modal.setSubmit("98c08565401579448aad7c64033dcb4081906dcb");
-        modal.setUser_name("608");
-        modal.setPassword("123456");
-        modal.setGetfcmtoken("123456");
-
-        Call<Login_model> call2 = apiService.post_login(modal);
-        call2.enqueue(new Callback<Login_model>() {
+        Call<ResponseBody> call = apiService.loginUser("98c08565401579448aad7c64033dcb4081906dcb", _user_name,_password,_firebase_token);
+        //Call<ResponseBody> call = apiService.testing("loginRequest");
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<Login_model> call, Response<Login_model> response) {
-                // Handle response for the second request
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    Log.e("Bg-service", "done");
                     // Handle success response
                     // response.body() contains the response data
 
-                    Login_model mm = response.body();
-                    Log.e("Bg-service", " " + (mm.getUser_alert()));
-
+                    try {
+                        writeTv(response.body().string());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 } else {
                     // Handle error response
-                    Log.e("Bg-service", "error");
                 }
             }
 
             @Override
-            public void onFailure(Call<Login_model> call, Throwable t) {
-                // Handle failure for the second request
-
-                Log.e("Bg-service", "onFailure");
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Handle network failures or other errors
+                Log.e("Bg-service", " " + t.toString());
             }
         });
     }
 
     private void writeTv(String response){
-
         //https://demonuts.com/retrofit-android-get-json/
-        Log.e("Bg-service", response.toString());
+        //Log.e("Bg-service", response.toString());
         try {
             JSONArray jArray = new JSONArray(response);
-            /*for (int i = 0; i < jArray.length(); i++)
+            for (int i = 0; i < jArray.length(); i++)
             {
-                JSONObject jsonObject = jArray.getJSONObject(i);
-                String user_session    = jsonObject.getString("user_session");
+                JSONObject jsonObject   = jArray.getJSONObject(i);
+                String user_session     = jsonObject.getString("user_session");
+                String user_fname       = jsonObject.getString("user_fname");
+                String user_code        = jsonObject.getString("user_code");
+                String user_altercode   = jsonObject.getString("user_altercode");
+                String user_password    = jsonObject.getString("user_password");
+                String user_alert       = jsonObject.getString("user_alert");
+                String user_return      = jsonObject.getString("user_return");
 
-                Log.e("Bg-service", user_session);
-            }*/
+                //Log.e("Bg-service", user_session);
+
+                if(user_return.equals("1"))
+                {
+                    Toast.makeText(Login_page.this,user_alert,Toast.LENGTH_SHORT).show();
+                    alert.setText(user_alert);
+
+                    session.createUserLoginSession(user_session,user_code,user_altercode,user_password,user_fname,firebase_token);
+
+                    Intent in = new Intent();
+                    in.setClass(Login_page.this,Home_page.class);
+                    startActivity(in);
+                    finish();
+                }
+                else
+                {
+                    Toast.makeText(Login_page.this,user_alert,Toast.LENGTH_SHORT).show();
+                    alert.setText(user_alert);
+                }
+            }
         }
         catch (Exception e) {
             // TODO: handle exception
             Log.e("Bg-service", "Error parsing data"+e.toString());
         }
 
+        login_btn1.setVisibility(View.GONE);
+        progressBar2.setVisibility(View.GONE);
+        login_btn.setVisibility(View.VISIBLE);
     }
 
     @SuppressLint("MissingPermission")

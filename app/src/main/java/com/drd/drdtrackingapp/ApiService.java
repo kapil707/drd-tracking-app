@@ -15,14 +15,20 @@ public interface ApiService {
     Call<ResponseBody> getUserInformation(@Field("user_type") String user_type,@Field("user_altercode") String user_altercode,@Field("user_password") String user_password);
 */
     @FormUrlEncoded
-    @POST("drdtrackingapp_api/api01/update_api")
-    Call<ResponseBody> update_api(@Field("user") String user,@Field("getLatitude") String getLatitude,@Field("getLongitude") String getLongitude);
+    @POST("drdtrackingapp_api/api01/update_user_location_api")
+    Call<ResponseBody> update_user_location(@Field("user_code") String user_code,@Field("getLatitude") String getLatitude,@Field("getLongitude") String getLongitude,@Field("firebase_token") String firebase_token);
 
-    @POST("drdtrackingapp_api/api01/insert_getfcmtoken")
-    Call<ResponseBody> postRequest2(@Body RequestBody requestBody);
+    @POST("drdtrackingapp_api/api01/insert_firebase_token_api")
+    Call<ResponseBody> insert_firebase_token(@Body RequestBody requestBody);
 
+
+    @FormUrlEncoded
     @POST("drdtrackingapp_api/api01/login")
-    Call<Login_model> post_login(@Body Login_model Loginmodel);
+    Call<ResponseBody> loginUser(@Field("submit") String submit,@Field("user_name") String user_name,@Field("password") String password,@Field("firebase_token") String firebase_token);
+
+    @FormUrlEncoded
+    @POST("drdtrackingapp_api/api01/test")
+    Call<ResponseBody> testing(@Field("test") String test);
 
     //Call<ResponseBody> postData(@Body RequestBody requestBody);
 }

@@ -25,6 +25,7 @@ public class UserSessionManager {
     private static final String PREFER_NAME = "drd_tracking_app";
     private static final String IS_USER_LOGIN = "IsUserLoggedIn";
     public static final String KEY_USERID = "userid";
+    public static final String KEY_USERCODE = "usercode";
     public static final String KEY_USERALTERCODE = "useraltercode";
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_USERNAME = "username";
@@ -38,11 +39,12 @@ public class UserSessionManager {
     }
 
     //Create login session
-    public void createUserLoginSession(String userid, String altercode,String password,String user_fname,String firebase_token){
+    public void createUserLoginSession(String userid,String code,String altercode,String password,String user_fname,String firebase_token){
         // Storing login value as TRUE
         editor.putBoolean(IS_USER_LOGIN, true);
 
         editor.putString(KEY_USERID, userid);
+        editor.putString(KEY_USERCODE, code);
         editor.putString(KEY_USERALTERCODE, altercode);
         editor.putString(KEY_PASSWORD, password);
         editor.putString(KEY_USERNAME, user_fname);
@@ -83,6 +85,7 @@ public class UserSessionManager {
         //Use hashmap to store user credentials
         HashMap<String, String> user = new HashMap<String, String>();
         user.put(KEY_USERID, pref.getString(KEY_USERID, null));
+        user.put(KEY_USERCODE, pref.getString(KEY_USERCODE, null));
         user.put(KEY_USERALTERCODE, pref.getString(KEY_USERALTERCODE, null));
         user.put(KEY_PASSWORD, pref.getString(KEY_PASSWORD, null));
         user.put(KEY_USERNAME, pref.getString(KEY_USERNAME, null));

@@ -47,6 +47,11 @@ public class MainActivity extends AppCompatActivity {
         session = new UserSessionManager(getApplicationContext());
         if (session.checkLogin()) {
             finish();
+        }else{
+            Intent in = new Intent();
+            in.setClass(this,Home_page.class);
+            startActivity(in);
+            finish();
         }
 
         /*AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -58,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
         alarmManager.set(AlarmManager.RTC_WAKEUP,ter,pi);*/
 
-        Log.e("main", "start: ");
+        /*Log.e("main", "start: ");
 
         btn1 = findViewById(R.id.btnStart);
         btn2 = findViewById(R.id.btnStop);
@@ -85,12 +90,12 @@ public class MainActivity extends AppCompatActivity {
         startService(serviceIntent);*/
         //ThreadExample
 
-        getFCMToken();
+        //getFCMToken();
 
         /*Intent serviceIntent = new Intent(this, MyBackgroundService.class);
         startService(serviceIntent);*/
 
-        startService(new Intent(this, BackgroundLocationUpdateService.class));
+        /*startService(new Intent(this, BackgroundLocationUpdateService.class));
 
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                         // Handle network failures or other errors
                     }
                 });*/
-            }
+            /*}
         });
 
         btn2.setOnClickListener(new View.OnClickListener() {
@@ -151,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //stopService(new Intent(MainActivity.this,MusicService.class));
             }
-        });
+        });*/
     }
 
     String firebase_token = "";
@@ -164,11 +169,11 @@ public class MainActivity extends AppCompatActivity {
 
                 firebase_token = token;
 
-                insert_my();
+                insert_firebase_token();
             }
         });
     }
-    void insert_my(){
+    void insert_firebase_token(){
         if (firebase_token.length() == 0) {
             Log.d("Bg-service", "firebase_token error");
         }else {
@@ -177,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
             RequestBody requestBody = new FormBody.Builder()
                     .add("getfcmtoken", firebase_token)
                     .build();
-            Call<ResponseBody> call2 = apiService.postRequest2(requestBody);
+            Call<ResponseBody> call2 = apiService.insert_firebase_token(requestBody);
             call2.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
