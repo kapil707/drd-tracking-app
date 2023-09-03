@@ -5,9 +5,11 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.media.RingtoneManager;
@@ -17,6 +19,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.text.format.DateFormat;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -42,6 +45,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -55,7 +59,9 @@ public class BackgroundLocationUpdateService extends Service implements GoogleAp
     /* Declare in manifest
     <service android:name=".BackgroundLocationUpdateService"/>
     */
-
+    Database db;
+    SQLiteDatabase sql;
+    String user_code = "", firebase_token= "";
     private final String TAG = "Bg-service";
     private final String TAG_LOCATION = "Bg-service";
     private Context context;
@@ -81,6 +87,15 @@ public class BackgroundLocationUpdateService extends Service implements GoogleAp
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         StartForeground();
+
+        db = new Database(this);
+        sql = db.getWritableDatabase();
+
+        session = new UserSessionManager(getApplicationContext());
+        HashMap<String, String> user = session.getUserDetails();
+        user_code = user.get(UserSessionManager.KEY_USERCODE);
+        firebase_token = user.get(UserSessionManager.KEY_FIREBASE_TOKEN);
+
         final Handler handler = new Handler();
         final Runnable runnable = new Runnable() {
 
@@ -156,6 +171,7 @@ public class BackgroundLocationUpdateService extends Service implements GoogleAp
         startForeground(101, notification);
     }
 
+    String myquery = "";
     @Override
     public void onLocationChanged(Location location) {
         Log.e(TAG_LOCATION, "Location Changed Latitude : " + location.getLatitude() + "\tLongitude : " + location.getLongitude());
@@ -169,13 +185,44 @@ public class BackgroundLocationUpdateService extends Service implements GoogleAp
             Log.e(TAG_LOCATION, "Latitude : " + location.getLatitude() + "\tLongitude : " + location.getLongitude());
         }
 
-        session = new UserSessionManager(getApplicationContext());
-        HashMap<String, String> user = session.getUserDetails();
-        String user_code = user.get(UserSessionManager.KEY_USERCODE);
-        String firebase_token = user.get(UserSessionManager.KEY_FIREBASE_TOKEN);
-
+        /*----------------------------------------*/
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
         Call<ResponseBody> call = apiService.update_user_location(user_code, String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()),firebase_token);
+
+        /*----------------------------------------*/
+        java.util.Date noteTS = Calendar.getInstance().getTime();
+
+        String time = "hh:mm"; // 12:00
+        //tvTime.setText(DateFormat.format(time, noteTS));
+
+        String date = "yyyy-MM-dd"; // 01 January 2013
+        //tvDate.setText(DateFormat.format(date, noteTS));
+
+        String gettime = DateFormat.format(time, noteTS) + "";
+        String getdate = DateFormat.format(date, noteTS) + "";
+
+        latitude = String.valueOf(location.getLatitude());
+        longitude = String.valueOf(location.getLongitude());
+
+        if(!myquery.equals(gettime)) {
+            myquery = gettime;
+
+            try {
+                ContentValues cvcv = new ContentValues();
+
+                cvcv.put("user_code", user_code);
+                cvcv.put("firebase_token", firebase_token);
+                cvcv.put("latitude", latitude);
+                cvcv.put("longitude", longitude);
+                cvcv.put("getdate", getdate);
+                cvcv.put("gettime", gettime);
+
+                sql.insert("tbl_user_loc", "", cvcv);
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+        }
+        /*----------------------------------------*/
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
