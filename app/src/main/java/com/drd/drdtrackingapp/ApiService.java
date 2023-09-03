@@ -16,14 +16,14 @@ public interface ApiService {
 */
     @FormUrlEncoded
     @POST("drdtrackingapp_api/api01/update_user_location_api")
-    Call<ResponseBody> update_user_location(@Field("user_code") String user_code,@Field("getLatitude") String getLatitude,@Field("getLongitude") String getLongitude,@Field("firebase_token") String firebase_token);
+    Call<ResponseBody> update_user_location(@Field("user_code") String user_code,@Field("firebase_token") String firebase_token,@Field("getLatitude") String getLatitude,@Field("getLongitude") String getLongitude,@Field("getdate") String getdate,@Field("gettime") String gettime);
 
     @POST("drdtrackingapp_api/api01/insert_firebase_token_api")
     Call<ResponseBody> insert_firebase_token(@Body RequestBody requestBody);
 
 
     @FormUrlEncoded
-    @POST("drdtrackingapp_api/api01/login")
+    @POST("drdtrackingapp_api/api01/login_api")
     Call<ResponseBody> loginUser(@Field("submit") String submit,@Field("user_name") String user_name,@Field("password") String password,@Field("firebase_token") String firebase_token);
 
     @FormUrlEncoded

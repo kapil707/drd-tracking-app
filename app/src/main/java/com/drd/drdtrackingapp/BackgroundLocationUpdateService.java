@@ -186,10 +186,6 @@ public class BackgroundLocationUpdateService extends Service implements GoogleAp
         }
 
         /*----------------------------------------*/
-        ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-        Call<ResponseBody> call = apiService.update_user_location(user_code, String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()),firebase_token);
-
-        /*----------------------------------------*/
         java.util.Date noteTS = Calendar.getInstance().getTime();
 
         String time = "hh:mm"; // 12:00
@@ -203,6 +199,12 @@ public class BackgroundLocationUpdateService extends Service implements GoogleAp
 
         latitude = String.valueOf(location.getLatitude());
         longitude = String.valueOf(location.getLongitude());
+
+        ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
+        Call<ResponseBody> call = apiService.update_user_location(user_code, firebase_token,latitude, longitude,getdate,gettime);
+
+        /*----------------------------------------*/
+
 
         if(!myquery.equals(gettime)) {
             myquery = gettime;

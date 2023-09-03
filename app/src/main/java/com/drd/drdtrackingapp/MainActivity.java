@@ -10,6 +10,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
@@ -19,6 +21,8 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -38,6 +42,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
     UserSessionManager session;
+    Database db;
+    SQLiteDatabase sql;
     Button btn1,btn2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +58,17 @@ public class MainActivity extends AppCompatActivity {
             in.setClass(this,Home_page.class);
             startActivity(in);
             finish();
+        }
+
+        db = new Database(this);
+        sql = db.getWritableDatabase();
+
+        try {
+            Cursor tbl_order_done = sql.rawQuery("Select * from tbl_user_loc", null);
+            Toast.makeText(MainActivity.this, "Total rec of : " + tbl_order_done.getCount(), Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            db.onUpgrade(sql, 1, 2);
+            Toast.makeText(MainActivity.this, "Update database", Toast.LENGTH_LONG).show();
         }
 
         /*AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -159,58 +176,7 @@ public class MainActivity extends AppCompatActivity {
         });*/
     }
 
-    String firebase_token = "";
-    void getFCMToken() {
 
-        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                String token = task.getResult();
-                Log.d("Bg-service", "FirebaseMessaging Token - " + token);
-
-                firebase_token = token;
-
-                insert_firebase_token();
-            }
-        });
-    }
-    void insert_firebase_token(){
-        if (firebase_token.length() == 0) {
-            Log.d("Bg-service", "firebase_token error");
-        }else {
-            ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-
-            RequestBody requestBody = new FormBody.Builder()
-                    .add("getfcmtoken", firebase_token)
-                    .build();
-            Call<ResponseBody> call2 = apiService.insert_firebase_token(requestBody);
-            call2.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    // Handle response for the second request
-                    if (response.isSuccessful()) {
-                        Log.e("Bg-service", "done");
-                        // Handle success response
-                        // response.body() contains the response data
-                        try {
-                            Log.e("Bg-service", " " + (response.body().string()));
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    } else {
-                        // Handle error response
-                        Log.e("Bg-service", "error");
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    // Handle failure for the second request
-
-                    Log.e("Bg-service", "onFailure");
-                }
-            });
-        }
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void ignoreBatteryOptimization() {

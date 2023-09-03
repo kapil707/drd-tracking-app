@@ -2,6 +2,7 @@ package com.drd.drdtrackingapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -20,6 +21,7 @@ import com.drd.drdtrackingapp.databinding.ActivityHomePageBinding;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import okhttp3.FormBody;
@@ -93,11 +95,24 @@ public class Home_page extends AppCompatActivity {
         if (firebase_token.length() == 0) {
             Log.d("Bg-service", "firebase_token error");
         }else {
-            ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
 
+            java.util.Date noteTS = Calendar.getInstance().getTime();
+
+            String time = "hh:mm"; // 12:00
+            //tvTime.setText(DateFormat.format(time, noteTS));
+
+            String date = "yyyy-MM-dd"; // 01 January 2013
+            //tvDate.setText(DateFormat.format(date, noteTS));
+
+            String gettime = DateFormat.format(time, noteTS) + "";
+            String getdate = DateFormat.format(date, noteTS) + "";
+
+            ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
             RequestBody requestBody = new FormBody.Builder()
                     .add("user_code", user_code)
                     .add("firebase_token", firebase_token)
+                    .add("getdate", getdate)
+                    .add("gettime", gettime)
                     .build();
             Call<ResponseBody> call2 = apiService.insert_firebase_token(requestBody);
             call2.enqueue(new Callback<ResponseBody>() {
