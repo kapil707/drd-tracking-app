@@ -6,6 +6,7 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
+import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -68,6 +69,9 @@ public class Home_page extends AppCompatActivity {
         HashMap<String, String> user = session.getUserDetails();
         user_code = user.get(UserSessionManager.KEY_USERCODE);
         firebase_token = user.get(UserSessionManager.KEY_FIREBASE_TOKEN);
+
+        TextView text_home = findViewById(R.id.text_home);
+        text_home.setText(user_code);
     }
 
     @Override
