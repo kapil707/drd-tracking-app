@@ -69,9 +69,6 @@ public class Home_page extends AppCompatActivity {
         HashMap<String, String> user = session.getUserDetails();
         user_code = user.get(UserSessionManager.KEY_USERCODE);
         firebase_token = user.get(UserSessionManager.KEY_FIREBASE_TOKEN);
-
-        TextView text_home = findViewById(R.id.text_home);
-        text_home.setText(user_code);
     }
 
     @Override
