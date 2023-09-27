@@ -23,8 +23,14 @@ public interface ApiService {
 
 
     @FormUrlEncoded
+    @POST("drdtrackingapp_api/api01/slider_api")
+    Call<ResponseBody> slider_api(@Field("submit") String submit);
+
+    @FormUrlEncoded
     @POST("drdtrackingapp_api/api01/login_api")
     Call<ResponseBody> loginUser(@Field("submit") String submit,@Field("user_name") String user_name,@Field("password") String password,@Field("firebase_token") String firebase_token);
+
+
 
     @FormUrlEncoded
     @POST("drdtrackingapp_api/api01/test")
