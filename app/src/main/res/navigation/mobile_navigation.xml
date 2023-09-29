@@ -12,14 +12,16 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.drd.drdtrackingapp.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
+        android:id="@+id/nav_your_list"
+        android:name="com.drd.drdtrackingapp.ui.yourlist.YourListFragment"
+        android:label="@string/menu_your_list"
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.drd.drdtrackingapp.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_gallery1"
+        android:name="com.drd.drdtrackingapp.ui.yourlist.YourListFragment"
+        android:label="@string/menu_your_list"
+        tools:layout="@layout/fragment_gallery" />
+
+
 </navigation>
