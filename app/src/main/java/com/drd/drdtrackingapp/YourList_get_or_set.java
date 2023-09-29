@@ -1,4 +1,4 @@
-package com.drd.drdtrackingapp.ui.yourlist;
+package com.drd.drdtrackingapp;
 
 import java.util.ArrayList;
 

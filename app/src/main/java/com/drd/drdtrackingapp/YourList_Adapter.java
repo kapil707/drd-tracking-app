@@ -1,4 +1,4 @@
-package com.drd.drdtrackingapp.ui.yourlist;
+package com.drd.drdtrackingapp;
 
 import android.app.Activity;
 import android.content.Context;

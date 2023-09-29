@@ -116,6 +116,7 @@ public class Login_page extends AppCompatActivity {
                     user_name1 = user_name.getText().toString();
                     password1 = password.getText().toString();
                     if (firebase_token.length() == 0) {
+                        //firebase_token = "1";
                         alert.setText(Html.fromHtml("<font color='red'>button click error 2</font>"));
                         Toast.makeText(Login_page.this, "button click error 2", Toast.LENGTH_SHORT).show();
                     } else {
@@ -169,7 +170,7 @@ public class Login_page extends AppCompatActivity {
     private void login_funcation(String _user_name,String _password,String _firebase_token){
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
 
-        Call<ResponseBody> call = apiService.loginUser("98c08565401579448aad7c64033dcb4081906dcb", _user_name,_password,_firebase_token);
+        Call<ResponseBody> call = apiService.login_api("98c08565401579448aad7c64033dcb4081906dcb", _user_name,_password,_firebase_token);
         //Call<ResponseBody> call = apiService.testing("loginRequest");
         call.enqueue(new Callback<ResponseBody>() {
             @Override

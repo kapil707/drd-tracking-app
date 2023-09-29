@@ -12,16 +12,10 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_your_list"
-        android:name="com.drd.drdtrackingapp.ui.yourlist.YourListFragment"
-        android:label="@string/menu_your_list"
-        tools:layout="@layout/fragment_gallery" />
-
-    <fragment
-        android:id="@+id/nav_gallery1"
-        android:name="com.drd.drdtrackingapp.ui.yourlist.YourListFragment"
-        android:label="@string/menu_your_list"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_delivery_list"
+        android:name="com.drd.drdtrackingapp.ui.deliverylist.DeliveryListFragment"
+        android:label="@string/menu_delivery_list"
+        tools:layout="@layout/fragment_delivery_list" />
 
 
 </navigation>

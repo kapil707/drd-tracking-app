@@ -28,9 +28,11 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("drdtrackingapp_api/api01/login_api")
-    Call<ResponseBody> loginUser(@Field("submit") String submit,@Field("user_name") String user_name,@Field("password") String password,@Field("firebase_token") String firebase_token);
+    Call<ResponseBody> login_api(@Field("submit") String submit,@Field("user_name") String user_name,@Field("password") String password,@Field("firebase_token") String firebase_token);
 
-
+    @FormUrlEncoded
+    @POST("drdtrackingapp_api/api01/delivery_list_api")
+    Call<ResponseBody> delivery_list_api(@Field("submit") String submit,@Field("user_altercode") String user_altercode);
 
     @FormUrlEncoded
     @POST("drdtrackingapp_api/api01/test")

@@ -9,9 +9,9 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/menu_home" />
         <item
-            android:id="@+id/nav_your_list"
+            android:id="@+id/nav_delivery_list"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_your_list" />
+            android:title="@string/menu_delivery_list" />
         <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/ic_menu_slideshow"

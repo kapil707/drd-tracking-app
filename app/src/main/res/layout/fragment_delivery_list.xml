@@ -5,10 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.yourlist.YourListFragment">
+    tools:context=".ui.deliverylist.DeliveryListFragment">
 
     <ListView
-        android:id="@+id/YourList_listView"
+        android:id="@+id/DeliveryListListView"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="5dip"
