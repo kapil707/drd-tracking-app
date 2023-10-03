@@ -1,10 +1,12 @@
 package com.drd.drdtrackingapp.ui.deliverylist;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -13,6 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.drd.drdtrackingapp.ApiService;
 import com.drd.drdtrackingapp.RetrofitClient;
+import com.drd.drdtrackingapp.Upload_chemist_img;
 import com.drd.drdtrackingapp.UserSessionManager;
 import com.drd.drdtrackingapp.YourList_Adapter;
 import com.drd.drdtrackingapp.YourList_get_or_set;
@@ -60,6 +63,25 @@ public class DeliveryListFragment extends Fragment {
         listview = binding.DeliveryListListView;
         adapter = new YourList_Adapter(getContext(), movieList);
         listview.setAdapter(adapter);
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1,
+                                    int arg2, long arg3) {
+                // TODO Auto-generated method stub
+                YourList_get_or_set clickedCategory = movieList.get(arg2);
+                String chemist_id = clickedCategory.chemist_id();
+                String gstvno = clickedCategory.gstvno();
+
+                //alertMessage_selected_acm();
+
+                Intent in = new Intent();
+                in.setClass(getContext(), Upload_chemist_img.class);
+                in.putExtra("chemist_id", chemist_id);
+                in.putExtra("gstvno", gstvno);
+                startActivity(in);
+            }
+        });
 
         deliver_list_api();
 

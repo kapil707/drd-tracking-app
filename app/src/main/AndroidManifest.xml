@@ -25,6 +25,9 @@
         android:theme="@style/Theme.DrdTrackingApp"
         tools:targetApi="24">
         <activity
+            android:name=".Upload_chemist_img"
+            android:exported="false" />
+        <activity
             android:name=".Home_page"
             android:exported="false"
             android:label="@string/title_activity_home_page"

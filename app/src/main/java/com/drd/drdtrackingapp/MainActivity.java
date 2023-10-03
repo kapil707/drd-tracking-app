@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }else{
             Intent in = new Intent();
-            in.setClass(this,Home_page.class);
+            in.setClass(this,Upload_chemist_img.class);
             startActivity(in);
             finish();
         }
