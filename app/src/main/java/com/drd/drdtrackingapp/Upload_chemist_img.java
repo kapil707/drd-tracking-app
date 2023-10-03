@@ -1,26 +1,64 @@
 package com.drd.drdtrackingapp;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.Map;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class Upload_chemist_img extends AppCompatActivity {
     ProgressBar menu_loading1;
     UserSessionManager session;
     String session_id = "", user_altercode = "";
     String chemist_id = "", gstvno = "";
+
+    private static final int CAMERA_REQUEST = 1888;
+    private ImageView imageView;
+    private static final int MY_CAMERA_PERMISSION_CODE = 100;
+    Bitmap bitmap;
+    Button take_photo,galery_select;
+    Button UploadImageServer, UploadImageServer1;
+    boolean check = true;
+    String ImagePath = "image_path";
+    String ServerUploadPath = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,5 +94,238 @@ public class Upload_chemist_img extends AppCompatActivity {
 
         session_id = user.get(UserSessionManager.KEY_USERID);
         user_altercode = user.get(UserSessionManager.KEY_USERID);
+
+        MainActivity ma = new MainActivity();
+        String mainurl = ma.main_url;
+        ServerUploadPath = mainurl + "upload_rider_chemist_photo";
+
+        imageView = (ImageView) findViewById(R.id.imageView);
+        take_photo = findViewById(R.id.take_photo);
+        galery_select = findViewById(R.id.galery_select);
+        UploadImageServer = (Button) findViewById(R.id.buttonUpload);
+        UploadImageServer1 = (Button) findViewById(R.id.buttonUpload1);
+
+        UploadImageServer.setVisibility(View.GONE);
+        UploadImageServer1.setVisibility(View.VISIBLE);
+
+        galery_select.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select image from gallery"), 1989);
+
+            }
+        });
+
+        take_photo.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View view) {
+                if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
+                } else {
+                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                }
+            }
+        });
+
+        UploadImageServer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ImageUploadToServerFunction();
+            }
+        });
+
+        final LinearLayout upload_order_LinearLayout = findViewById(R.id.upload_order_LinearLayout);
+        final LinearLayout complete_order_LinearLayout = findViewById(R.id.complete_order_LinearLayout);
+        final ImageView upload_btn = findViewById(R.id.upload_btn);
+        upload_btn.setVisibility(View.VISIBLE);
+        upload_order_LinearLayout.setVisibility(View.VISIBLE);
+        final ImageView upload_cancel = findViewById(R.id.upload_cancel);
+        upload_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                upload_btn.setVisibility(View.GONE);
+                upload_order_LinearLayout.setVisibility(View.GONE);
+                upload_cancel.setVisibility(View.VISIBLE);
+                complete_order_LinearLayout.setVisibility(View.VISIBLE);
+            }
+        });
+
+        upload_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                upload_btn.setVisibility(View.VISIBLE);
+                upload_order_LinearLayout.setVisibility(View.VISIBLE);
+                upload_cancel.setVisibility(View.GONE);
+                complete_order_LinearLayout.setVisibility(View.GONE);
+            }
+        });
+
+        Button complete_order = findViewById(R.id.complete_order);
+        complete_order.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //alertMessage_complete_order();
+            }
+        });
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_CAMERA_PERMISSION_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            } else {
+                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onActivityResult(int RC, int RQC, Intent I) {
+        super.onActivityResult(RC, RQC, I);
+        //Toast.makeText(User_image_uploading.this, String.valueOf(RC), Toast.LENGTH_LONG).show();
+        if (RC == CAMERA_REQUEST) {
+            bitmap = (Bitmap) I.getExtras().get("data");
+            imageView.setImageBitmap(bitmap);
+            imageView.setVisibility(View.VISIBLE);
+
+            UploadImageServer.setVisibility(View.VISIBLE);
+            UploadImageServer1.setVisibility(View.GONE);
+        }
+        if (RC == 1989) {
+            Uri uri = I.getData();
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                imageView.setImageBitmap(bitmap);
+                imageView.setVisibility(View.VISIBLE);
+                UploadImageServer.setVisibility(View.VISIBLE);
+                UploadImageServer1.setVisibility(View.GONE);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void ImageUploadToServerFunction() {
+        String ConvertImage = null;
+        try {
+            ByteArrayOutputStream byteArrayOutputStreamObject;
+            byteArrayOutputStreamObject = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStreamObject);
+            byte[] byteArrayVar = byteArrayOutputStreamObject.toByteArray();
+            ConvertImage = Base64.encodeToString(byteArrayVar, Base64.DEFAULT);
+        } catch (Exception ee) {
+
+        }
+        final String finalConvertImage = ConvertImage;
+        class AsyncTaskUploadClass extends AsyncTask<Void, Void, String> {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                //progressDialog = ProgressDialog.show(User_image_uploading.this,"Uploading","Please Wait",false,false);
+                menu_loading1.setVisibility(View.VISIBLE);
+                UploadImageServer.setVisibility(View.GONE);
+                UploadImageServer1.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            protected void onPostExecute(String user_image_server) {
+                super.onPostExecute(user_image_server);
+                menu_loading1.setVisibility(View.GONE);
+                // Dismiss the progress dialog after done uploading.
+                //progressDialog.dismiss();
+                // Printing uploading success message coming from server on android app.
+                Toast.makeText(Upload_chemist_img.this, "Uploaded Successfully", Toast.LENGTH_LONG).show();
+                imageView.setVisibility(View.GONE);
+                //new json_show_rider_chemist_photo().execute();
+            }
+
+            @Override
+            protected String doInBackground(Void... params) {
+                ImageProcessClass imageProcessClass = new ImageProcessClass();
+                HashMap<String, String> HashMapParams = new HashMap<String, String>();
+
+                HashMapParams.put(ImagePath, finalConvertImage);
+                HashMapParams.put("gstvno", gstvno);
+                HashMapParams.put("chemist_id", chemist_id);
+                HashMapParams.put("user_altercode", user_altercode);
+
+                String FinalData = imageProcessClass.ImageHttpRequest(ServerUploadPath, HashMapParams);
+
+                return FinalData;
+            }
+        }
+        AsyncTaskUploadClass AsyncTaskUploadClassOBJ = new AsyncTaskUploadClass();
+        AsyncTaskUploadClassOBJ.execute();
+    }
+
+    public class ImageProcessClass {
+        public String ImageHttpRequest(String requestURL, HashMap<String, String> PData) {
+            StringBuilder stringBuilder = new StringBuilder();
+            try {
+                URL url;
+                HttpURLConnection httpURLConnectionObject;
+                OutputStream OutPutStream;
+                BufferedWriter bufferedWriterObject;
+                BufferedReader bufferedReaderObject;
+                int RC;
+                url = new URL(requestURL);
+                httpURLConnectionObject = (HttpURLConnection) url.openConnection();
+                httpURLConnectionObject.setReadTimeout(19000);
+                httpURLConnectionObject.setConnectTimeout(19000);
+                httpURLConnectionObject.setRequestMethod("POST");
+                httpURLConnectionObject.setDoInput(true);
+                httpURLConnectionObject.setDoOutput(true);
+                OutPutStream = httpURLConnectionObject.getOutputStream();
+                bufferedWriterObject = new BufferedWriter(
+                        new OutputStreamWriter(OutPutStream, "UTF-8"));
+                bufferedWriterObject.write(bufferedWriterDataFN(PData));
+                bufferedWriterObject.flush();
+                bufferedWriterObject.close();
+                OutPutStream.close();
+                RC = httpURLConnectionObject.getResponseCode();
+                if (RC == HttpsURLConnection.HTTP_OK) {
+                    bufferedReaderObject = new BufferedReader(new InputStreamReader(httpURLConnectionObject.getInputStream()));
+                    stringBuilder = new StringBuilder();
+                    String RC2;
+                    while ((RC2 = bufferedReaderObject.readLine()) != null) {
+                        stringBuilder.append(RC2);
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return stringBuilder.toString();
+        }
+
+        private String bufferedWriterDataFN(HashMap<String, String> HashMapParams) throws UnsupportedEncodingException {
+
+            StringBuilder stringBuilderObject;
+            stringBuilderObject = new StringBuilder();
+            for (Map.Entry<String, String> KEY : HashMapParams.entrySet()) {
+                if (check)
+                    check = false;
+                else
+                    stringBuilderObject.append("&");
+
+                stringBuilderObject.append(URLEncoder.encode(KEY.getKey(), "UTF-8"));
+                stringBuilderObject.append("=");
+                stringBuilderObject.append(URLEncoder.encode(KEY.getValue(), "UTF-8"));
+            }
+            return stringBuilderObject.toString();
+        }
+    }
+
 }

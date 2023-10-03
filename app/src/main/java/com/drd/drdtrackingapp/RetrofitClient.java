@@ -9,7 +9,7 @@ public class RetrofitClient {
     public static Retrofit getRetrofitInstance(){
         if(retrofit==null){
             retrofit = new Retrofit.Builder()
-                    .baseUrl("https://drdweb.co.in/")
+                    .baseUrl("https://www.drdweb.co.in/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
