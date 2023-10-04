@@ -19,7 +19,8 @@
             android:divider="#FFFFFF"
             android:numColumns="3"
             android:dividerHeight="0dp"
-            android:listSelector="@drawable/list_selector"></GridView>
+            android:listSelector="@drawable/list_selector"
+            android:layout_marginTop="70dp"></GridView>
 
         <LinearLayout
             android:id="@+id/upload_order_LinearLayout"

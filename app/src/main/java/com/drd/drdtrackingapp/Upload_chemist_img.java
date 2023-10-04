@@ -17,16 +17,22 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -39,10 +45,17 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Upload_chemist_img extends AppCompatActivity {
     ProgressBar menu_loading1;
@@ -59,6 +72,10 @@ public class Upload_chemist_img extends AppCompatActivity {
     boolean check = true;
     String ImagePath = "image_path";
     String ServerUploadPath = "";
+
+    GridView listview;
+    Upload_chemist_img_Adapter adapter;
+    List<Upload_chemist_img_get_or_set> movieList = new ArrayList<Upload_chemist_img_get_or_set>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +114,7 @@ public class Upload_chemist_img extends AppCompatActivity {
 
         MainActivity ma = new MainActivity();
         String mainurl = ma.main_url;
-        ServerUploadPath = mainurl + "upload_rider_chemist_photo";
+        ServerUploadPath = mainurl + "upload_rider_chemist_photo_api";
 
         imageView = (ImageView) findViewById(R.id.imageView);
         take_photo = findViewById(R.id.take_photo);
@@ -174,6 +191,34 @@ public class Upload_chemist_img extends AppCompatActivity {
                 //alertMessage_complete_order();
             }
         });
+
+
+        listview = findViewById(R.id.listView1);
+        adapter = new Upload_chemist_img_Adapter(Upload_chemist_img.this, movieList);
+        listview.setAdapter(adapter);
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1,
+                                    int arg2, long arg3) {
+                // TODO Auto-generated method stub
+                Upload_chemist_img_get_or_set clickedCategory = movieList.get(arg2);
+                String id = clickedCategory.id();
+                //alertMessage_delete_rider_chemist_photo(id);
+                //alertMessage_selected_acm();
+            }
+        });
+
+        listview.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View arg0) {
+                // TODO Auto-generated method stub
+                /* Toast.makeText(getApplicationContext(), "Position",Toast.LENGTH_LONG).show(); */
+                return false;
+            }
+        });
+
+        show_rider_chemist_photo_api();
     }
 
     @Override
@@ -248,7 +293,8 @@ public class Upload_chemist_img extends AppCompatActivity {
                 // Printing uploading success message coming from server on android app.
                 Toast.makeText(Upload_chemist_img.this, "Uploaded Successfully", Toast.LENGTH_LONG).show();
                 imageView.setVisibility(View.GONE);
-                //new json_show_rider_chemist_photo().execute();
+
+                show_rider_chemist_photo_api();
             }
 
             @Override
@@ -326,6 +372,68 @@ public class Upload_chemist_img extends AppCompatActivity {
             }
             return stringBuilderObject.toString();
         }
+    }
+
+    private void show_rider_chemist_photo_api(){
+        Toast.makeText(Upload_chemist_img.this,"deliver_list_api working",Toast.LENGTH_SHORT).show();
+        ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
+
+        Call<ResponseBody> call = apiService.show_rider_chemist_photo_api("98c08565401579448aad7c64033dcb4081906dcb",user_altercode,chemist_id,gstvno);
+        //Call<ResponseBody> call = apiService.testing("loginRequest");
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    // Handle success response
+                    // response.body() contains the response data
+
+                    Toast.makeText(Upload_chemist_img.this,"show_rider_chemist_photo_api onResponse",Toast.LENGTH_SHORT).show();
+
+                    try {
+                        writeTv(response.body().string());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    // Handle error response
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Handle network failures or other errors
+                Log.e("Bg-service-onFailure", " " + t.toString());
+                Toast.makeText(Upload_chemist_img.this,"show_rider_chemist_photo_api onFailure",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void writeTv(String response) {
+        //https://demonuts.com/retrofit-android-get-json/
+        //Log.e("Bg-service", response.toString());
+        movieList.clear();
+        try {
+            int intid = 0;
+            JSONArray jArray = new JSONArray(response);
+            for (int i = 0; i < jArray.length(); i++) {
+
+                JSONObject jsonObject = jArray.getJSONObject(i);
+                String id =  jsonObject.getString("id");
+                String image = jsonObject.getString("image");
+                String time = jsonObject.getString("time");
+
+                Upload_chemist_img_get_or_set movie = new Upload_chemist_img_get_or_set();
+                movie.id(id);
+                movie.image(image);
+                movie.time(time);
+                movie.intid(String.valueOf(intid++));
+                movieList.add(movie);
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            Log.e("Bg-service", "Error parsing data" + e.toString());
+        }
+        adapter.notifyDataSetChanged();
     }
 
 }

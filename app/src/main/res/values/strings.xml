@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Drd Tracking App</string>
+    <string name="app_name">Drd Master App</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="title_activity_home_page">Home_page</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
