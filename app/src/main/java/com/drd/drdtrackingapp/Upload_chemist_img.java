@@ -110,11 +110,11 @@ public class Upload_chemist_img extends AppCompatActivity {
         HashMap<String, String> user = session.getUserDetails();
 
         session_id = user.get(UserSessionManager.KEY_USERID);
-        user_altercode = user.get(UserSessionManager.KEY_USERID);
+        user_altercode = user.get(UserSessionManager.KEY_USERALTERCODE);
 
         MainActivity ma = new MainActivity();
         String mainurl = ma.main_url;
-        ServerUploadPath = mainurl + "upload_rider_chemist_photo_api";
+        ServerUploadPath = mainurl + "upload_delivery_chemist_photo_api";
 
         imageView = (ImageView) findViewById(R.id.imageView);
         take_photo = findViewById(R.id.take_photo);
@@ -291,7 +291,7 @@ public class Upload_chemist_img extends AppCompatActivity {
                 // Dismiss the progress dialog after done uploading.
                 //progressDialog.dismiss();
                 // Printing uploading success message coming from server on android app.
-                Toast.makeText(Upload_chemist_img.this, "Uploaded Successfully", Toast.LENGTH_LONG).show();
+                Toast.makeText(Upload_chemist_img.this, user_image_server.toString(), Toast.LENGTH_LONG).show();
                 imageView.setVisibility(View.GONE);
 
                 show_rider_chemist_photo_api();
@@ -302,10 +302,12 @@ public class Upload_chemist_img extends AppCompatActivity {
                 ImageProcessClass imageProcessClass = new ImageProcessClass();
                 HashMap<String, String> HashMapParams = new HashMap<String, String>();
 
+                HashMapParams.put("api_key", "98c08565401579448aad7c64033dcb4081906dcb");
+
                 HashMapParams.put(ImagePath, finalConvertImage);
-                HashMapParams.put("gstvno", gstvno);
-                HashMapParams.put("chemist_id", chemist_id);
                 HashMapParams.put("user_altercode", user_altercode);
+                HashMapParams.put("chemist_id", chemist_id);
+                HashMapParams.put("gstvno", gstvno);
 
                 String FinalData = imageProcessClass.ImageHttpRequest(ServerUploadPath, HashMapParams);
 
@@ -378,7 +380,7 @@ public class Upload_chemist_img extends AppCompatActivity {
         Toast.makeText(Upload_chemist_img.this,"deliver_list_api working",Toast.LENGTH_SHORT).show();
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
 
-        Call<ResponseBody> call = apiService.show_rider_chemist_photo_api("98c08565401579448aad7c64033dcb4081906dcb",user_altercode,chemist_id,gstvno);
+        Call<ResponseBody> call = apiService.get_delivery_chemist_photo_api("98c08565401579448aad7c64033dcb4081906dcb",user_altercode,chemist_id,gstvno);
         //Call<ResponseBody> call = apiService.testing("loginRequest");
         call.enqueue(new Callback<ResponseBody>() {
             @Override

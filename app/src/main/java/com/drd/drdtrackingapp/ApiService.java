@@ -23,20 +23,20 @@ public interface ApiService {
 
 
     @FormUrlEncoded
-    @POST("drd_master_api/api01/slider_api")
-    Call<ResponseBody> slider_api(@Field("api_key") String api_key);
+    @POST("drd_master_api/api01/get_slider_api")
+    Call<ResponseBody> get_slider_api(@Field("api_key") String api_key);
 
     @FormUrlEncoded
     @POST("drd_master_api/api01/login_api")
     Call<ResponseBody> login_api(@Field("submit") String submit,@Field("user_name") String user_name,@Field("password") String password,@Field("firebase_token") String firebase_token);
 
     @FormUrlEncoded
-    @POST("drd_master_api/api01/delivery_list_api")
-    Call<ResponseBody> delivery_list_api(@Field("submit") String submit,@Field("user_altercode") String user_altercode);
+    @POST("drd_master_api/api01/get_delivery_api")
+    Call<ResponseBody> get_delivery_api(@Field("api_key") String api_key,@Field("user_altercode") String user_altercode);
 
     @FormUrlEncoded
-    @POST("drd_master_api/api01/show_rider_chemist_photo_api")
-    Call<ResponseBody> show_rider_chemist_photo_api(@Field("submit") String submit,@Field("user_altercode") String user_altercode,@Field("chemist_id") String chemist_id,@Field("gstvno") String gstvno);
+    @POST("drd_master_api/api01/get_delivery_chemist_photo_api")
+    Call<ResponseBody> get_delivery_chemist_photo_api(@Field("api_key") String api_key,@Field("user_altercode") String user_altercode,@Field("chemist_id") String chemist_id,@Field("gstvno") String gstvno);
 
     @FormUrlEncoded
     @POST("drd_master_api/api01/test")

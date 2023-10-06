@@ -41,7 +41,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
-    public String main_url = "https://www.drdweb.co.in/drdtrackingapp_api/api01/";
+    public String main_url = "https://www.drdweb.co.in/drd_master_api/api01/";
     UserSessionManager session;
     Database db;
     SQLiteDatabase sql;

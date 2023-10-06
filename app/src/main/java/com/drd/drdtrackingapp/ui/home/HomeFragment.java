@@ -75,7 +75,7 @@ public class HomeFragment extends Fragment {
         Toast.makeText(getContext(),"slider_api working",Toast.LENGTH_SHORT).show();
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
 
-        Call<ResponseBody> call = apiService.slider_api("98c08565401579448aad7c64033dcb4081906dcb");
+        Call<ResponseBody> call = apiService.get_slider_api("98c08565401579448aad7c64033dcb4081906dcb");
         //Call<ResponseBody> call = apiService.testing("loginRequest");
         call.enqueue(new Callback<ResponseBody>() {
             @Override
