@@ -61,7 +61,7 @@ public class BackgroundLocationUpdateService extends Service implements GoogleAp
     */
     Database db;
     SQLiteDatabase sql;
-    String user_code = "", firebase_token= "";
+    String user_code = "",user_altercode="", firebase_token= "";
     private final String TAG = "Bg-service";
     private final String TAG_LOCATION = "Bg-service";
     private Context context;
@@ -94,6 +94,7 @@ public class BackgroundLocationUpdateService extends Service implements GoogleAp
         session = new UserSessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
         user_code = user.get(UserSessionManager.KEY_USERCODE);
+        user_altercode = user.get(UserSessionManager.KEY_USERALTERCODE);
         firebase_token = user.get(UserSessionManager.KEY_FIREBASE_TOKEN);
 
         final Handler handler = new Handler();
@@ -201,7 +202,7 @@ public class BackgroundLocationUpdateService extends Service implements GoogleAp
         longitude = String.valueOf(location.getLongitude());
 
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-        Call<ResponseBody> call = apiService.update_user_location(user_code, firebase_token,latitude, longitude,getdate,gettime);
+        Call<ResponseBody> call = apiService.update_tracking_api("98c08565401579448aad7c64033dcb4081906dcb",user_code,user_altercode, firebase_token,latitude, longitude,getdate,gettime);
 
         /*----------------------------------------*/
 
