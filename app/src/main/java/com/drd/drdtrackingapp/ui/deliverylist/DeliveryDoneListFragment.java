@@ -91,7 +91,7 @@ public class DeliveryDoneListFragment extends Fragment {
         Toast.makeText(getContext(),"deliver_list_api working",Toast.LENGTH_SHORT).show();
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
 
-        Call<ResponseBody> call = apiService.get_delivery_done_api("98c08565401579448aad7c64033dcb4081906dcb",user_altercode);
+        Call<ResponseBody> call = apiService.get_delivery_order_done_api("98c08565401579448aad7c64033dcb4081906dcb",user_altercode);
         //Call<ResponseBody> call = apiService.testing("loginRequest");
         call.enqueue(new Callback<ResponseBody>() {
             @Override

@@ -77,6 +77,11 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
     GridView listview;
     Dilivery_chemist_info_page_Adapter adapter;
     List<Dilivery_chemist_info_page_get_or_set> movieList = new ArrayList<Dilivery_chemist_info_page_get_or_set>();
+
+
+    GPSTracker mGPS;
+    double latitude1, longitude1;
+    String getlatitude = "", getlongitude = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,7 +120,7 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
 
         MainActivity ma = new MainActivity();
         String mainurl = ma.main_url;
-        ServerUploadPath = mainurl + "upload_delivery_chemist_photo_api";
+        ServerUploadPath = mainurl + "upload_delivery_order_photo_api";
 
         imageView = (ImageView) findViewById(R.id.imageView);
         take_photo = findViewById(R.id.take_photo);
@@ -219,7 +224,7 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
             }
         });
 
-        show_rider_chemist_photo_api();
+        get_delivery_order_photo_api();
     }
 
     @Override
@@ -295,7 +300,7 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
                 Toast.makeText(Dilivery_chemist_info_page.this, user_image_server.toString(), Toast.LENGTH_LONG).show();
                 imageView.setVisibility(View.GONE);
 
-                show_rider_chemist_photo_api();
+                get_delivery_order_photo_api();
             }
 
             @Override
@@ -377,11 +382,11 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
         }
     }
 
-    private void show_rider_chemist_photo_api(){
+    private void get_delivery_order_photo_api(){
         Toast.makeText(Dilivery_chemist_info_page.this,"deliver_list_api working",Toast.LENGTH_SHORT).show();
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
 
-        Call<ResponseBody> call = apiService.get_delivery_chemist_photo_api("98c08565401579448aad7c64033dcb4081906dcb",user_altercode,chemist_id,gstvno);
+        Call<ResponseBody> call = apiService.get_delivery_order_photo_api("98c08565401579448aad7c64033dcb4081906dcb",user_altercode,chemist_id,gstvno);
         //Call<ResponseBody> call = apiService.testing("loginRequest");
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -446,7 +451,7 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
                     case DialogInterface.BUTTON_POSITIVE:
                         // Yes button clicked
                         try {
-                            //mGPS_info();
+                            mGPS_info();
                             upload_delivery_order_completed_api();
                         } catch (Exception e) {
                             // TODO: handle exception
@@ -468,6 +473,17 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
                 .setNegativeButton("No", dialogClickListener).show();
     }
 
+    public void mGPS_info() {
+        mGPS = new GPSTracker(this);
+        mGPS.getLocation();
+
+        latitude1 = mGPS.getLatitude();
+        longitude1 = mGPS.getLongitude();
+
+        getlatitude = String.valueOf(latitude1);
+        getlongitude = String.valueOf(longitude1);
+    }
+
     private void upload_delivery_order_completed_api(){
         Toast.makeText(Dilivery_chemist_info_page.this,"deliver_list_api working",Toast.LENGTH_SHORT).show();
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
@@ -475,7 +491,7 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
         EditText enter_remarks = findViewById(R.id.enter_remarks);
         String message = enter_remarks.getText().toString();
 
-        Call<ResponseBody> call = apiService.upload_delivery_order_completed_api("98c08565401579448aad7c64033dcb4081906dcb",user_altercode,chemist_id,gstvno,message);
+        Call<ResponseBody> call = apiService.upload_delivery_order_completed_api("98c08565401579448aad7c64033dcb4081906dcb",user_altercode,chemist_id,gstvno,message,getlatitude,getlongitude);
         //Call<ResponseBody> call = apiService.testing("loginRequest");
         call.enqueue(new Callback<ResponseBody>() {
             @Override
