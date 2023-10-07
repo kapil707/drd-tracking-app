@@ -35,6 +35,10 @@ public interface ApiService {
     Call<ResponseBody> get_delivery_api(@Field("api_key") String api_key,@Field("user_altercode") String user_altercode);
 
     @FormUrlEncoded
+    @POST("drd_master_api/api01/get_delivery_done_api")
+    Call<ResponseBody> get_delivery_done_api(@Field("api_key") String api_key,@Field("user_altercode") String user_altercode);
+
+    @FormUrlEncoded
     @POST("drd_master_api/api01/get_delivery_chemist_photo_api")
     Call<ResponseBody> get_delivery_chemist_photo_api(@Field("api_key") String api_key,@Field("user_altercode") String user_altercode,@Field("chemist_id") String chemist_id,@Field("gstvno") String gstvno);
 
