@@ -6,11 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -57,7 +55,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Upload_chemist_img extends AppCompatActivity {
+public class Dilivery_chemist_info_page extends AppCompatActivity {
     ProgressBar menu_loading1;
     UserSessionManager session;
     String session_id = "", user_altercode = "";
@@ -74,12 +72,12 @@ public class Upload_chemist_img extends AppCompatActivity {
     String ServerUploadPath = "";
 
     GridView listview;
-    Upload_chemist_img_Adapter adapter;
-    List<Upload_chemist_img_get_or_set> movieList = new ArrayList<Upload_chemist_img_get_or_set>();
+    Dilivery_chemist_info_page_Adapter adapter;
+    List<Dilivery_chemist_info_page_get_or_set> movieList = new ArrayList<Dilivery_chemist_info_page_get_or_set>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_upload_chemist_img);
+        setContentView(R.layout.activity_dilivery_chemist_info_page);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -194,7 +192,7 @@ public class Upload_chemist_img extends AppCompatActivity {
 
 
         listview = findViewById(R.id.listView1);
-        adapter = new Upload_chemist_img_Adapter(Upload_chemist_img.this, movieList);
+        adapter = new Dilivery_chemist_info_page_Adapter(Dilivery_chemist_info_page.this, movieList);
         listview.setAdapter(adapter);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -202,7 +200,7 @@ public class Upload_chemist_img extends AppCompatActivity {
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int arg2, long arg3) {
                 // TODO Auto-generated method stub
-                Upload_chemist_img_get_or_set clickedCategory = movieList.get(arg2);
+                Dilivery_chemist_info_page_get_or_set clickedCategory = movieList.get(arg2);
                 String id = clickedCategory.id();
                 //alertMessage_delete_rider_chemist_photo(id);
                 //alertMessage_selected_acm();
@@ -291,7 +289,7 @@ public class Upload_chemist_img extends AppCompatActivity {
                 // Dismiss the progress dialog after done uploading.
                 //progressDialog.dismiss();
                 // Printing uploading success message coming from server on android app.
-                Toast.makeText(Upload_chemist_img.this, user_image_server.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(Dilivery_chemist_info_page.this, user_image_server.toString(), Toast.LENGTH_LONG).show();
                 imageView.setVisibility(View.GONE);
 
                 show_rider_chemist_photo_api();
@@ -377,7 +375,7 @@ public class Upload_chemist_img extends AppCompatActivity {
     }
 
     private void show_rider_chemist_photo_api(){
-        Toast.makeText(Upload_chemist_img.this,"deliver_list_api working",Toast.LENGTH_SHORT).show();
+        Toast.makeText(Dilivery_chemist_info_page.this,"deliver_list_api working",Toast.LENGTH_SHORT).show();
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
 
         Call<ResponseBody> call = apiService.get_delivery_chemist_photo_api("98c08565401579448aad7c64033dcb4081906dcb",user_altercode,chemist_id,gstvno);
@@ -389,7 +387,7 @@ public class Upload_chemist_img extends AppCompatActivity {
                     // Handle success response
                     // response.body() contains the response data
 
-                    Toast.makeText(Upload_chemist_img.this,"show_rider_chemist_photo_api onResponse",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Dilivery_chemist_info_page.this,"show_rider_chemist_photo_api onResponse",Toast.LENGTH_SHORT).show();
 
                     try {
                         writeTv(response.body().string());
@@ -405,7 +403,7 @@ public class Upload_chemist_img extends AppCompatActivity {
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Handle network failures or other errors
                 Log.e("Bg-service-onFailure", " " + t.toString());
-                Toast.makeText(Upload_chemist_img.this,"show_rider_chemist_photo_api onFailure",Toast.LENGTH_SHORT).show();
+                Toast.makeText(Dilivery_chemist_info_page.this,"show_rider_chemist_photo_api onFailure",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -424,7 +422,7 @@ public class Upload_chemist_img extends AppCompatActivity {
                 String image = jsonObject.getString("image");
                 String time = jsonObject.getString("time");
 
-                Upload_chemist_img_get_or_set movie = new Upload_chemist_img_get_or_set();
+                Dilivery_chemist_info_page_get_or_set movie = new Dilivery_chemist_info_page_get_or_set();
                 movie.id(id);
                 movie.image(image);
                 movie.time(time);

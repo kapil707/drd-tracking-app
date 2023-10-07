@@ -14,13 +14,13 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class Upload_chemist_img_Adapter extends BaseAdapter {
+public class Dilivery_chemist_info_page_Adapter extends BaseAdapter {
 
     Context context;
     LayoutInflater inflater;
-    private List<Upload_chemist_img_get_or_set> movieItems;
+    private List<Dilivery_chemist_info_page_get_or_set> movieItems;
 
-    public Upload_chemist_img_Adapter(Context context, List<Upload_chemist_img_get_or_set> arraylist)
+    public Dilivery_chemist_info_page_Adapter(Context context, List<Dilivery_chemist_info_page_get_or_set> arraylist)
     {
         this.context = context;
         this.movieItems = arraylist;
@@ -38,8 +38,8 @@ public class Upload_chemist_img_Adapter extends BaseAdapter {
 		// TODO Auto-generated method stub
        
         LayoutInflater abc = ((Activity) context).getLayoutInflater();
-		View itemView = abc.inflate(R.layout.upload_chemist_img_item, null,true);
-		final Upload_chemist_img_get_or_set m = movieItems.get(position);
+		View itemView = abc.inflate(R.layout.activity_dilivery_chemist_info_page_item, null,true);
+		final Dilivery_chemist_info_page_get_or_set m = movieItems.get(position);
 
         LinearLayout upload_chemist_img_LinearLayout = (LinearLayout) itemView.findViewById(R.id.upload_chemist_img_LinearLayout);
         TextView upload_time = (TextView) itemView.findViewById(R.id.upload_time);
