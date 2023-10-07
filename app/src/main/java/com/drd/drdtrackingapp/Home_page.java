@@ -37,7 +37,7 @@ public class Home_page extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityHomePageBinding binding;
     UserSessionManager session;
-    String user_code = "",firebase_token = "";
+    String user_code = "",user_altercode="",firebase_token = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +53,7 @@ public class Home_page extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
         // Passing each menu ID as a set of Ids because each
@@ -65,16 +66,28 @@ public class Home_page extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        //NavigationView navigationView1 = (NavigationView) findViewById(R.id.nav_view);
+        // navigationView.setNavigationItemSelectedListener(this);
+
         session = new UserSessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
         user_code = user.get(UserSessionManager.KEY_USERCODE);
+        user_altercode = user.get(UserSessionManager.KEY_USERALTERCODE);
         firebase_token = user.get(UserSessionManager.KEY_FIREBASE_TOKEN);
+        String user_name = user.get(UserSessionManager.KEY_USERNAME);
+
+        View header = navigationView.getHeaderView(0);
+        TextView nav_user_name = header.findViewById(R.id.nav_user_name);
+        nav_user_name.setText(user_name);
+
+        TextView nav_user_email = header.findViewById(R.id.nav_user_email);
+        nav_user_email.setText("Code : " + user_altercode);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home_page, menu);
+        //getMenuInflater().inflate(R.menu.home_page, menu);
         return true;
     }
 

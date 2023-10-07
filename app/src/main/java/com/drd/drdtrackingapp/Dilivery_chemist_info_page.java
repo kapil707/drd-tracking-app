@@ -502,11 +502,11 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
 
                     Toast.makeText(Dilivery_chemist_info_page.this,"show_rider_chemist_photo_api onResponse",Toast.LENGTH_SHORT).show();
 
-                    try {
-                        writeTv(response.body().string());
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+//                    try {
+//                        writeTv(response.body().string());
+//                    } catch (IOException e) {
+//                        throw new RuntimeException(e);
+//                    }
                 } else {
                     // Handle error response
                 }
