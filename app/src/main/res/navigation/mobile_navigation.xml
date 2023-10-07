@@ -17,5 +17,11 @@
         android:label="@string/menu_delivery_list"
         tools:layout="@layout/fragment_delivery_list" />
 
+    <fragment
+        android:id="@+id/nav_delivery_done_list"
+        android:name="com.drd.drdtrackingapp.ui.deliverylist.DeliveryListFragment"
+        android:label="@string/menu_delivery_done_list"
+        tools:layout="@layout/fragment_delivery_list" />
+
 
 </navigation>
