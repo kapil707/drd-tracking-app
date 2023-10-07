@@ -2,10 +2,12 @@ package com.drd.drdtrackingapp;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -21,6 +23,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -186,7 +189,7 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
         complete_order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //alertMessage_complete_order();
+                alertMessage_complete_order();
             }
         });
 
@@ -436,4 +439,69 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
+    public void alertMessage_complete_order() {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        // Yes button clicked
+                        try {
+                            //mGPS_info();
+                            upload_delivery_order_completed_api();
+                        } catch (Exception e) {
+                            // TODO: handle exception
+                        }
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        // No button clicked
+                        // do nothing
+
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure to completed order?")
+                .setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+    }
+
+    private void upload_delivery_order_completed_api(){
+        Toast.makeText(Dilivery_chemist_info_page.this,"deliver_list_api working",Toast.LENGTH_SHORT).show();
+        ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
+
+        EditText enter_remarks = findViewById(R.id.enter_remarks);
+        String message = enter_remarks.getText().toString();
+
+        Call<ResponseBody> call = apiService.upload_delivery_order_completed_api("98c08565401579448aad7c64033dcb4081906dcb",user_altercode,chemist_id,gstvno,message);
+        //Call<ResponseBody> call = apiService.testing("loginRequest");
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    // Handle success response
+                    // response.body() contains the response data
+
+                    Toast.makeText(Dilivery_chemist_info_page.this,"show_rider_chemist_photo_api onResponse",Toast.LENGTH_SHORT).show();
+
+                    try {
+                        writeTv(response.body().string());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    // Handle error response
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Handle network failures or other errors
+                Log.e("Bg-service-onFailure", " " + t.toString());
+                Toast.makeText(Dilivery_chemist_info_page.this,"show_rider_chemist_photo_api onFailure",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }
