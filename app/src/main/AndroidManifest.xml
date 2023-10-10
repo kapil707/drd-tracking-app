@@ -10,7 +10,6 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
-
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
@@ -26,6 +25,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DrdTrackingApp"
         tools:targetApi="24">
+        <activity
+            android:name=".Qr_code_scan"
+            android:exported="false" />
         <activity
             android:name=".Dilivery_chemist_info_page"
             android:exported="false" />
