@@ -62,6 +62,7 @@ public class Home_page extends AppCompatActivity {
                 intentIntegrator.setPrompt("Scan a barcode or QR Code");
                 //intentIntegrator.setOrientationLocked(true);
                 intentIntegrator.initiateScan();
+
             }
         });
 
