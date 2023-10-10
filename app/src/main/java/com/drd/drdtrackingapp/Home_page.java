@@ -7,10 +7,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -20,6 +22,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.drd.drdtrackingapp.databinding.ActivityHomePageBinding;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -49,8 +56,12 @@ public class Home_page extends AppCompatActivity {
         binding.appBarHomePage.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                IntentIntegrator intentIntegrator = new IntentIntegrator(Home_page.this);
+                intentIntegrator.setPrompt("Scan a barcode or QR Code");
+                intentIntegrator.setOrientationLocked(true);
+                intentIntegrator.initiateScan();
             }
         });
 
@@ -82,6 +93,55 @@ public class Home_page extends AppCompatActivity {
 
         TextView nav_user_email = header.findViewById(R.id.nav_user_email);
         nav_user_email.setText("Code : " + user_altercode);
+    }
+
+    // iss say qr code ka json response ata ha
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        // if the intentResult is null then
+        // toast a message as "cancelled"
+        if (intentResult != null) {
+            if (intentResult.getContents() == null) {
+                Toast.makeText(getBaseContext(), "Cancelled", Toast.LENGTH_SHORT).show();
+            } else {
+                // if the intentResult is not null we'll set
+                // the content and format of scan message
+//                messageText.setText(intentResult.getContents());
+//                messageFormat.setText(intentResult.getFormatName());
+
+                try {
+                    JSONArray jArray = new JSONArray(intentResult.getContents());
+                    for (int i = 0; i < jArray.length(); i++) {
+
+                        JSONObject jsonObject = jArray.getJSONObject(i);
+                        String time_id = jsonObject.getString("time_id");
+//                        date_id = jsonObject.getString("date_id");
+//                        return_id = jsonObject.getString("return_id");
+//                        value_id = jsonObject.getString("value_id");
+
+                        Toast.makeText(getApplicationContext(), time_id.toString(), Toast.LENGTH_LONG).show();
+
+                        /*if(return_id.equals("1"))
+                        {
+                            //Toast.makeText(getApplicationContext(), value_id.toString(), Toast.LENGTH_LONG).show();
+                            camera.stopScanner();
+
+                            new json_insert_drd_attendance().execute();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "Scanner try again later", Toast.LENGTH_LONG).show();
+                        }*/
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "Scanner error rply", Toast.LENGTH_LONG).show();
+                }
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override
