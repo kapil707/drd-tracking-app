@@ -60,7 +60,7 @@ public class Home_page extends AppCompatActivity {
 //                        .setAction("Action", null).show();
                 IntentIntegrator intentIntegrator = new IntentIntegrator(Home_page.this);
                 intentIntegrator.setPrompt("Scan a barcode or QR Code");
-                intentIntegrator.setOrientationLocked(true);
+                //intentIntegrator.setOrientationLocked(true);
                 intentIntegrator.initiateScan();
             }
         });
