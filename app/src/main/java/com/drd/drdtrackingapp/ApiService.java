@@ -16,20 +16,19 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("drd_master_api/api01/get_login_api")
-    Call<ResponseBody> get_login_api(@Field("submit") String submit,@Field("user_name") String user_name,@Field("password") String password,@Field("firebase_token") String firebase_token);
-
-    @FormUrlEncoded
-    @POST("drd_master_api/api01/update_tracking_api")
-    Call<ResponseBody> update_tracking_api(@Field("api_key") String api_key,@Field("user_code") String user_code,@Field("user_altercode") String user_altercode,@Field("firebase_token") String firebase_token,@Field("getLatitude") String getLatitude,@Field("getLongitude") String getLongitude,@Field("getdate") String getdate,@Field("gettime") String gettime);
-
-    @POST("drd_master_api/api01/insert_firebase_token_api")
-    Call<ResponseBody> insert_firebase_token(@Body RequestBody requestBody);
-
+    Call<ResponseBody> get_login_api(@Field("api_key") String api_key,@Field("user_name") String user_name,@Field("password") String password,@Field("firebase_token") String firebase_token);
 
     @FormUrlEncoded
     @POST("drd_master_api/api01/get_slider_api")
     Call<ResponseBody> get_slider_api(@Field("api_key") String api_key);
 
+    @FormUrlEncoded
+    @POST("drd_master_api/api01/update_firebase_token_api")
+    Call<ResponseBody> update_firebase_token_api(@Field("api_key") String api_key,@Field("user_code") String user_code,@Field("user_altercode") String user_altercode,@Field("firebase_token") String firebase_token,@Field("latitude") String latitude,@Field("longitude") String longitude);
+
+    @FormUrlEncoded
+    @POST("drd_master_api/api01/update_tracking_api")
+    Call<ResponseBody> update_tracking_api(@Field("api_key") String api_key,@Field("user_code") String user_code,@Field("user_altercode") String user_altercode,@Field("firebase_token") String firebase_token,@Field("latitude") String getLatitude,@Field("longitude") String getLongitude,@Field("getdate") String getdate,@Field("gettime") String gettime);
 
     @FormUrlEncoded
     @POST("drd_master_api/api01/get_delivery_order_api")

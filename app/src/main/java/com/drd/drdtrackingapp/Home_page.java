@@ -215,41 +215,36 @@ public class Home_page extends AppCompatActivity {
             String date = "yyyy-MM-dd"; // 01 January 2013
             //tvDate.setText(DateFormat.format(date, noteTS));
 
-            String gettime = DateFormat.format(time, noteTS) + "";
-            String getdate = DateFormat.format(date, noteTS) + "";
+            //String gettime = DateFormat.format(time, noteTS) + "";
+            //String getdate = DateFormat.format(date, noteTS) + "";
+
+            mGPS_info(); // locacation ati ha iss say scnner open kartay he
 
             ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-            RequestBody requestBody = new FormBody.Builder()
-                    .add("user_code", user_code)
-                    .add("firebase_token", firebase_token)
-                    .add("getdate", getdate)
-                    .add("gettime", gettime)
-                    .build();
-            Call<ResponseBody> call2 = apiService.insert_firebase_token(requestBody);
-            call2.enqueue(new Callback<ResponseBody>() {
+
+            Call<ResponseBody> call = apiService.update_firebase_token_api("98c08565401579448aad7c64033dcb4081906dcb", user_code,user_altercode,firebase_token,getlatitude,getlongitude);
+            //Call<ResponseBody> call = apiService.testing("loginRequest");
+            call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    // Handle response for the second request
                     if (response.isSuccessful()) {
-                        Log.e("Bg-service", "done");
                         // Handle success response
                         // response.body() contains the response data
-                        try {
-                            Log.e("Bg-service", " " + (response.body().string()));
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
+
+//                        try {
+//                            writeTv(response.body().string());
+//                        } catch (IOException e) {
+//                            throw new RuntimeException(e);
+//                        }
                     } else {
                         // Handle error response
-                        Log.e("Bg-service", "error");
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    // Handle failure for the second request
-
-                    Log.e("Bg-service", "onFailure");
+                    // Handle network failures or other errors
+                    Log.e("Bg-service", " " + t.toString());
                 }
             });
         }
