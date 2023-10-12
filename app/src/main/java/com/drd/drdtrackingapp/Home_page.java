@@ -45,6 +45,10 @@ public class Home_page extends AppCompatActivity {
     private ActivityHomePageBinding binding;
     UserSessionManager session;
     String user_code = "",user_altercode="",firebase_token = "";
+
+    GPSTracker mGPS;
+    double latitude1, longitude1;
+    String getlatitude = "", getlongitude = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +62,9 @@ public class Home_page extends AppCompatActivity {
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
+
+                mGPS_info(); // locacation ati ha iss say scnner open kartay he
+
                 IntentIntegrator intentIntegrator = new IntentIntegrator(Home_page.this);
                 intentIntegrator.setPrompt("Scan a barcode or QR Code");
                 //intentIntegrator.setOrientationLocked(true);
@@ -106,42 +113,72 @@ public class Home_page extends AppCompatActivity {
             if (intentResult.getContents() == null) {
                 Toast.makeText(getBaseContext(), "Cancelled", Toast.LENGTH_SHORT).show();
             } else {
-                // if the intentResult is not null we'll set
-                // the content and format of scan message
-//                messageText.setText(intentResult.getContents());
-//                messageFormat.setText(intentResult.getFormatName());
-
                 try {
                     JSONArray jArray = new JSONArray(intentResult.getContents());
                     for (int i = 0; i < jArray.length(); i++) {
 
                         JSONObject jsonObject = jArray.getJSONObject(i);
-                        String time_id = jsonObject.getString("time_id");
-//                        date_id = jsonObject.getString("date_id");
-//                        return_id = jsonObject.getString("return_id");
-//                        value_id = jsonObject.getString("value_id");
 
-                        Toast.makeText(getApplicationContext(), time_id.toString(), Toast.LENGTH_LONG).show();
+                        String token_id = jsonObject.getString("token_id");
+                        String return_id = jsonObject.getString("return_id");
+                        String date = jsonObject.getString("date");
+                        String time = jsonObject.getString("time");
 
-                        /*if(return_id.equals("1"))
-                        {
-                            //Toast.makeText(getApplicationContext(), value_id.toString(), Toast.LENGTH_LONG).show();
-                            camera.stopScanner();
+                        mGPS_info(); // locacation ati ha iss say scnner open kartay he
 
-                            new json_insert_drd_attendance().execute();
+                        if(return_id=="1") {
+                            upload_attendance_api(getlatitude, getlongitude, date, time, token_id);
                         }
-                        else
-                        {
-                            Toast.makeText(getApplicationContext(), "Scanner try again later", Toast.LENGTH_LONG).show();
-                        }*/
                     }
                 } catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), "Scanner error rply", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Qr Scanner error", Toast.LENGTH_LONG).show();
                 }
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    public void mGPS_info() {
+        mGPS = new GPSTracker(this);
+        mGPS.getLocation();
+
+        latitude1 = mGPS.getLatitude();
+        longitude1 = mGPS.getLongitude();
+
+        getlatitude = String.valueOf(latitude1);
+        getlongitude = String.valueOf(longitude1);
+    }
+
+    private void upload_attendance_api(String latitude,String longitude,String date,String time,String token_key){
+        ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
+
+        Call<ResponseBody> call = apiService.upload_attendance_api("98c08565401579448aad7c64033dcb4081906dcb", user_altercode,latitude,longitude,date,time,token_key);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    // Handle success response
+                    // response.body() contains the response data
+
+                    try {
+                        Toast.makeText(getApplicationContext(), response.body().string(), Toast.LENGTH_LONG).show();
+                        //writeTv(response.body().string());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    // Handle error response
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Handle network failures or other errors
+                Log.e("Bg-service", " " + t.toString());
+            }
+        });
     }
 
     @Override

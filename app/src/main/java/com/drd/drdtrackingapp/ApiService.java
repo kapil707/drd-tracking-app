@@ -46,6 +46,10 @@ public interface ApiService {
     @POST("drd_master_api/api01/upload_delivery_order_completed_api")
     Call<ResponseBody> upload_delivery_order_completed_api(@Field("api_key") String api_key,@Field("user_altercode") String user_altercode,@Field("chemist_id") String chemist_id,@Field("gstvno") String gstvno,@Field("message") String message,@Field("getLatitude") String getLatitude,@Field("getLongitude") String getLongitude);
 
+    @FormUrlEncoded
+    @POST("drd_master_api/api01/upload_attendance_api")
+    Call<ResponseBody> upload_attendance_api(@Field("api_key") String api_key,@Field("user_altercode") String user_altercode,@Field("latitude") String latitude,@Field("longitude") String longitude,@Field("date") String date,@Field("time") String time,@Field("token_key") String token_key);
+
 
     //Call<ResponseBody> postData(@Body RequestBody requestBody);
 }
