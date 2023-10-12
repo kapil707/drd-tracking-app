@@ -179,7 +179,7 @@ public class Login_page extends AppCompatActivity {
     private void login_funcation(String _user_name,String _password,String _firebase_token){
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
 
-        Call<ResponseBody> call = apiService.login_api("98c08565401579448aad7c64033dcb4081906dcb", _user_name,_password,_firebase_token);
+        Call<ResponseBody> call = apiService.get_login_api("98c08565401579448aad7c64033dcb4081906dcb", _user_name,_password,_firebase_token);
         //Call<ResponseBody> call = apiService.testing("loginRequest");
         call.enqueue(new Callback<ResponseBody>() {
             @Override
