@@ -59,7 +59,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Dilivery_chemist_info_page extends AppCompatActivity {
+public class Delivery_chemist_page extends AppCompatActivity {
     ProgressBar menu_loading1;
     UserSessionManager session;
     String user_code="",user_altercode = "";
@@ -75,9 +75,9 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
     String ImagePath = "image_path";
     String upload_delivery_order_photo_api = "";
 
-    GridView listview;
-    Dilivery_chemist_info_page_Adapter adapter;
-    List<Dilivery_chemist_info_page_get_or_set> movieList = new ArrayList<Dilivery_chemist_info_page_get_or_set>();
+    GridView gridview;
+    Delivery_chemist_photo_Adapter adapter;
+    List<Dilivery_chemist_photo_get_or_set> get_set = new ArrayList<Dilivery_chemist_photo_get_or_set>();
 
 
     GPSTracker mGPS;
@@ -86,7 +86,7 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dilivery_chemist_info_page);
+        setContentView(R.layout.delivery_chemist_page);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -94,10 +94,10 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
 
             int nightModeFlags = getApplicationContext().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
             if (nightModeFlags== Configuration.UI_MODE_NIGHT_NO || nightModeFlags== Configuration.UI_MODE_NIGHT_UNDEFINED) {
-                window.setStatusBarColor(getResources().getColor(R.color.my_dark_primary));
+                window.setStatusBarColor(getResources().getColor(R.color.my_light_primary));
             }
             if (nightModeFlags== Configuration.UI_MODE_NIGHT_YES) {
-                window.setStatusBarColor(getResources().getColor(R.color.my_light_primary));
+                window.setStatusBarColor(getResources().getColor(R.color.my_dark_primary));
             }
         }
 
@@ -206,23 +206,23 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
         });
 
 
-        listview = findViewById(R.id.listView1);
-        adapter = new Dilivery_chemist_info_page_Adapter(Dilivery_chemist_info_page.this, movieList);
-        listview.setAdapter(adapter);
+        gridview = findViewById(R.id.delivery_chamist_photo_gridview);
+        adapter = new Delivery_chemist_photo_Adapter(Delivery_chemist_page.this, get_set);
+        gridview.setAdapter(adapter);
 
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int arg2, long arg3) {
                 // TODO Auto-generated method stub
-                Dilivery_chemist_info_page_get_or_set clickedCategory = movieList.get(arg2);
+                Dilivery_chemist_photo_get_or_set clickedCategory = get_set.get(arg2);
                 String id = clickedCategory.id();
                 //alertMessage_delete_rider_chemist_photo(id);
                 //alertMessage_selected_acm();
             }
         });
 
-        listview.setOnLongClickListener(new View.OnLongClickListener() {
+        gridview.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View arg0) {
                 // TODO Auto-generated method stub
@@ -329,7 +329,7 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
                             get_delivery_order_photo_api();
                         }
 
-                        Toast.makeText(Dilivery_chemist_info_page.this, return_message.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(Delivery_chemist_page.this, return_message.toString(), Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
                     // TODO: handle exception
@@ -400,7 +400,7 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
     }
 
     private void get_delivery_order_photo_api(){
-        Toast.makeText(Dilivery_chemist_info_page.this,"deliver_list_api working",Toast.LENGTH_SHORT).show();
+        Toast.makeText(Delivery_chemist_page.this,"deliver_list_api working",Toast.LENGTH_SHORT).show();
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
 
         Call<ResponseBody> call = apiService.get_delivery_order_photo_api("98c08565401579448aad7c64033dcb4081906dcb",user_code,user_altercode,chemist_id,gstvno);
@@ -412,7 +412,7 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
                     // Handle success response
                     // response.body() contains the response data
 
-                    Toast.makeText(Dilivery_chemist_info_page.this,"show_rider_chemist_photo_api onResponse",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Delivery_chemist_page.this,"show_rider_chemist_photo_api onResponse",Toast.LENGTH_SHORT).show();
 
                     try {
                         writeTv(response.body().string());
@@ -428,7 +428,7 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Handle network failures or other errors
                 Log.e("Bg-service-onFailure", " " + t.toString());
-                Toast.makeText(Dilivery_chemist_info_page.this,"show_rider_chemist_photo_api onFailure",Toast.LENGTH_SHORT).show();
+                Toast.makeText(Delivery_chemist_page.this,"show_rider_chemist_photo_api onFailure",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -436,7 +436,7 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
     private void writeTv(String response) {
         //https://demonuts.com/retrofit-android-get-json/
         //Log.e("Bg-service", response.toString());
-        movieList.clear();
+        get_set.clear();
         try {
             int intid = 0;
             JSONArray jArray = new JSONArray(response);
@@ -447,12 +447,12 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
                 String image = jsonObject.getString("image");
                 String time = jsonObject.getString("time");
 
-                Dilivery_chemist_info_page_get_or_set movie = new Dilivery_chemist_info_page_get_or_set();
-                movie.id(id);
-                movie.image(image);
-                movie.time(time);
-                movie.intid(String.valueOf(intid++));
-                movieList.add(movie);
+                Dilivery_chemist_photo_get_or_set mylist = new Dilivery_chemist_photo_get_or_set();
+                mylist.id(id);
+                mylist.image(image);
+                mylist.time(time);
+                mylist.intid(String.valueOf(intid++));
+                get_set.add(mylist);
             }
         } catch (Exception e) {
             // TODO: handle exception
@@ -502,7 +502,7 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
     }
 
     private void upload_delivery_order_completed_api(){
-        Toast.makeText(Dilivery_chemist_info_page.this,"deliver_list_api working",Toast.LENGTH_SHORT).show();
+        Toast.makeText(Delivery_chemist_page.this,"deliver_list_api working",Toast.LENGTH_SHORT).show();
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
 
         EditText enter_remarks = findViewById(R.id.enter_remarks);
@@ -517,7 +517,7 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
                     // Handle success response
                     // response.body() contains the response data
 
-                    Toast.makeText(Dilivery_chemist_info_page.this,"show_rider_chemist_photo_api onResponse",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Delivery_chemist_page.this,"show_rider_chemist_photo_api onResponse",Toast.LENGTH_SHORT).show();
 
 //                    try {
 //                        writeTv(response.body().string());
@@ -533,7 +533,7 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Handle network failures or other errors
                 Log.e("Bg-service-onFailure", " " + t.toString());
-                Toast.makeText(Dilivery_chemist_info_page.this,"show_rider_chemist_photo_api onFailure",Toast.LENGTH_SHORT).show();
+                Toast.makeText(Delivery_chemist_page.this,"show_rider_chemist_photo_api onFailure",Toast.LENGTH_SHORT).show();
             }
         });
     }

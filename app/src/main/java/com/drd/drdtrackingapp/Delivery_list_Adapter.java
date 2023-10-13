@@ -11,13 +11,13 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class YourList_Adapter extends BaseAdapter {
+public class Delivery_list_Adapter extends BaseAdapter {
 
     Context context;
     LayoutInflater inflater;
-    private List<YourList_get_or_set> movieItems;
+    private List<Delivery_list_get_or_set> movieItems;
 
-    public YourList_Adapter(Context context, List<YourList_get_or_set> arraylist)
+    public Delivery_list_Adapter(Context context, List<Delivery_list_get_or_set> arraylist)
     {
         this.context = context;
         this.movieItems = arraylist;
@@ -35,8 +35,8 @@ public class YourList_Adapter extends BaseAdapter {
 		// TODO Auto-generated method stub
        
         LayoutInflater abc = ((Activity) context).getLayoutInflater();
-		View itemView = abc.inflate(R.layout.select_chemist_item, null,true);
-		final YourList_get_or_set m = movieItems.get(position);
+		View itemView = abc.inflate(R.layout.delivery_list_item, null,true);
+		final Delivery_list_get_or_set m = movieItems.get(position);
 
         LinearLayout select_chemist_LinearLayout = (LinearLayout) itemView.findViewById(R.id.select_chemist_LinearLayout);
         TextView select_chemist_name = (TextView) itemView.findViewById(R.id.select_chemist_name);

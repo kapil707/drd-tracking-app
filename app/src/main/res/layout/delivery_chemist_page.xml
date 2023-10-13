@@ -4,19 +4,18 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".Dilivery_chemist_info_page"
+        tools:context=".Delivery_chemist_page"
         android:background="@drawable/background"
         android:layout_centerHorizontal="true">
 
         <include layout="@layout/menu"></include>
 
         <GridView
-            android:id="@+id/listView1"
+            android:id="@+id/delivery_chamist_photo_gridview"
             android:layout_width="fill_parent"
             android:layout_height="400dip"
             android:layout_marginBottom="5dip"
             android:layout_weight="1"
-            android:divider="#FFFFFF"
             android:numColumns="3"
             android:dividerHeight="0dp"
             android:listSelector="@drawable/list_selector"

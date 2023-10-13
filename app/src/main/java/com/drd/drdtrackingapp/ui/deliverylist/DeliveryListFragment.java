@@ -15,10 +15,10 @@ import androidx.fragment.app.Fragment;
 
 import com.drd.drdtrackingapp.ApiService;
 import com.drd.drdtrackingapp.RetrofitClient;
-import com.drd.drdtrackingapp.Dilivery_chemist_info_page;
+import com.drd.drdtrackingapp.Delivery_chemist_page;
 import com.drd.drdtrackingapp.UserSessionManager;
-import com.drd.drdtrackingapp.YourList_Adapter;
-import com.drd.drdtrackingapp.YourList_get_or_set;
+import com.drd.drdtrackingapp.Delivery_list_Adapter;
+import com.drd.drdtrackingapp.Delivery_list_get_or_set;
 import com.drd.drdtrackingapp.databinding.FragmentDeliveryListBinding;
 
 import org.json.JSONArray;
@@ -43,8 +43,8 @@ public class DeliveryListFragment extends Fragment {
     String user_code="",user_altercode = "";
 
     ListView listview;
-    YourList_Adapter adapter;
-    List<YourList_get_or_set> movieList = new ArrayList<YourList_get_or_set>();
+    Delivery_list_Adapter adapter;
+    List<Delivery_list_get_or_set> movieList = new ArrayList<Delivery_list_get_or_set>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -62,7 +62,7 @@ public class DeliveryListFragment extends Fragment {
 
 
         listview = binding.DeliveryListListView;
-        adapter = new YourList_Adapter(getContext(), movieList);
+        adapter = new Delivery_list_Adapter(getContext(), movieList);
         listview.setAdapter(adapter);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -70,14 +70,14 @@ public class DeliveryListFragment extends Fragment {
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int arg2, long arg3) {
                 // TODO Auto-generated method stub
-                YourList_get_or_set clickedCategory = movieList.get(arg2);
+                Delivery_list_get_or_set clickedCategory = movieList.get(arg2);
                 String chemist_id = clickedCategory.chemist_id();
                 String gstvno = clickedCategory.gstvno();
 
                 //alertMessage_selected_acm();
 
                 Intent in = new Intent();
-                in.setClass(getContext(), Dilivery_chemist_info_page.class);
+                in.setClass(getContext(), Delivery_chemist_page.class);
                 in.putExtra("chemist_id", chemist_id);
                 in.putExtra("gstvno", gstvno);
                 startActivity(in);
@@ -138,7 +138,7 @@ public class DeliveryListFragment extends Fragment {
                 String amt = jsonObject.getString("amt");
                 String gstvno = jsonObject.getString("gstvno");
 
-                YourList_get_or_set movie = new YourList_get_or_set();
+                Delivery_list_get_or_set movie = new Delivery_list_get_or_set();
                 movie.chemist_id(chemist_id);
                 movie.name(name);
                 movie.amt(amt);

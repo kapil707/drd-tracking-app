@@ -33,7 +33,7 @@
             android:name=".Qr_code_scan"
             android:exported="false" />
         <activity
-            android:name=".Dilivery_chemist_info_page"
+            android:name=".Delivery_chemist_page"
             android:exported="false" />
         <activity
             android:name=".Home_page"

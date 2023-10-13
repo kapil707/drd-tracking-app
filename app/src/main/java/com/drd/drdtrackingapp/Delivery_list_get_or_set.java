@@ -2,13 +2,13 @@ package com.drd.drdtrackingapp;
 
 import java.util.ArrayList;
 
-public class YourList_get_or_set {
+public class Delivery_list_get_or_set {
     private String chemist_id,name,amt,gstvno,intid;
-    public YourList_get_or_set() {
+    public Delivery_list_get_or_set() {
     }
 
-    public YourList_get_or_set(String chemist_id, String name, String amt, String gstvno, String intid,
-                               ArrayList<String> genre) {
+    public Delivery_list_get_or_set(String chemist_id, String name, String amt, String gstvno, String intid,
+                                    ArrayList<String> genre) {
         this.chemist_id = chemist_id;
         this.name = name;
         this.amt = amt;

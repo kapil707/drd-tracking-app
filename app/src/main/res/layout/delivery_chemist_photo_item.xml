@@ -17,7 +17,7 @@
             android:layout_marginLeft="5dip"
             android:layout_marginTop="5dip"
             android:layout_marginRight="5dip"
-            android:background="@color/gray"
+            android:theme="@style/list_item_bg_theme"
             android:orientation="vertical"
             android:padding="5dip"
             android:visibility="gone">
