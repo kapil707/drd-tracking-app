@@ -12,6 +12,8 @@
     <color name="list_item_bg_light_primary">#dadada</color>
     <color name="list_item_bg_dark_primary">#000000</color>
 
+    <color name="list_item_bg2_light_primary">#A6A6A6</color>
+    <color name="list_item_bg2_dark_primary">#5A5A5A</color>
 
     <color name="new_theme_color">#10847e</color>
     <color name="new_theme_color_a">#10847e</color>

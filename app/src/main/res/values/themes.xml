@@ -9,6 +9,10 @@
         <item name="android:background">@color/list_item_bg_light_primary</item>
     </style>
 
+    <style name="list_item_bg_theme2" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:background">@color/list_item_bg2_light_primary</item>
+    </style>
+
     <style name="Theme.DrdTrackingApp" parent="Base.Theme.DrdTrackingApp" />
 
     <style name="Theme.DrdTrackingApp.NoActionBar">

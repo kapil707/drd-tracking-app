@@ -50,6 +50,7 @@ public class HomeFragment extends Fragment {
 
     UserSessionManager session;
     String user_altercode = "";
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel =
@@ -63,16 +64,15 @@ public class HomeFragment extends Fragment {
         user_altercode = user.get(UserSessionManager.KEY_USERALTERCODE);
 
 
-
         slider_api();
 
         final TextView textView = binding.textHome;
-        textView.setText("Login User : " +user_altercode);
+        textView.setText("Login User : " + user_altercode);
         return root;
     }
 
-    private void slider_api(){
-        Toast.makeText(getContext(),"slider_api working",Toast.LENGTH_SHORT).show();
+    private void slider_api() {
+        Toast.makeText(getContext(), "slider_api working", Toast.LENGTH_SHORT).show();
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
 
         Call<ResponseBody> call = apiService.get_slider_api("98c08565401579448aad7c64033dcb4081906dcb");
@@ -81,11 +81,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    // Handle success response
-                    // response.body() contains the response data
-
-                    Toast.makeText(getContext(),"slider_api onResponse",Toast.LENGTH_SHORT).show();
-
+                    //Toast.makeText(getContext(),"slider_api onResponse",Toast.LENGTH_SHORT).show();
                     try {
                         writeTv(response.body().string());
                     } catch (IOException e) {
@@ -100,34 +96,29 @@ public class HomeFragment extends Fragment {
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Handle network failures or other errors
                 Log.e("Bg-service-onFailure", " " + t.toString());
-                Toast.makeText(getContext(),"slider_api onFailure",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "get_slider_api onFailure : " + t.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void writeTv(String response){
+    private void writeTv(String response) {
         //https://demonuts.com/retrofit-android-get-json/
         //Log.e("Bg-service", response.toString());
         try {
             ArrayList<SlideModel> imageList = new ArrayList<>();
             JSONArray jArray = new JSONArray(response);
-            for (int i = 0; i < jArray.length(); i++)
-            {
-                JSONObject jsonObject   = jArray.getJSONObject(i);
-                String image     = jsonObject.getString("image");
-
+            for (int i = 0; i < jArray.length(); i++) {
+                JSONObject jsonObject = jArray.getJSONObject(i);
+                String image = jsonObject.getString("image");
 
                 imageList.add(new SlideModel(image, "The animal population decreased by 58 percent in 42 years.", ScaleTypes.FIT));
-
-
 
             }
             ImageSlider imageSlider = binding.imageSlider;
             imageSlider.setImageList(imageList);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO: handle exception
-            Log.e("Bg-service", "Error parsing data"+e.toString());
+            Log.e("Bg-service", "Error parsing data" + e.toString());
         }
     }
 

@@ -39,7 +39,7 @@ public class DeliveryDoneListFragment extends Fragment {
     private FragmentDeliveryListBinding binding;
 
     UserSessionManager session;
-    String user_code = "",user_altercode = "";
+    String user_code = "", user_altercode = "";
 
     ListView listview;
     Delivery_list_Adapter adapter;
@@ -55,10 +55,6 @@ public class DeliveryDoneListFragment extends Fragment {
         HashMap<String, String> user = session.getUserDetails();
         user_code = user.get(UserSessionManager.KEY_USERCODE);
         user_altercode = user.get(UserSessionManager.KEY_USERALTERCODE);
-
-//        final TextView textView = binding.textYourList;
-//        textView.setText("Login User : " +user_altercode);
-
 
         listview = binding.DeliveryListListView;
         adapter = new Delivery_list_Adapter(getContext(), get_set);
@@ -88,21 +84,16 @@ public class DeliveryDoneListFragment extends Fragment {
         return root;
     }
 
-    private void delivery_done_api(){
-        Toast.makeText(getContext(),"deliver_list_api working",Toast.LENGTH_SHORT).show();
+    private void delivery_done_api() {
+        Toast.makeText(getContext(), "deliver_list_api working", Toast.LENGTH_SHORT).show();
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
 
-        Call<ResponseBody> call = apiService.get_delivery_order_done_api("98c08565401579448aad7c64033dcb4081906dcb",user_code,user_altercode);
-        //Call<ResponseBody> call = apiService.testing("loginRequest");
+        Call<ResponseBody> call = apiService.get_delivery_order_done_api("98c08565401579448aad7c64033dcb4081906dcb", user_code, user_altercode);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    // Handle success response
-                    // response.body() contains the response data
-
-                    Toast.makeText(getContext(),"deliver_list_api onResponse",Toast.LENGTH_SHORT).show();
-
+                    //Toast.makeText(getContext(),"deliver_list_api onResponse",Toast.LENGTH_SHORT).show();
                     try {
                         writeTv(response.body().string());
                     } catch (IOException e) {
@@ -117,7 +108,7 @@ public class DeliveryDoneListFragment extends Fragment {
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Handle network failures or other errors
                 Log.e("Bg-service-onFailure", " " + t.toString());
-                Toast.makeText(getContext(),"deliver_list_api onFailure",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "get_delivery_order_done_api onFailure : " + t.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }
