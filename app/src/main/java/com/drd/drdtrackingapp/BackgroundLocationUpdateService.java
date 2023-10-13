@@ -253,6 +253,7 @@ public class BackgroundLocationUpdateService extends Service implements GoogleAp
 
     }
 
+
     @Override
     public void onProviderEnabled(String provider) {
 
