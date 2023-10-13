@@ -72,7 +72,7 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
     Button UploadImageServer, UploadImageServer1;
     boolean check = true;
     String ImagePath = "image_path";
-    String ServerUploadPath = "";
+    String upload_delivery_order_photo_api = "";
 
     GridView listview;
     Dilivery_chemist_info_page_Adapter adapter;
@@ -119,7 +119,7 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
 
         MainActivity ma = new MainActivity();
         String mainurl = ma.main_url;
-        ServerUploadPath = mainurl + "upload_delivery_order_photo_api";
+        upload_delivery_order_photo_api = mainurl + "upload_delivery_order_photo_api";
 
         imageView = (ImageView) findViewById(R.id.imageView);
         take_photo = findViewById(R.id.take_photo);
@@ -288,36 +288,45 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
                 UploadImageServer.setVisibility(View.GONE);
                 UploadImageServer1.setVisibility(View.VISIBLE);
             }
-
-            @Override
-            protected void onPostExecute(String user_image_server) {
-                super.onPostExecute(user_image_server);
-                menu_loading1.setVisibility(View.GONE);
-                // Dismiss the progress dialog after done uploading.
-                //progressDialog.dismiss();
-                // Printing uploading success message coming from server on android app.
-                Toast.makeText(Dilivery_chemist_info_page.this, user_image_server.toString(), Toast.LENGTH_LONG).show();
-                imageView.setVisibility(View.GONE);
-
-                get_delivery_order_photo_api();
-            }
-
             @Override
             protected String doInBackground(Void... params) {
                 ImageProcessClass imageProcessClass = new ImageProcessClass();
                 HashMap<String, String> HashMapParams = new HashMap<String, String>();
 
                 HashMapParams.put("api_key", "98c08565401579448aad7c64033dcb4081906dcb");
-
                 HashMapParams.put(ImagePath, finalConvertImage);
                 HashMapParams.put("user_code", user_code);
                 HashMapParams.put("user_altercode", user_altercode);
                 HashMapParams.put("chemist_id", chemist_id);
                 HashMapParams.put("gstvno", gstvno);
 
-                String FinalData = imageProcessClass.ImageHttpRequest(ServerUploadPath, HashMapParams);
-
+                String FinalData = imageProcessClass.ImageHttpRequest(upload_delivery_order_photo_api, HashMapParams);
                 return FinalData;
+            }
+            @Override
+            protected void onPostExecute(String response) {
+                super.onPostExecute(response);
+                menu_loading1.setVisibility(View.GONE);
+                imageView.setVisibility(View.GONE);
+                try {
+                    int intid = 0;
+                    JSONArray jArray = new JSONArray(response);
+                    for (int i = 0; i < jArray.length(); i++) {
+
+                        JSONObject jsonObject = jArray.getJSONObject(i);
+                        String return_id =  jsonObject.getString("return_id");
+                        String return_message =  jsonObject.getString("return_message");
+
+                        if(return_id.equals("1")){
+                            get_delivery_order_photo_api();
+                        }
+
+                        Toast.makeText(Dilivery_chemist_info_page.this, return_message.toString(), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    // TODO: handle exception
+                    Log.e("Bg-service", "Error parsing data" + e.toString());
+                }
             }
         }
         AsyncTaskUploadClass AsyncTaskUploadClassOBJ = new AsyncTaskUploadClass();
