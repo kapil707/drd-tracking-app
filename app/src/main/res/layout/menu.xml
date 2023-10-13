@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:background="@color/new_theme_color">
+    android:background="?attr/colorPrimary">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -77,6 +77,7 @@
             android:layout_weight="1"
             android:visibility="gone"
             app:srcCompat="@drawable/baseline_cloud_upload_24"
+            android:layout_marginRight="15dip"
             tools:visibility="gone" />
 
         <ImageView
@@ -86,6 +87,7 @@
             android:layout_weight="1"
             android:visibility="gone"
             app:srcCompat="@drawable/cancel_icon"
+            android:layout_marginRight="15dip"
             tools:visibility="gone" />
     </LinearLayout>
 </RelativeLayout>

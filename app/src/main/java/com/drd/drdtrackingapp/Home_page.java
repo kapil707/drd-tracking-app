@@ -1,11 +1,15 @@
 package com.drd.drdtrackingapp;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +61,19 @@ public class Home_page extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarHomePage.toolbar);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+            int nightModeFlags = getApplicationContext().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+            if (nightModeFlags== Configuration.UI_MODE_NIGHT_NO || nightModeFlags== Configuration.UI_MODE_NIGHT_UNDEFINED) {
+                window.setStatusBarColor(getResources().getColor(R.color.my_dark_primary));
+            }
+            if (nightModeFlags== Configuration.UI_MODE_NIGHT_YES) {
+                window.setStatusBarColor(getResources().getColor(R.color.my_light_primary));
+            }
+        }
         binding.appBarHomePage.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

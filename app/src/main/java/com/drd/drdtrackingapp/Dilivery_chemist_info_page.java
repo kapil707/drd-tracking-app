@@ -10,6 +10,7 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -90,7 +91,14 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.new_theme_color));
+
+            int nightModeFlags = getApplicationContext().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+            if (nightModeFlags== Configuration.UI_MODE_NIGHT_NO || nightModeFlags== Configuration.UI_MODE_NIGHT_UNDEFINED) {
+                window.setStatusBarColor(getResources().getColor(R.color.my_dark_primary));
+            }
+            if (nightModeFlags== Configuration.UI_MODE_NIGHT_YES) {
+                window.setStatusBarColor(getResources().getColor(R.color.my_light_primary));
+            }
         }
 
         Intent in = getIntent();
