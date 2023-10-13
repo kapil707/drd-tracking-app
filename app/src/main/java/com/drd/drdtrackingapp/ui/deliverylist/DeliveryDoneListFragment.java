@@ -39,7 +39,7 @@ public class DeliveryDoneListFragment extends Fragment {
     private FragmentDeliveryListBinding binding;
 
     UserSessionManager session;
-    String user_altercode = "";
+    String user_code = "",user_altercode = "";
 
     ListView listview;
     YourList_Adapter adapter;
@@ -53,6 +53,7 @@ public class DeliveryDoneListFragment extends Fragment {
 
         session = new UserSessionManager(this.getContext());
         HashMap<String, String> user = session.getUserDetails();
+        user_code = user.get(UserSessionManager.KEY_USERCODE);
         user_altercode = user.get(UserSessionManager.KEY_USERALTERCODE);
 
 //        final TextView textView = binding.textYourList;
@@ -91,7 +92,7 @@ public class DeliveryDoneListFragment extends Fragment {
         Toast.makeText(getContext(),"deliver_list_api working",Toast.LENGTH_SHORT).show();
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
 
-        Call<ResponseBody> call = apiService.get_delivery_order_done_api("98c08565401579448aad7c64033dcb4081906dcb",user_altercode);
+        Call<ResponseBody> call = apiService.get_delivery_order_done_api("98c08565401579448aad7c64033dcb4081906dcb",user_code,user_altercode);
         //Call<ResponseBody> call = apiService.testing("loginRequest");
         call.enqueue(new Callback<ResponseBody>() {
             @Override

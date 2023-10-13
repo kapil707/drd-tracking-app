@@ -61,7 +61,7 @@ import retrofit2.Response;
 public class Dilivery_chemist_info_page extends AppCompatActivity {
     ProgressBar menu_loading1;
     UserSessionManager session;
-    String session_id = "", user_altercode = "";
+    String user_code="",user_altercode = "";
     String chemist_id = "", gstvno = "";
 
     private static final int CAMERA_REQUEST = 1888;
@@ -114,8 +114,7 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
 
         session = new UserSessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
-
-        session_id = user.get(UserSessionManager.KEY_USERID);
+        user_code = user.get(UserSessionManager.KEY_USERCODE);
         user_altercode = user.get(UserSessionManager.KEY_USERALTERCODE);
 
         MainActivity ma = new MainActivity();
@@ -311,6 +310,7 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
                 HashMapParams.put("api_key", "98c08565401579448aad7c64033dcb4081906dcb");
 
                 HashMapParams.put(ImagePath, finalConvertImage);
+                HashMapParams.put("user_code", user_code);
                 HashMapParams.put("user_altercode", user_altercode);
                 HashMapParams.put("chemist_id", chemist_id);
                 HashMapParams.put("gstvno", gstvno);
@@ -386,7 +386,7 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
         Toast.makeText(Dilivery_chemist_info_page.this,"deliver_list_api working",Toast.LENGTH_SHORT).show();
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
 
-        Call<ResponseBody> call = apiService.get_delivery_order_photo_api("98c08565401579448aad7c64033dcb4081906dcb",user_altercode,chemist_id,gstvno);
+        Call<ResponseBody> call = apiService.get_delivery_order_photo_api("98c08565401579448aad7c64033dcb4081906dcb",user_code,user_altercode,chemist_id,gstvno);
         //Call<ResponseBody> call = apiService.testing("loginRequest");
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -491,7 +491,7 @@ public class Dilivery_chemist_info_page extends AppCompatActivity {
         EditText enter_remarks = findViewById(R.id.enter_remarks);
         String message = enter_remarks.getText().toString();
 
-        Call<ResponseBody> call = apiService.upload_delivery_order_completed_api("98c08565401579448aad7c64033dcb4081906dcb",user_altercode,chemist_id,gstvno,message,getlatitude,getlongitude);
+        Call<ResponseBody> call = apiService.upload_delivery_order_completed_api("98c08565401579448aad7c64033dcb4081906dcb",user_code,user_altercode,chemist_id,gstvno,message,getlatitude,getlongitude);
         //Call<ResponseBody> call = apiService.testing("loginRequest");
         call.enqueue(new Callback<ResponseBody>() {
             @Override

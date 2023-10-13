@@ -153,7 +153,7 @@ public class Home_page extends AppCompatActivity {
     private void upload_attendance_api(String latitude,String longitude,String date,String time,String token_key){
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
 
-        Call<ResponseBody> call = apiService.upload_attendance_api("98c08565401579448aad7c64033dcb4081906dcb", user_altercode,latitude,longitude,date,time,token_key);
+        Call<ResponseBody> call = apiService.upload_attendance_api("98c08565401579448aad7c64033dcb4081906dcb", user_code,user_altercode,latitude,longitude,date,time,token_key);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override

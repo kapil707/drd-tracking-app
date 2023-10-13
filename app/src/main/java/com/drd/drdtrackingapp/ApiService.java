@@ -28,27 +28,27 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("drd_master_api/api01/update_tracking_api")
-    Call<ResponseBody> update_tracking_api(@Field("api_key") String api_key,@Field("user_code") String user_code,@Field("user_altercode") String user_altercode,@Field("firebase_token") String firebase_token,@Field("latitude") String getLatitude,@Field("longitude") String getLongitude,@Field("getdate") String getdate,@Field("gettime") String gettime);
+    Call<ResponseBody> update_tracking_api(@Field("api_key") String api_key,@Field("user_code") String user_code,@Field("user_altercode") String user_altercode,@Field("firebase_token") String firebase_token,@Field("latitude") String latitude,@Field("longitude") String longitude,@Field("getdate") String getdate,@Field("gettime") String gettime);
 
     @FormUrlEncoded
     @POST("drd_master_api/api01/get_delivery_order_api")
-    Call<ResponseBody> get_delivery_order_api(@Field("api_key") String api_key,@Field("user_altercode") String user_altercode);
+    Call<ResponseBody> get_delivery_order_api(@Field("api_key") String api_key,@Field("user_code") String user_code,@Field("user_altercode") String user_altercode);
 
     @FormUrlEncoded
     @POST("drd_master_api/api01/get_delivery_order_done_api")
-    Call<ResponseBody> get_delivery_order_done_api(@Field("api_key") String api_key,@Field("user_altercode") String user_altercode);
+    Call<ResponseBody> get_delivery_order_done_api(@Field("api_key") String api_key,@Field("user_code") String user_code,@Field("user_altercode") String user_altercode);
 
     @FormUrlEncoded
     @POST("drd_master_api/api01/get_delivery_order_photo_api")
-    Call<ResponseBody> get_delivery_order_photo_api(@Field("api_key") String api_key,@Field("user_altercode") String user_altercode,@Field("chemist_id") String chemist_id,@Field("gstvno") String gstvno);
+    Call<ResponseBody> get_delivery_order_photo_api(@Field("api_key") String api_key,@Field("user_code") String user_code,@Field("user_altercode") String user_altercode,@Field("chemist_id") String chemist_id,@Field("gstvno") String gstvno);
 
     @FormUrlEncoded
     @POST("drd_master_api/api01/upload_delivery_order_completed_api")
-    Call<ResponseBody> upload_delivery_order_completed_api(@Field("api_key") String api_key,@Field("user_altercode") String user_altercode,@Field("chemist_id") String chemist_id,@Field("gstvno") String gstvno,@Field("message") String message,@Field("getLatitude") String getLatitude,@Field("getLongitude") String getLongitude);
+    Call<ResponseBody> upload_delivery_order_completed_api(@Field("api_key") String api_key,@Field("user_code") String user_code,@Field("user_altercode") String user_altercode,@Field("chemist_id") String chemist_id,@Field("gstvno") String gstvno,@Field("message") String message,@Field("latitude") String latitude,@Field("longitude") String longitude);
 
     @FormUrlEncoded
     @POST("drd_master_api/api01/upload_attendance_api")
-    Call<ResponseBody> upload_attendance_api(@Field("api_key") String api_key,@Field("user_altercode") String user_altercode,@Field("latitude") String latitude,@Field("longitude") String longitude,@Field("date") String date,@Field("time") String time,@Field("token_key") String token_key);
+    Call<ResponseBody> upload_attendance_api(@Field("api_key") String api_key,@Field("user_code") String user_code,@Field("user_altercode") String user_altercode,@Field("latitude") String latitude,@Field("longitude") String longitude,@Field("getdate") String getdate,@Field("gettime") String gettime,@Field("token_key") String token_key);
 
 
     //Call<ResponseBody> postData(@Body RequestBody requestBody);
