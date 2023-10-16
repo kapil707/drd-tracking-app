@@ -9,6 +9,9 @@
     <color name="my_light_primary">#10847e</color>
     <color name="my_dark_primary">#000000</color>
 
+    <color name="all_page_background_light">#ffffff</color>
+    <color name="all_page_background_dark">#5A5A5A</color>
+
     <color name="list_item_bg_light_primary">#dadada</color>
     <color name="list_item_bg_dark_primary">#000000</color>
 

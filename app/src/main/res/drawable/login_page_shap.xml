@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <solid
-        android:color="@color/new_theme_color" >
+        android:color="@color/new_theme_color">
     </solid>
     <!--<solid
         android:color="#FFE0B2" >
