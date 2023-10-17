@@ -92,15 +92,20 @@ public class Login_page extends AppCompatActivity {
             LinearLayout textbox_bg2 = findViewById(R.id.textbox_bg2);
             textbox_bg2.setBackgroundResource(R.drawable.login_textbox_shap);
 
+            LinearLayout page_hr_line = findViewById(R.id.page_hr_line);
+            page_hr_line.setBackgroundResource(R.drawable.page_hr_line_shap);
+
             GradientDrawable drawable = (GradientDrawable) login_page_theme_bg.getBackground();
             GradientDrawable drawable1 = (GradientDrawable) login_btn1.getBackground();
             GradientDrawable drawable2 = (GradientDrawable) textbox_bg1.getBackground();
             GradientDrawable drawable3 = (GradientDrawable) textbox_bg2.getBackground();
+            GradientDrawable drawable4 = (GradientDrawable) page_hr_line.getBackground();
             if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
                 drawable.setColor(getResources().getColor(R.color.header_bg_dark));
                 drawable1.setColor(getResources().getColor(R.color.button_bg_dark));
                 drawable2.setColor(getResources().getColor(R.color.textbox_bg_dark));
                 drawable3.setColor(getResources().getColor(R.color.textbox_bg_dark));
+                drawable4.setColor(getResources().getColor(R.color.page_hr_bg_dark));
             }
         }
 

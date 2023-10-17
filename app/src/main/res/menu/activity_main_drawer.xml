@@ -17,7 +17,7 @@
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/menu_delivery_done_list" />
         <item
-            android:id="@+id/test"
+            android:id="@+id/logout_btn"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/menu_logout" />
     </group>

@@ -2,9 +2,9 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="match_parent">
-    <solid android:color="#FFFFFF"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <solid
+        android:color="@color/page_hr_bg_light">
+    </solid>
     <padding android:left="40dp" android:right="40dp" android:top="0dp" android:bottom="1dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -9,18 +9,26 @@
         <item name="color">@color/page_bg_dark</item>
     </style>
 
+    <style name="page_bg_theme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:background">@color/page_bg_light</item>
+    </style>
+
+    <style name="page_textclr_theme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:textColor">@color/page_textclr_light</item>
+    </style>
+
     <style name="textbox_theme" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:background">@color/textbox_bg_light</item>
         <item name="android:tint">@color/textbox_fafa_icon_light</item>
     </style>
 
+    <style name="textbox_border_theme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="color">@color/header_bg_light</item>
+    </style>
+
     <style name="textbox_textclr_theme" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:textColor">@color/textbox_textclr_light</item>
         <item name="android:textColorHint">@color/textbox_textclr_hint_light</item>
-    </style>
-
-    <style name="page_bg_theme" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="android:background">@color/page_bg_light</item>
     </style>
 
     <style name="list_item_bg_theme" parent="Theme.Material3.DayNight.NoActionBar">

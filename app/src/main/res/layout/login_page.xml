@@ -65,12 +65,13 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/page_hr_line"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="15dip"
                     android:layout_marginTop="15dip"
                     android:layout_marginRight="15dip"
-                    android:background="@drawable/login_or_create_shap1"
+                    android:background="@drawable/page_hr_line_shap"
                     android:orientation="horizontal">
 
                 </LinearLayout>
@@ -110,9 +111,7 @@
 
                     <ImageView
                         android:id="@+id/eyes"
-                        android:layout_marginTop="5dip"
-                        android:layout_marginLeft="5dip"
-                        android:layout_marginBottom="5dip"
+                        android:layout_margin="5dip"
                         android:layout_width="30dip"
                         android:layout_height="30dip"
                         android:visibility="gone"
@@ -121,9 +120,7 @@
 
                     <ImageView
                         android:id="@+id/eyes1"
-                        android:layout_marginTop="5dip"
-                        android:layout_marginLeft="5dip"
-                        android:layout_marginBottom="5dip"
+                        android:layout_margin="5dip"
                         android:layout_width="30dip"
                         android:layout_height="30dip"
                         app:srcCompat="@drawable/eye_hide_svgrepo_com"
@@ -139,7 +136,7 @@
                     android:layout_marginLeft="15dip"
                     android:layout_marginTop="15dip"
                     android:layout_marginRight="15dip"
-                    android:textColor="@color/login_page_color1"
+                    android:theme="@style/page_textclr_theme"
                     android:textSize="20dip" />
 
                 <Button
