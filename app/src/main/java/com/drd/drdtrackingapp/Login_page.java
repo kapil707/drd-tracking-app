@@ -10,6 +10,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -27,6 +29,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -70,11 +73,34 @@ public class Login_page extends AppCompatActivity {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
             int nightModeFlags = getApplicationContext().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-            if (nightModeFlags== Configuration.UI_MODE_NIGHT_NO || nightModeFlags== Configuration.UI_MODE_NIGHT_UNDEFINED) {
-                window.setStatusBarColor(getResources().getColor(R.color.my_light_primary));
+            if (nightModeFlags == Configuration.UI_MODE_NIGHT_NO || nightModeFlags == Configuration.UI_MODE_NIGHT_UNDEFINED) {
+                window.setStatusBarColor(getResources().getColor(R.color.header_bg_light));
             }
-            if (nightModeFlags== Configuration.UI_MODE_NIGHT_YES) {
-                window.setStatusBarColor(getResources().getColor(R.color.my_dark_primary));
+            if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
+                window.setStatusBarColor(getResources().getColor(R.color.header_bg_dark));
+            }
+
+            LinearLayout login_page_theme_bg = findViewById(R.id.login_page_theme_bg);
+            login_page_theme_bg.setBackgroundResource(R.drawable.login_page_shap);
+
+            Button login_btn1 = findViewById(R.id.login_btn);
+            login_btn1.setBackgroundResource(R.drawable.login_btn_shap);
+
+            LinearLayout textbox_bg1 = findViewById(R.id.textbox_bg1);
+            textbox_bg1.setBackgroundResource(R.drawable.login_textbox_shap);
+
+            LinearLayout textbox_bg2 = findViewById(R.id.textbox_bg2);
+            textbox_bg2.setBackgroundResource(R.drawable.login_textbox_shap);
+
+            GradientDrawable drawable = (GradientDrawable) login_page_theme_bg.getBackground();
+            GradientDrawable drawable1 = (GradientDrawable) login_btn1.getBackground();
+            GradientDrawable drawable2 = (GradientDrawable) textbox_bg1.getBackground();
+            GradientDrawable drawable3 = (GradientDrawable) textbox_bg2.getBackground();
+            if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
+                drawable.setColor(getResources().getColor(R.color.header_bg_dark));
+                drawable1.setColor(getResources().getColor(R.color.button_bg_dark));
+                drawable2.setColor(getResources().getColor(R.color.textbox_bg_dark));
+                drawable3.setColor(getResources().getColor(R.color.textbox_bg_dark));
             }
         }
 

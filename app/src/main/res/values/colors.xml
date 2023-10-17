@@ -6,11 +6,26 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
 
-    <color name="my_light_primary">#10847e</color>
-    <color name="my_dark_primary">#000000</color>
+    <color name="header_bg_light">#10847e</color>
+    <color name="header_bg_dark">#362222</color>
 
-    <color name="all_page_background_light">#ffffff</color>
-    <color name="all_page_background_dark">#5A5A5A</color>
+    <color name="page_bg_light">#ffffff</color>
+    <color name="page_bg_dark">#171010</color>
+
+    <color name="button_bg_light">#10847e</color>
+    <color name="button_bg_dark">#362222</color>
+
+    <color name="textbox_fafa_icon_light">#171010</color>
+    <color name="textbox_fafa_icon_dark">#D5D5D5</color>
+
+    <color name="textbox_bg_light">#D5D5D5</color>
+    <color name="textbox_bg_dark">#423F3E</color>
+
+    <color name="textbox_textclr_light">#171010</color>
+    <color name="textbox_textclr_dark">#D5D5D5</color>
+
+    <color name="textbox_textclr_hint_light">#727272</color>
+    <color name="textbox_textclr_hint_dark">#C5C2C2</color>
 
     <color name="list_item_bg_light_primary">#dadada</color>
     <color name="list_item_bg_dark_primary">#000000</color>

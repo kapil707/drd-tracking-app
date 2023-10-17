@@ -68,10 +68,10 @@ public class Home_page extends AppCompatActivity {
 
             int nightModeFlags = getApplicationContext().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
             if (nightModeFlags== Configuration.UI_MODE_NIGHT_NO || nightModeFlags== Configuration.UI_MODE_NIGHT_UNDEFINED) {
-                window.setStatusBarColor(getResources().getColor(R.color.my_light_primary));
+                window.setStatusBarColor(getResources().getColor(R.color.header_bg_light));
             }
             if (nightModeFlags== Configuration.UI_MODE_NIGHT_YES) {
-                window.setStatusBarColor(getResources().getColor(R.color.my_dark_primary));
+                window.setStatusBarColor(getResources().getColor(R.color.header_bg_dark));
             }
         }
         binding.appBarHomePage.fab.setOnClickListener(new View.OnClickListener() {
