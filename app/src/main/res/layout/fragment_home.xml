@@ -10,7 +10,7 @@
     <com.denzcoskun.imageslider.ImageSlider
         android:id="@+id/image_slider"
         android:layout_width="wrap_content"
-        android:layout_height="300dp"
+        android:layout_height="230dp"
         app:iss_auto_cycle="true"
         app:iss_period="1000"
         app:iss_delay="1000"

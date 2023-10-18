@@ -5,6 +5,10 @@
             <item name="colorPrimary">@color/header_bg_light</item>
     </style>
 
+    <style name="nav_bar_header_theme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:background">@color/nav_bar_header_bg_light</item>
+    </style>
+
     <style name="header_login_page" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="color">@color/page_bg_dark</item>
     </style>
@@ -29,6 +33,10 @@
     <style name="textbox_textclr_theme" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:textColor">@color/textbox_textclr_light</item>
         <item name="android:textColorHint">@color/textbox_textclr_hint_light</item>
+    </style>
+
+    <style name="home_page_camra_clr_theme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:background">@color/home_page_camra_clr_light</item>
     </style>
 
     <style name="list_item_bg_theme" parent="Theme.Material3.DayNight.NoActionBar">

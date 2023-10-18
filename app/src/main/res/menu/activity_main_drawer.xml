@@ -6,19 +6,25 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/home_4_svgrepo_com"
             android:title="@string/menu_home" />
+
+        <item
+            android:id="@+id/attendance_btn"
+            android:icon="@drawable/attendance_svgrepo_com"
+            android:title="Attendance" />
+
         <item
             android:id="@+id/nav_delivery_list"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/file_list_svgrepo_com"
             android:title="@string/menu_delivery_list" />
         <item
             android:id="@+id/nav_delivery_done_list"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/folder_check_svgrepo_com"
             android:title="@string/menu_delivery_done_list" />
         <item
             android:id="@+id/logout_btn"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/logout_2_svgrepo_com"
             android:title="@string/menu_logout" />
     </group>
 </menu>

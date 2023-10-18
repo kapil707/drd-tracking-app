@@ -5,6 +5,10 @@
         <item name="colorPrimary">@color/header_bg_dark</item>
     </style>
 
+    <style name="nav_bar_header_theme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:background">@color/nav_bar_header_bg_dark</item>
+    </style>
+
     <style name="header_login_page" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="color">@color/header_bg_dark</item>
     </style>
@@ -33,6 +37,10 @@
 
     <style name="list_item_bg_theme" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:background">@color/list_item_bg_dark_primary</item>
+    </style>
+
+    <style name="home_page_camra_clr_theme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:background">@color/home_page_camra_clr_dark</item>
     </style>
 
     <style name="list_item_bg_theme2" parent="Theme.Material3.DayNight.NoActionBar">

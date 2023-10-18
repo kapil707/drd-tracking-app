@@ -51,6 +51,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityHomePageBinding binding;
+    NavController navController;
     UserSessionManager session;
     String user_code = "",user_altercode="",firebase_token = "";
 
@@ -83,13 +84,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-
-                mGPS_info(); // locacation ati ha iss say scnner open kartay he
-
-                IntentIntegrator intentIntegrator = new IntentIntegrator(Home_page.this);
-                intentIntegrator.setPrompt("Scan a barcode or QR Code");
-                //intentIntegrator.setOrientationLocked(true);
-                intentIntegrator.initiateScan();
+                open_qr_scanner();
             }
         });
 
@@ -98,12 +93,14 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_delivery_list, R.id.nav_delivery_done_list)
+                R.id.nav_home, R.id.nav_delivery_list, R.id.nav_delivery_done_list,R.id.login_btn)
                 .setOpenableLayout(drawer)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home_page);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home_page);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        setNavigationViewListener();
 
         //NavigationView navigationView1 = (NavigationView) findViewById(R.id.nav_view);
         // navigationView.setNavigationItemSelectedListener(this);
@@ -122,7 +119,6 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
         TextView nav_user_email = header.findViewById(R.id.nav_user_email);
         nav_user_email.setText("Code : " + user_altercode);
 
-        setNavigationViewListener();
     }
 
     @Override
@@ -133,6 +129,14 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
         if (id == R.id.logout_btn) {
             //Toast.makeText(getBaseContext(), "Cancelled", Toast.LENGTH_SHORT).show();
             alertMessage_logoutUser();
+        } else {
+            if (id == R.id.attendance_btn) {
+                open_qr_scanner();
+            } else {
+                // Make your navController object final above
+                // or call Navigation.findNavController() again here
+                NavigationUI.onNavDestinationSelected(item, navController);
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -175,6 +179,14 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
     }
 
     // iss say qr code ka json response ata ha
+    private void open_qr_scanner(){
+        mGPS_info(); // locacation ati ha iss say scnner open kartay he
+
+        IntentIntegrator intentIntegrator = new IntentIntegrator(Home_page.this);
+        intentIntegrator.setPrompt("Scan a barcode or QR Code");
+        //intentIntegrator.setOrientationLocked(true);
+        intentIntegrator.initiateScan();
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
