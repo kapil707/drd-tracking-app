@@ -3,9 +3,12 @@ package com.drd.drdtrackingapp;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,9 +39,22 @@ import com.google.zxing.integration.android.IntentResult;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Map;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
@@ -58,6 +74,10 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
     GPSTracker mGPS;
     double latitude1, longitude1;
     String getlatitude = "", getlongitude = "";
+
+    String upload_master_profile_image_api = "";
+    Bitmap bitmap;
+    boolean check = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,6 +139,18 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
         TextView nav_user_email = header.findViewById(R.id.nav_user_email);
         nav_user_email.setText("Code : " + user_altercode);
 
+        TextView edit_profile_btn = header.findViewById(R.id.edit_profile_btn);
+        edit_profile_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                upload_master_profile_image();
+                //Toast.makeText(getBaseContext(), "Cancelled", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        MainActivity ma = new MainActivity();
+        String mainurl = ma.main_url;
+        upload_master_profile_image_api = mainurl + "upload_master_profile_image_api";
     }
 
     @Override
@@ -331,6 +363,130 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
                     Log.e("Bg-service", " " + t.toString());
                 }
             });
+        }
+    }
+
+    public void upload_master_profile_image() {
+        String ConvertImage = null;
+        try {
+            ByteArrayOutputStream byteArrayOutputStreamObject;
+            byteArrayOutputStreamObject = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStreamObject);
+            byte[] byteArrayVar = byteArrayOutputStreamObject.toByteArray();
+            ConvertImage = Base64.encodeToString(byteArrayVar, Base64.DEFAULT);
+        } catch (Exception ee) {
+
+        }
+        final String finalConvertImage = ConvertImage;
+        class AsyncTaskUploadClass extends AsyncTask<Void, Void, String> {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                //progressDialog = ProgressDialog.show(User_image_uploading.this,"Uploading","Please Wait",false,false);
+//                menu_loading1.setVisibility(View.VISIBLE);
+//                UploadImageServer.setVisibility(View.GONE);
+//                UploadImageServer1.setVisibility(View.VISIBLE);
+            }
+            @Override
+            protected String doInBackground(Void... params) {
+                ImageProcessClass imageProcessClass = new ImageProcessClass();
+                HashMap<String, String> HashMapParams = new HashMap<String, String>();
+
+                HashMapParams.put("api_key", "98c08565401579448aad7c64033dcb4081906dcb");
+                HashMapParams.put(ImagePath, finalConvertImage);
+                HashMapParams.put("user_code", user_code);
+                HashMapParams.put("user_altercode", user_altercode);
+                HashMapParams.put("chemist_id", chemist_id);
+                HashMapParams.put("gstvno", gstvno);
+
+                String FinalData = imageProcessClass.ImageHttpRequest(upload_master_profile_image_api, HashMapParams);
+                return FinalData;
+            }
+            @Override
+            protected void onPostExecute(String response) {
+                super.onPostExecute(response);
+                menu_loading1.setVisibility(View.GONE);
+                imageView.setVisibility(View.GONE);
+                try {
+                    int intid = 0;
+                    JSONArray jArray = new JSONArray(response);
+                    for (int i = 0; i < jArray.length(); i++) {
+
+                        JSONObject jsonObject = jArray.getJSONObject(i);
+                        String return_id =  jsonObject.getString("return_id");
+                        String return_message =  jsonObject.getString("return_message");
+
+                        if(return_id.equals("1")){
+                            //get_delivery_order_photo_api();
+                        }
+
+                        //Toast.makeText(this, return_message.toString(), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    // TODO: handle exception
+                    Log.e("Bg-service", "Error parsing data" + e.toString());
+                }
+            }
+        }
+        AsyncTaskUploadClass AsyncTaskUploadClassOBJ = new AsyncTaskUploadClass();
+        AsyncTaskUploadClassOBJ.execute();
+    }
+
+    public class ImageProcessClass {
+        public String ImageHttpRequest(String requestURL, HashMap<String, String> PData) {
+            StringBuilder stringBuilder = new StringBuilder();
+            try {
+                URL url;
+                HttpURLConnection httpURLConnectionObject;
+                OutputStream OutPutStream;
+                BufferedWriter bufferedWriterObject;
+                BufferedReader bufferedReaderObject;
+                int RC;
+                url = new URL(requestURL);
+                httpURLConnectionObject = (HttpURLConnection) url.openConnection();
+                httpURLConnectionObject.setReadTimeout(19000);
+                httpURLConnectionObject.setConnectTimeout(19000);
+                httpURLConnectionObject.setRequestMethod("POST");
+                httpURLConnectionObject.setDoInput(true);
+                httpURLConnectionObject.setDoOutput(true);
+                OutPutStream = httpURLConnectionObject.getOutputStream();
+                bufferedWriterObject = new BufferedWriter(
+                        new OutputStreamWriter(OutPutStream, "UTF-8"));
+                bufferedWriterObject.write(bufferedWriterDataFN(PData));
+                bufferedWriterObject.flush();
+                bufferedWriterObject.close();
+                OutPutStream.close();
+                RC = httpURLConnectionObject.getResponseCode();
+                if (RC == HttpsURLConnection.HTTP_OK) {
+                    bufferedReaderObject = new BufferedReader(new InputStreamReader(httpURLConnectionObject.getInputStream()));
+                    stringBuilder = new StringBuilder();
+                    String RC2;
+                    while ((RC2 = bufferedReaderObject.readLine()) != null) {
+                        stringBuilder.append(RC2);
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return stringBuilder.toString();
+        }
+
+        private String bufferedWriterDataFN(HashMap<String, String> HashMapParams) throws UnsupportedEncodingException {
+
+            StringBuilder stringBuilderObject;
+            stringBuilderObject = new StringBuilder();
+            for (Map.Entry<String, String> KEY : HashMapParams.entrySet()) {
+                if (check)
+                    check = false;
+                else
+                    stringBuilderObject.append("&");
+
+                stringBuilderObject.append(URLEncoder.encode(KEY.getKey(), "UTF-8"));
+                stringBuilderObject.append("=");
+                stringBuilderObject.append(URLEncoder.encode(KEY.getValue(), "UTF-8"));
+            }
+            return stringBuilderObject.toString();
         }
     }
 }
