@@ -49,7 +49,6 @@ public class UserSessionManager {
         editor.putString(KEY_USERALTERCODE, altercode);
         editor.putString(KEY_PASSWORD, password);
         editor.putString(KEY_USERNAME, user_fname);
-        editor.putString(KEY_USERNAME, user_fname);
         editor.putString(KEY_USERIMAGE, user_image);
         editor.putString(KEY_FIREBASE_TOKEN,firebase_token );
         // commit changes
@@ -91,7 +90,7 @@ public class UserSessionManager {
         user.put(KEY_USERALTERCODE, pref.getString(KEY_USERALTERCODE, null));
         user.put(KEY_PASSWORD, pref.getString(KEY_PASSWORD, null));
         user.put(KEY_USERNAME, pref.getString(KEY_USERNAME, null));
-        user.put(KEY_USERNAME, pref.getString(KEY_USERIMAGE, null));
+        user.put(KEY_USERIMAGE, pref.getString(KEY_USERIMAGE, null));
         user.put(KEY_FIREBASE_TOKEN, pref.getString(KEY_FIREBASE_TOKEN, null));
         return user;
     }

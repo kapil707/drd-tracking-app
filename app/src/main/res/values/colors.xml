@@ -9,6 +9,9 @@
     <color name="nav_bar_header_bg_light">#10847e</color>
     <color name="nav_bar_header_bg_dark">#362222</color>
 
+    <color name="nav_bar_text_light">#ffffff</color>
+    <color name="nav_bar_text_dark">#C3C3C3</color>
+
     <color name="header_bg_light">#10847e</color>
     <color name="header_bg_dark">#362222</color>
 

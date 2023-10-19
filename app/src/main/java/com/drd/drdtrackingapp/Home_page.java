@@ -43,6 +43,7 @@ import com.drd.drdtrackingapp.databinding.ActivityHomePageBinding;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -154,8 +155,14 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
         TextView nav_user_email = header.findViewById(R.id.nav_user_email);
         nav_user_email.setText("Code : " + user_altercode);
 
-        ImageView nav_user_image = header.findViewById(R.id.nav_user_image);
-
+        try {
+            ImageView nav_user_image = header.findViewById(R.id.nav_user_image);
+            Picasso.get().load(user_image).into(nav_user_image);
+        } catch (Exception e) {
+            // TODO: handle exception
+            //mProgressDialog.dismiss();
+            Toast.makeText(getBaseContext(), "error load image", Toast.LENGTH_SHORT).show();
+        }
 
         TextView edit_profile_btn = header.findViewById(R.id.edit_profile_btn);
         edit_profile_btn.setOnClickListener(new View.OnClickListener() {

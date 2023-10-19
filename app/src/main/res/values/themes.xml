@@ -9,6 +9,10 @@
         <item name="android:background">@color/nav_bar_header_bg_light</item>
     </style>
 
+    <style name="nav_bar_text_theme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:textColor">@color/nav_bar_text_light</item>
+    </style>
+
     <style name="header_login_page" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="color">@color/page_bg_dark</item>
     </style>
