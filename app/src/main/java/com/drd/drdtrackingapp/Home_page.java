@@ -1,12 +1,17 @@
 package com.drd.drdtrackingapp;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.format.DateFormat;
 import android.util.Base64;
 import android.util.Log;
@@ -15,13 +20,16 @@ import android.view.View;
 import android.view.Menu;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
 import androidx.navigation.NavController;
@@ -69,7 +77,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
     private ActivityHomePageBinding binding;
     NavController navController;
     UserSessionManager session;
-    String user_code = "",user_altercode="",firebase_token = "";
+    String user_session="",user_code="",user_altercode="",user_password="",user_fname="",user_image="",firebase_token="";
 
     GPSTracker mGPS;
     double latitude1, longitude1;
@@ -78,6 +86,9 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
     String upload_master_profile_image_api = "";
     Bitmap bitmap;
     boolean check = true;
+
+    private static final int CAMERA_REQUEST = 1888;
+    private static final int MY_CAMERA_PERMISSION_CODE = 100;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,10 +103,10 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
             int nightModeFlags = getApplicationContext().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-            if (nightModeFlags== Configuration.UI_MODE_NIGHT_NO || nightModeFlags== Configuration.UI_MODE_NIGHT_UNDEFINED) {
+            if (nightModeFlags == Configuration.UI_MODE_NIGHT_NO || nightModeFlags == Configuration.UI_MODE_NIGHT_UNDEFINED) {
                 window.setStatusBarColor(getResources().getColor(R.color.header_bg_light));
             }
-            if (nightModeFlags== Configuration.UI_MODE_NIGHT_YES) {
+            if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
                 window.setStatusBarColor(getResources().getColor(R.color.header_bg_dark));
             }
         }
@@ -113,7 +124,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_delivery_list, R.id.nav_delivery_done_list,R.id.login_btn)
+                R.id.nav_home, R.id.nav_delivery_list, R.id.nav_delivery_done_list, R.id.login_btn)
                 .setOpenableLayout(drawer)
                 .build();
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home_page);
@@ -125,25 +136,38 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
         //NavigationView navigationView1 = (NavigationView) findViewById(R.id.nav_view);
         // navigationView.setNavigationItemSelectedListener(this);
 
+        /*********************************************************/
         session = new UserSessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
+        user_session = user.get(UserSessionManager.KEY_USERID);
         user_code = user.get(UserSessionManager.KEY_USERCODE);
         user_altercode = user.get(UserSessionManager.KEY_USERALTERCODE);
+        user_fname = user.get(UserSessionManager.KEY_USERNAME);
+        user_image = user.get(UserSessionManager.KEY_USERIMAGE);
         firebase_token = user.get(UserSessionManager.KEY_FIREBASE_TOKEN);
-        String user_name = user.get(UserSessionManager.KEY_USERNAME);
+        /*********************************************************/
 
         View header = navigationView.getHeaderView(0);
         TextView nav_user_name = header.findViewById(R.id.nav_user_name);
-        nav_user_name.setText(user_name);
+        nav_user_name.setText(user_fname);
 
         TextView nav_user_email = header.findViewById(R.id.nav_user_email);
         nav_user_email.setText("Code : " + user_altercode);
 
+        ImageView nav_user_image = header.findViewById(R.id.nav_user_image);
+
+
         TextView edit_profile_btn = header.findViewById(R.id.edit_profile_btn);
         edit_profile_btn.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
-                upload_master_profile_image();
+                if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
+                } else {
+                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                }
                 //Toast.makeText(getBaseContext(), "Cancelled", Toast.LENGTH_SHORT).show();
             }
         });
@@ -219,9 +243,8 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
         //intentIntegrator.setOrientationLocked(true);
         intentIntegrator.initiateScan();
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+
+    public void attendance_upload(int requestCode, int resultCode,Intent data){
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         // if the intentResult is null then
         // toast a message as "cancelled"
@@ -250,8 +273,6 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
                     Toast.makeText(getApplicationContext(), "Qr Scanner error", Toast.LENGTH_LONG).show();
                 }
             }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -366,6 +387,35 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
         }
     }
 
+
+    /*********image upload*********************/
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_CAMERA_PERMISSION_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            } else {
+                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Toast.makeText(getBaseContext(),String.valueOf(requestCode), Toast.LENGTH_LONG).show();
+        if (requestCode == CAMERA_REQUEST && requestCode == 1888) {
+            bitmap = (Bitmap) data.getExtras().get("data");
+            upload_master_profile_image();
+        }else{
+            attendance_upload(requestCode, resultCode, data);
+        }
+    }
+
     public void upload_master_profile_image() {
         String ConvertImage = null;
         try {
@@ -382,10 +432,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                //progressDialog = ProgressDialog.show(User_image_uploading.this,"Uploading","Please Wait",false,false);
-//                menu_loading1.setVisibility(View.VISIBLE);
-//                UploadImageServer.setVisibility(View.GONE);
-//                UploadImageServer1.setVisibility(View.VISIBLE);
+                Toast.makeText(getBaseContext(), "Start Uploading", Toast.LENGTH_LONG).show();
             }
             @Override
             protected String doInBackground(Void... params) {
@@ -393,11 +440,9 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
                 HashMap<String, String> HashMapParams = new HashMap<String, String>();
 
                 HashMapParams.put("api_key", "98c08565401579448aad7c64033dcb4081906dcb");
-                HashMapParams.put(ImagePath, finalConvertImage);
+                HashMapParams.put("image_path", finalConvertImage);
                 HashMapParams.put("user_code", user_code);
                 HashMapParams.put("user_altercode", user_altercode);
-                HashMapParams.put("chemist_id", chemist_id);
-                HashMapParams.put("gstvno", gstvno);
 
                 String FinalData = imageProcessClass.ImageHttpRequest(upload_master_profile_image_api, HashMapParams);
                 return FinalData;
@@ -405,8 +450,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
             @Override
             protected void onPostExecute(String response) {
                 super.onPostExecute(response);
-                menu_loading1.setVisibility(View.GONE);
-                imageView.setVisibility(View.GONE);
+                //Toast.makeText(getBaseContext(), response, Toast.LENGTH_LONG).show();
                 try {
                     int intid = 0;
                     JSONArray jArray = new JSONArray(response);
@@ -415,12 +459,9 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
                         JSONObject jsonObject = jArray.getJSONObject(i);
                         String return_id =  jsonObject.getString("return_id");
                         String return_message =  jsonObject.getString("return_message");
+                        String user_image =  jsonObject.getString("user_image");
 
-                        if(return_id.equals("1")){
-                            //get_delivery_order_photo_api();
-                        }
-
-                        //Toast.makeText(this, return_message.toString(), Toast.LENGTH_LONG).show();
+                        session.createUserLoginSession(user_session,user_code,user_altercode,user_password,user_fname,user_image,firebase_token);
                     }
                 } catch (Exception e) {
                     // TODO: handle exception

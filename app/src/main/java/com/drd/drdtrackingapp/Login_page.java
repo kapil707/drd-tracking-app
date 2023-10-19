@@ -58,11 +58,12 @@ public class Login_page extends AppCompatActivity {
     FusedLocationProviderClient mFusedLocationClient;
     ProgressBar progressBar2;
 
-    Button login_btn,login_btn1;
+    Button login_btn, login_btn1;
     TextView alert;
-    EditText user_name,password;
-    String user_name1 = "",password1 = "",firebase_token = "";
+    EditText user_name, password;
+    String user_name1 = "", password1 = "", firebase_token = "";
     UserSessionManager session;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -170,7 +171,7 @@ public class Login_page extends AppCompatActivity {
                                 NetworkInfo ni = cm.getActiveNetworkInfo();
                                 if (ni != null) {
                                     try {
-                                        login_funcation(user_name1,password1,firebase_token);
+                                        login_funcation(user_name1, password1, firebase_token);
                                         login_btn1.setVisibility(View.VISIBLE);
                                         progressBar2.setVisibility(View.VISIBLE);
                                         login_btn.setVisibility(View.GONE);
@@ -210,9 +211,9 @@ public class Login_page extends AppCompatActivity {
         });
     }
 
-    private void login_funcation(String _user_name,String _password,String _firebase_token){
+    private void login_funcation(String _user_name, String _password, String _firebase_token) {
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-        Call<ResponseBody> call = apiService.get_login_api("98c08565401579448aad7c64033dcb4081906dcb", _user_name,_password,_firebase_token);
+        Call<ResponseBody> call = apiService.get_login_api("98c08565401579448aad7c64033dcb4081906dcb", _user_name, _password, _firebase_token);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -235,55 +236,56 @@ public class Login_page extends AppCompatActivity {
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Handle network failures or other errors
                 Log.e("Bg-service", " " + t.toString());
+
+                login_btn1.setVisibility(View.GONE);
+                progressBar2.setVisibility(View.GONE);
+                login_btn.setVisibility(View.VISIBLE);
             }
         });
     }
 
-    private void writeTv(String response){
+    private void writeTv(String response) {
         //https://demonuts.com/retrofit-android-get-json/
         //Log.e("Bg-service", response.toString());
         try {
             JSONArray jArray = new JSONArray(response);
-            for (int i = 0; i < jArray.length(); i++)
-            {
-                JSONObject jsonObject   = jArray.getJSONObject(i);
-                String user_session     = jsonObject.getString("user_session");
-                String user_fname       = jsonObject.getString("user_fname");
-                String user_code        = jsonObject.getString("user_code");
-                String user_altercode   = jsonObject.getString("user_altercode");
-                String user_password    = jsonObject.getString("user_password");
-                String user_alert       = jsonObject.getString("user_alert");
-                String user_return      = jsonObject.getString("user_return");
+            for (int i = 0; i < jArray.length(); i++) {
+                JSONObject jsonObject = jArray.getJSONObject(i);
+                String return_id = jsonObject.getString("return_id");
+                String return_message = jsonObject.getString("return_message");
+
+                String user_session = jsonObject.getString("user_session");
+                String user_fname = jsonObject.getString("user_fname");
+                String user_code = jsonObject.getString("user_code");
+                String user_altercode = jsonObject.getString("user_altercode");
+                String user_password = jsonObject.getString("user_password");
+                String user_image = jsonObject.getString("user_image");
 
                 //Log.e("Bg-service", user_session);
 
-                if(user_return.equals("1"))
-                {
-                    Toast.makeText(Login_page.this,user_alert,Toast.LENGTH_SHORT).show();
-                    alert.setText(user_alert);
+                if (return_id.equals("1")) {
+                    Toast.makeText(Login_page.this, return_message, Toast.LENGTH_SHORT).show();
+                    alert.setText(return_message);
 
-                    session.createUserLoginSession(user_session,user_code,user_altercode,user_password,user_fname,firebase_token);
+                    session.createUserLoginSession(user_session, user_code, user_altercode, user_password, user_fname, user_image, firebase_token);
 
                     Intent in = new Intent();
-                    in.setClass(Login_page.this,Home_page.class);
+                    in.setClass(Login_page.this, Home_page.class);
                     startActivity(in);
                     finish();
-                }
-                else
-                {
-                    Toast.makeText(Login_page.this,user_alert,Toast.LENGTH_SHORT).show();
-                    alert.setText(user_alert);
+                } else {
+                    Toast.makeText(Login_page.this, return_message, Toast.LENGTH_SHORT).show();
+                    alert.setText(return_message);
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // TODO: handle exception
-            Log.e("Bg-service", "Error parsing data"+e.toString());
-        }
+            Log.e("Bg-service", "Error parsing data" + e.toString());
 
-        login_btn1.setVisibility(View.GONE);
-        progressBar2.setVisibility(View.GONE);
-        login_btn.setVisibility(View.VISIBLE);
+            login_btn1.setVisibility(View.GONE);
+            progressBar2.setVisibility(View.GONE);
+            login_btn.setVisibility(View.VISIBLE);
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -315,7 +317,7 @@ public class Login_page extends AppCompatActivity {
     private void requestPermissions() {
         ActivityCompat.requestPermissions(
                 this,
-                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_BACKGROUND_LOCATION},
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION},
                 PERMISSION_ID
         );
     }
@@ -334,8 +336,9 @@ public class Login_page extends AppCompatActivity {
                 LocationManager.NETWORK_PROVIDER
         );
     }
+
     @SuppressLint("MissingPermission")
-    private void requestNewLocationData(){
+    private void requestNewLocationData() {
 
         LocationRequest mLocationRequest = new LocationRequest();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);

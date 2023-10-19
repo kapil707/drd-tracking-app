@@ -29,6 +29,7 @@ public class UserSessionManager {
     public static final String KEY_USERALTERCODE = "useraltercode";
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_USERNAME = "username";
+    public static final String KEY_USERIMAGE = "userimage";
     public static final String KEY_FIREBASE_TOKEN = "firebase_token";
 
     // Constructor
@@ -39,7 +40,7 @@ public class UserSessionManager {
     }
 
     //Create login session
-    public void createUserLoginSession(String userid,String code,String altercode,String password,String user_fname,String firebase_token){
+    public void createUserLoginSession(String userid,String code,String altercode,String password,String user_fname,String user_image,String firebase_token){
         // Storing login value as TRUE
         editor.putBoolean(IS_USER_LOGIN, true);
 
@@ -49,6 +50,7 @@ public class UserSessionManager {
         editor.putString(KEY_PASSWORD, password);
         editor.putString(KEY_USERNAME, user_fname);
         editor.putString(KEY_USERNAME, user_fname);
+        editor.putString(KEY_USERIMAGE, user_image);
         editor.putString(KEY_FIREBASE_TOKEN,firebase_token );
         // commit changes
         editor.commit();
@@ -89,6 +91,7 @@ public class UserSessionManager {
         user.put(KEY_USERALTERCODE, pref.getString(KEY_USERALTERCODE, null));
         user.put(KEY_PASSWORD, pref.getString(KEY_PASSWORD, null));
         user.put(KEY_USERNAME, pref.getString(KEY_USERNAME, null));
+        user.put(KEY_USERNAME, pref.getString(KEY_USERIMAGE, null));
         user.put(KEY_FIREBASE_TOKEN, pref.getString(KEY_FIREBASE_TOKEN, null));
         return user;
     }
