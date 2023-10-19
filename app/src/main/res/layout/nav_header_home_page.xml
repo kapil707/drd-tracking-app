@@ -52,4 +52,5 @@
         android:layout_height="wrap_content"
         android:theme="@style/nav_bar_text_theme"
         android:text="@string/nav_header_title"/>
+
 </LinearLayout>
