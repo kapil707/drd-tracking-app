@@ -15,6 +15,11 @@
             android:title="Attendance" />
 
         <item
+            android:id="@+id/meter_btn"
+            android:icon="@drawable/speed_svgrepo_com"
+            android:title="Meter Photo" />
+
+        <item
             android:id="@+id/nav_delivery_list"
             android:icon="@drawable/file_list_svgrepo_com"
             android:title="@string/menu_delivery_list" />

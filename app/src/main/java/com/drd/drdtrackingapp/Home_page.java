@@ -196,9 +196,16 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
             if (id == R.id.attendance_btn) {
                 open_qr_scanner();
             } else {
-                // Make your navController object final above
-                // or call Navigation.findNavController() again here
-                NavigationUI.onNavDestinationSelected(item, navController);
+                if (id == R.id.meter_btn) {
+                    Intent in = new Intent();
+                    in.setClass(getBaseContext(), Meter_photo.class);
+                    //in.putExtra("","");
+                    startActivity(in);
+                } else {
+                    // Make your navController object final above
+                    // or call Navigation.findNavController() again here
+                    NavigationUI.onNavDestinationSelected(item, navController);
+                }
             }
         }
 

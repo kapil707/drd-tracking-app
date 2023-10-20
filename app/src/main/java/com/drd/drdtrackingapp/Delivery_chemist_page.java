@@ -78,15 +78,13 @@ public class Delivery_chemist_page extends AppCompatActivity {
     GridView gridview;
     Delivery_chemist_photo_Adapter adapter;
     List<Dilivery_chemist_photo_get_or_set> get_set = new ArrayList<Dilivery_chemist_photo_get_or_set>();
-
-
     GPSTracker mGPS;
     double latitude1, longitude1;
     String getlatitude = "", getlongitude = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.delivery_chemist_page);
+        setContentView(R.layout.delivery_chemist_photo);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
