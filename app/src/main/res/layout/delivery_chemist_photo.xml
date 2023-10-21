@@ -51,7 +51,7 @@
                     android:layout_marginLeft="10dip"
                     android:layout_marginRight="10dip"
                     android:layout_weight="1"
-                    android:background="@drawable/login_btn_shap"
+                    android:background="@drawable/button_shap"
                     android:text="Take Photo"
                     android:textAllCaps="false"
                     android:textColor="#ffffff" />
@@ -64,7 +64,7 @@
                     android:layout_marginLeft="10dip"
                     android:layout_marginRight="10dip"
                     android:layout_weight="1"
-                    android:background="@drawable/login_btn_shap"
+                    android:background="@drawable/button_shap"
                     android:text="Select Photo"
                     android:textAllCaps="false"
                     android:textColor="#ffffff" />
@@ -78,7 +78,7 @@
                 android:layout_marginTop="10dip"
                 android:layout_marginRight="10dip"
                 android:layout_marginBottom="10dip"
-                android:background="@drawable/login_btn_shap"
+                android:background="@drawable/button_shap"
                 android:text="Upload Photo"
                 android:textAllCaps="false"
                 android:textColor="#ffffff" />
@@ -91,7 +91,7 @@
                 android:layout_marginTop="10dip"
                 android:layout_marginRight="10dip"
                 android:layout_marginBottom="10dip"
-                android:background="@drawable/login_btn_shap_dis"
+                android:background="@drawable/button_dis_shap"
                 android:text="Upload Photo"
                 android:textAllCaps="false"
                 android:textColor="#ffffff"
@@ -139,7 +139,7 @@
                 android:layout_marginTop="10dip"
                 android:layout_marginRight="10dip"
                 android:layout_marginBottom="10dip"
-                android:background="@drawable/login_btn_shap"
+                android:background="@drawable/button_shap"
                 android:text="Complete Order"
                 android:textAllCaps="false"
                 android:textColor="#ffffff" />

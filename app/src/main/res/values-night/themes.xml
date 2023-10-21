@@ -25,18 +25,36 @@
         <item name="android:textColor">@color/page_textclr_dark</item>
     </style>
 
+    <style name="button_theme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:textColor">@color/button_textclr_dark</item>
+        <item name="android:backgroundTint">@color/button_bg_dark</item>
+    </style>
+
+    <style name="button_dis_theme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:textColor">@color/button_dis_textclr_dark</item>
+        <item name="android:backgroundTint">@color/button_dis_bg_dark</item>
+    </style>
+
     <style name="textbox_theme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:tint">@color/textbox_bg_dark</item>
         <item name="android:background">@color/textbox_bg_dark</item>
+        <item name="android:textColor">@color/textbox_textclr_dark</item>
+        <item name="android:textColorHint">@color/textbox_textclr_hint_dark</item>
+    </style>
+
+    <style name="textbox_shap_theme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:tint">@color/textbox_bg_dark</item>
+        <item name="android:background">@color/textbox_bg_dark</item>
+        <item name="android:color">@color/textbox_bg_dark</item>
+    </style>
+
+    <style name="textbox_fafa_theme" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:tint">@color/textbox_fafa_icon_dark</item>
+        <item name="android:background">@color/textbox_bg_dark</item>
     </style>
 
     <style name="textbox_border_theme" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="color">@color/header_bg_dark</item>
-    </style>
-
-    <style name="textbox_textclr_theme" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="android:textColor">@color/textbox_textclr_dark</item>
-        <item name="android:textColorHint">@color/textbox_textclr_hint_dark</item>
     </style>
 
     <style name="list_item_bg_theme" parent="Theme.Material3.DayNight.NoActionBar">

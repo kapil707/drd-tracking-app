@@ -25,18 +25,36 @@
         <item name="android:textColor">@color/page_textclr_light</item>
     </style>
 
+    <style name="button_theme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:textColor">@color/button_textclr_light</item>
+        <item name="android:backgroundTint">@color/button_bg_light</item>
+    </style>
+
+    <style name="button_dis_theme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:textColor">@color/button_dis_textclr_light</item>
+        <item name="android:backgroundTint">@color/button_dis_bg_light</item>
+    </style>
+
     <style name="textbox_theme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:tint">@color/textbox_bg_light</item>
         <item name="android:background">@color/textbox_bg_light</item>
+        <item name="android:textColor">@color/textbox_textclr_light</item>
+        <item name="android:textColorHint">@color/textbox_textclr_hint_light</item>
+    </style>
+
+    <style name="textbox_shap_theme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:tint">@color/textbox_bg_light</item>
+        <item name="android:background">@color/textbox_bg_light</item>
+        <item name="android:color">@color/textbox_bg_light</item>
+    </style>
+
+    <style name="textbox_fafa_theme" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:tint">@color/textbox_fafa_icon_light</item>
+        <item name="android:background">@color/textbox_bg_light</item>
     </style>
 
     <style name="textbox_border_theme" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="color">@color/header_bg_light</item>
-    </style>
-
-    <style name="textbox_textclr_theme" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="android:textColor">@color/textbox_textclr_light</item>
-        <item name="android:textColorHint">@color/textbox_textclr_hint_light</item>
     </style>
 
     <style name="home_page_camra_clr_theme" parent="Theme.Material3.DayNight.NoActionBar">

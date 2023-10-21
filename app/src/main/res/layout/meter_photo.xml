@@ -36,7 +36,7 @@
                 android:textAllCaps="false"
                 android:textColor="#ffffff"
                 android:text="Take Photo"
-                android:background="@drawable/login_btn_shap"
+                android:background="@drawable/button_shap"
                 android:drawableLeft="@drawable/baseline_camera_alt_24" />
 
         <LinearLayout
@@ -47,7 +47,7 @@
             android:layout_marginTop="10dip"
             android:layout_marginRight="10dip"
             android:orientation="horizontal"
-            android:background="@drawable/login_textbox_shap"
+            android:background="@drawable/textbox_shap"
             android:elevation="2dp">
             <EditText
                 android:id="@+id/meter_text"
@@ -59,7 +59,7 @@
                 android:background="@null"
                 android:ems="10"
                 android:inputType="textEmailAddress"
-                android:theme="@style/textbox_textclr_theme"/>
+                style="@style/textbox_theme"/>
         </LinearLayout>
 
         <Button
@@ -70,7 +70,7 @@
             android:layout_marginTop="10dip"
             android:layout_marginRight="10dip"
             android:layout_marginBottom="10dip"
-            android:background="@drawable/login_btn_shap"
+            android:background="@drawable/button_shap"
             android:text="Upload Photo"
             android:textAllCaps="false"
             android:textColor="#ffffff" />
@@ -83,7 +83,7 @@
             android:layout_marginTop="10dip"
             android:layout_marginRight="10dip"
             android:layout_marginBottom="10dip"
-            android:background="@drawable/login_btn_shap_dis"
+            android:background="@drawable/button_dis_shap"
             android:text="Upload Photo"
             android:textAllCaps="false"
             android:textColor="#ffffff"

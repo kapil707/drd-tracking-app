@@ -30,15 +30,17 @@
                 android:orientation="vertical"
                 android:padding="10dip">
 
+
                 <LinearLayout
                     android:id="@+id/textbox_bg1"
+                    app:backgroundTint="@null"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:orientation="horizontal"
                     android:layout_marginLeft="15dip"
                     android:layout_marginTop="15dip"
                     android:layout_marginRight="15dip"
-                    android:orientation="horizontal"
-                    android:background="@drawable/login_textbox_shap"
+                    android:background="@drawable/textbox_shap"
                     android:elevation="2dp">
 
                     <ImageView
@@ -48,7 +50,7 @@
                         android:layout_width="30dip"
                         android:layout_height="30dip"
                         app:srcCompat="@drawable/user_shield_alt_1_svgrepo_com"
-                        android:theme="@style/textbox_theme" />
+                        android:theme="@style/textbox_fafa_theme" />
 
                     <EditText
                         android:id="@+id/user_name"
@@ -60,9 +62,9 @@
                         android:ems="10"
                         android:hint="Enter username"
                         android:inputType="textEmailAddress"
-                        android:theme="@style/textbox_textclr_theme"></EditText>
+                        style="@style/textbox_theme"></EditText>
 
-                </LinearLayout>
+                    </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/page_hr_line"
@@ -80,11 +82,11 @@
                     android:id="@+id/textbox_bg2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:orientation="horizontal"
                     android:layout_marginLeft="15dip"
                     android:layout_marginTop="15dip"
                     android:layout_marginRight="15dip"
-                    android:orientation="horizontal"
-                    android:background="@drawable/login_textbox_shap"
+                    android:background="@drawable/textbox_shap"
                     android:elevation="2dp">
 
                     <ImageView
@@ -94,7 +96,7 @@
                         android:layout_width="30dip"
                         android:layout_height="30dip"
                         app:srcCompat="@drawable/lock_alt_svgrepo_com"
-                        android:theme="@style/textbox_theme"/>
+                        android:theme="@style/textbox_fafa_theme"/>
 
                     <EditText
                         android:id="@+id/user_password"
@@ -106,7 +108,7 @@
                         android:background="@null"
                         android:ems="10"
                         android:hint="Enter password"
-                        android:theme="@style/textbox_textclr_theme"
+                        style="@style/textbox_theme"
                         android:inputType="textPassword"/>
 
                     <ImageView
@@ -116,7 +118,7 @@
                         android:layout_height="30dip"
                         android:visibility="gone"
                         app:srcCompat="@drawable/baseline_remove_red_eye_24"
-                        android:theme="@style/textbox_theme"/>
+                        android:theme="@style/textbox_fafa_theme"/>
 
                     <ImageView
                         android:id="@+id/eyes1"
@@ -125,7 +127,7 @@
                         android:layout_height="30dip"
                         app:srcCompat="@drawable/eye_hide_svgrepo_com"
                         android:layout_marginRight="10dip"
-                        android:theme="@style/textbox_theme"/>
+                        android:theme="@style/textbox_fafa_theme"/>
                 </LinearLayout>
 
                 <TextView
@@ -144,8 +146,9 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     app:backgroundTint="@null"
-                    android:background="@drawable/login_btn_shap"
+                    android:background="@drawable/button_shap"
                     android:text="Login"
+                    style="@style/button_theme"
                     android:textColor="#ffffff"
                     android:layout_marginTop="15dip"
                     android:layout_marginLeft="15dip"
@@ -157,9 +160,9 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     app:backgroundTint="@null"
-                    android:background="@drawable/login_btn_shap_dis"
+                    android:background="@drawable/button_dis_shap"
                     android:text="Login"
-                    android:textColor="#ffffff"
+                    style="@style/button_dis_theme"
                     android:layout_marginTop="15dip"
                     android:layout_marginLeft="15dip"
                     android:layout_marginRight="15dip"

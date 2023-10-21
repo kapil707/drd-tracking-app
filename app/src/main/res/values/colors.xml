@@ -24,6 +24,15 @@
     <color name="button_bg_light">#10847e</color>
     <color name="button_bg_dark">#362222</color>
 
+    <color name="button_textclr_light">#171010</color>
+    <color name="button_textclr_dark">#D5D5D5</color>
+
+    <color name="button_dis_bg_light">#D5D5D5</color>
+    <color name="button_dis_bg_dark">#423F3E</color>
+
+    <color name="button_dis_textclr_light">#171010</color>
+    <color name="button_dis_textclr_dark">#D5D5D5</color>
+
     <color name="page_hr_bg_light">#D5D5D5</color>
     <color name="page_hr_bg_dark">#423F3E</color>
 

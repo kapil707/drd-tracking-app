@@ -82,10 +82,10 @@ public class Meter_photo extends AppCompatActivity {
             }
 
             Button login_btn1 = findViewById(R.id.buttonUpload);
-            login_btn1.setBackgroundResource(R.drawable.login_btn_shap);
+            login_btn1.setBackgroundResource(R.drawable.button_shap);
 
             LinearLayout textbox_bg1 = findViewById(R.id.textbox_bg1);
-            textbox_bg1.setBackgroundResource(R.drawable.login_textbox_shap);
+            textbox_bg1.setBackgroundResource(R.drawable.textbox_shap);
 
             GradientDrawable drawable1 = (GradientDrawable) login_btn1.getBackground();
             GradientDrawable drawable2 = (GradientDrawable) textbox_bg1.getBackground();
