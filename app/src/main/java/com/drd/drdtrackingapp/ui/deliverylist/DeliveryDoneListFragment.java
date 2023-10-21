@@ -85,9 +85,7 @@ public class DeliveryDoneListFragment extends Fragment {
     }
 
     private void delivery_done_api() {
-        Toast.makeText(getContext(), "deliver_list_api working", Toast.LENGTH_SHORT).show();
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-
         Call<ResponseBody> call = apiService.get_delivery_order_done_api("98c08565401579448aad7c64033dcb4081906dcb", user_code, user_altercode);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -103,7 +101,6 @@ public class DeliveryDoneListFragment extends Fragment {
                     // Handle error response
                 }
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Handle network failures or other errors

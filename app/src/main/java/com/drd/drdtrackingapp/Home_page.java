@@ -84,7 +84,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
     double latitude1, longitude1;
     String getlatitude = "", getlongitude = "";
 
-    String upload_master_profile_image_api = "";
+    String upload_profile_image_api = "";
     Bitmap bitmap;
     boolean check = true;
 
@@ -181,7 +181,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
 
         MainActivity ma = new MainActivity();
         String mainurl = ma.main_url;
-        upload_master_profile_image_api = mainurl + "upload_master_profile_image_api";
+        upload_profile_image_api = mainurl + "upload_profile_image_api";
     }
 
     @Override
@@ -458,7 +458,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
                 HashMapParams.put("user_code", user_code);
                 HashMapParams.put("user_altercode", user_altercode);
 
-                String FinalData = imageProcessClass.ImageHttpRequest(upload_master_profile_image_api, HashMapParams);
+                String FinalData = imageProcessClass.ImageHttpRequest(upload_profile_image_api, HashMapParams);
                 return FinalData;
             }
             @Override

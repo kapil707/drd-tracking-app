@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -64,7 +65,6 @@ public class Delivery_chemist_page extends AppCompatActivity {
     UserSessionManager session;
     String user_code="",user_altercode = "";
     String chemist_id = "", gstvno = "";
-
     private static final int CAMERA_REQUEST = 1888;
     private ImageView imageView;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
@@ -96,6 +96,14 @@ public class Delivery_chemist_page extends AppCompatActivity {
             }
             if (nightModeFlags== Configuration.UI_MODE_NIGHT_YES) {
                 window.setStatusBarColor(getResources().getColor(R.color.header_bg_dark));
+            }
+
+            LinearLayout textbox_bg1 = findViewById(R.id.textbox_bg1);
+            textbox_bg1.setBackgroundResource(R.drawable.textbox_shap);
+
+            GradientDrawable drawable2 = (GradientDrawable) textbox_bg1.getBackground();
+            if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
+                drawable2.setColor(getResources().getColor(R.color.textbox_bg_dark));
             }
         }
 
@@ -398,9 +406,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
     }
 
     private void get_delivery_order_photo_api(){
-        Toast.makeText(Delivery_chemist_page.this,"deliver_list_api working",Toast.LENGTH_SHORT).show();
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-
         Call<ResponseBody> call = apiService.get_delivery_order_photo_api("98c08565401579448aad7c64033dcb4081906dcb",user_code,user_altercode,chemist_id,gstvno);
         //Call<ResponseBody> call = apiService.testing("loginRequest");
         call.enqueue(new Callback<ResponseBody>() {
@@ -409,9 +415,6 @@ public class Delivery_chemist_page extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     // Handle success response
                     // response.body() contains the response data
-
-                    Toast.makeText(Delivery_chemist_page.this,"show_rider_chemist_photo_api onResponse",Toast.LENGTH_SHORT).show();
-
                     try {
                         writeTv(response.body().string());
                     } catch (IOException e) {
@@ -421,7 +424,6 @@ public class Delivery_chemist_page extends AppCompatActivity {
                     // Handle error response
                 }
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Handle network failures or other errors
@@ -500,12 +502,10 @@ public class Delivery_chemist_page extends AppCompatActivity {
     }
 
     private void upload_delivery_order_completed_api(){
-        Toast.makeText(Delivery_chemist_page.this,"deliver_list_api working",Toast.LENGTH_SHORT).show();
-        ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-
         EditText enter_remarks = findViewById(R.id.enter_remarks);
         String message = enter_remarks.getText().toString();
 
+        ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
         Call<ResponseBody> call = apiService.upload_delivery_order_completed_api("98c08565401579448aad7c64033dcb4081906dcb",user_code,user_altercode,chemist_id,gstvno,message,getlatitude,getlongitude);
         //Call<ResponseBody> call = apiService.testing("loginRequest");
         call.enqueue(new Callback<ResponseBody>() {
@@ -515,18 +515,25 @@ public class Delivery_chemist_page extends AppCompatActivity {
                     // Handle success response
                     // response.body() contains the response data
 
-                    Toast.makeText(Delivery_chemist_page.this,"show_rider_chemist_photo_api onResponse",Toast.LENGTH_SHORT).show();
+                    try {
+                        JSONArray jArray = new JSONArray(response.body().string());
+                        for (int i = 0; i < jArray.length(); i++) {
 
-//                    try {
-//                        writeTv(response.body().string());
-//                    } catch (IOException e) {
-//                        throw new RuntimeException(e);
-//                    }
+                            JSONObject jsonObject = jArray.getJSONObject(i);
+                            String return_id = jsonObject.getString("return_id");
+                            String return_message = jsonObject.getString("return_message");
+
+                            Toast.makeText(Delivery_chemist_page.this, return_message, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                        Log.e("Bg-service", "Error parsing data" + e.toString());
+                    }
+
                 } else {
                     // Handle error response
                 }
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Handle network failures or other errors

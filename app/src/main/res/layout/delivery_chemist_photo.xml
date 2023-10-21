@@ -54,20 +54,21 @@
                     android:background="@drawable/button_shap"
                     android:text="Take Photo"
                     android:textAllCaps="false"
-                    android:textColor="#ffffff" />
+                    android:textColor="#ffffff"
+                    android:drawableLeft="@drawable/baseline_camera_alt_24" />
 
 
                 <Button
                     android:id="@+id/galery_select"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dip"
                     android:layout_marginLeft="10dip"
                     android:layout_marginRight="10dip"
                     android:layout_weight="1"
                     android:background="@drawable/button_shap"
                     android:text="Select Photo"
                     android:textAllCaps="false"
-                    android:textColor="#ffffff" />
+                    android:textColor="#ffffff"/>
             </LinearLayout>
 
             <Button
@@ -109,26 +110,27 @@
             android:visibility="gone">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/medicine_add_qtyadd_shap"
-                android:orientation="horizontal"
-                android:padding="5dip"
+                android:id="@+id/textbox_bg1"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip">
+                android:layout_marginTop="10dip"
+                android:layout_marginRight="10dip"
+                android:orientation="horizontal"
+                android:background="@drawable/textbox_shap"
+                android:elevation="2dp">
 
                 <EditText
                     android:id="@+id/enter_remarks"
                     android:hint="Enter a remark"
-                    android:layout_width="match_parent"
-                    android:layout_height="25dip"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_margin="5dp"
+                    android:layout_margin="10dip"
+                    android:background="@null"
                     android:ems="10"
-                    android:inputType="text"
-                    android:textColor="@color/login_page_color1"
-                    android:textColorHint="@color/login_page_color1"
-                    android:background="@null"/>
+                    android:inputType="textEmailAddress"
+                    style="@style/textbox_theme" />
             </LinearLayout>
 
             <Button
