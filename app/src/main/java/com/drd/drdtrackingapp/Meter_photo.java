@@ -162,7 +162,6 @@ public class Meter_photo extends AppCompatActivity {
                 ImageUploadToServerFunction();
             }
         });
-
     }
 
     @Override
