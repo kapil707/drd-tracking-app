@@ -303,8 +303,6 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
     }
 
     private void upload_attendance_api(String latitude,String longitude,String date,String time,String token_key){
-        Toast.makeText(getApplicationContext(), "work1", Toast.LENGTH_LONG).show();
-
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
         Call<ResponseBody> call = apiService.upload_attendance_api("98c08565401579448aad7c64033dcb4081906dcb", user_code,user_altercode,latitude,longitude,date,time,token_key);
         call.enqueue(new Callback<ResponseBody>() {
@@ -313,18 +311,27 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
                 if (response.isSuccessful()) {
                     // Handle success response
                     // response.body() contains the response data
-                    Toast.makeText(getApplicationContext(), "work2", Toast.LENGTH_LONG).show();
-
                     try {
-                        Toast.makeText(getApplicationContext(), response.body().string(), Toast.LENGTH_LONG).show();
-                        //writeTv(response.body().string());
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+                        JSONArray jArray = new JSONArray(response.body().string());
+                        for (int i = 0; i < jArray.length(); i++) {
+
+                            JSONObject jsonObject = jArray.getJSONObject(i);
+                            String return_id =  jsonObject.getString("return_id");
+                            String return_message =  jsonObject.getString("return_message");
+
+//                            if(return_id.equals("1")){
+//                                finish();
+//                            }
+                            Toast.makeText(getApplicationContext(), return_message.toString(), Toast.LENGTH_LONG).show();
+                        }
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                        Log.e("Bg-service", "Error parsing data" + e.toString());
+                        Toast.makeText(getApplicationContext(),"upload_attendance_api error2", Toast.LENGTH_LONG).show();
                     }
                 } else {
                     // Handle error response
                     Toast.makeText(getApplicationContext(), "upload_attendance_api error", Toast.LENGTH_LONG).show();
-
                 }
             }
 

@@ -269,6 +269,7 @@ public class Meter_photo extends AppCompatActivity {
                 } catch (Exception e) {
                     // TODO: handle exception
                     Log.e("Bg-service", "Error parsing data" + e.toString());
+                    Toast.makeText(getApplicationContext(),"upload_meter_photo_api error2", Toast.LENGTH_LONG).show();
                 }
             }
         }
