@@ -75,6 +75,7 @@ public class DeliveryDoneListFragment extends Fragment {
                 in.setClass(getContext(), Delivery_chemist_page.class);
                 in.putExtra("chemist_id", chemist_id);
                 in.putExtra("gstvno", gstvno);
+                in.putExtra("edit_yes_no", "no");
                 startActivity(in);
             }
         });

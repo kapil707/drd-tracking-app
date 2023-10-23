@@ -159,10 +159,15 @@ public class Meter_photo extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
-                ImageUploadToServerFunction();
+                String message = meter_text.getText().toString();
+
+                if (message.length() > 0) {
+                    ImageUploadToServerFunction();
+                }else{
+                    Toast.makeText(Meter_photo.this, "Enter Meter Reading", Toast.LENGTH_LONG).show();
+                }
             }
         });
-
     }
 
     @Override
@@ -249,7 +254,6 @@ public class Meter_photo extends AppCompatActivity {
                 menu_loading1.setVisibility(View.GONE);
                 imageView.setVisibility(View.GONE);
                 try {
-                    int intid = 0;
                     JSONArray jArray = new JSONArray(response);
                     for (int i = 0; i < jArray.length(); i++) {
 
@@ -257,6 +261,9 @@ public class Meter_photo extends AppCompatActivity {
                         String return_id =  jsonObject.getString("return_id");
                         String return_message =  jsonObject.getString("return_message");
 
+                        if(return_id.equals("1")){
+                            finish();
+                        }
                         Toast.makeText(getApplicationContext(), return_message.toString(), Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {

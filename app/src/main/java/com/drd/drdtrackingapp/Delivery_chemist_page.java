@@ -110,6 +110,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
         Intent in = getIntent();
         chemist_id = in.getStringExtra("chemist_id");
         gstvno = in.getStringExtra("gstvno");
+        String edit_yes_no = in.getStringExtra("edit_yes_no");
 
         TextView action_bar_title1 = (TextView) findViewById(R.id.action_bar_title);
         action_bar_title1.setText("Update image (" + chemist_id + ")");
@@ -141,9 +142,10 @@ public class Delivery_chemist_page extends AppCompatActivity {
         UploadImageServer = (Button) findViewById(R.id.buttonUpload);
         UploadImageServer1 = (Button) findViewById(R.id.buttonUpload1);
 
-        UploadImageServer.setVisibility(View.GONE);
-        UploadImageServer1.setVisibility(View.VISIBLE);
-
+        if(edit_yes_no.equals("yes")) {
+            UploadImageServer.setVisibility(View.GONE);
+            UploadImageServer1.setVisibility(View.VISIBLE);
+        }
         galery_select.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -180,8 +182,10 @@ public class Delivery_chemist_page extends AppCompatActivity {
         final LinearLayout upload_order_LinearLayout = findViewById(R.id.upload_order_LinearLayout);
         final LinearLayout complete_order_LinearLayout = findViewById(R.id.complete_order_LinearLayout);
         final ImageView upload_btn = findViewById(R.id.upload_btn);
-        upload_btn.setVisibility(View.VISIBLE);
-        upload_order_LinearLayout.setVisibility(View.VISIBLE);
+        if(edit_yes_no.equals("yes")) {
+            upload_btn.setVisibility(View.VISIBLE);
+            upload_order_LinearLayout.setVisibility(View.VISIBLE);
+        }
         final ImageView upload_cancel = findViewById(R.id.upload_cancel);
         upload_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -475,6 +479,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
                             upload_delivery_order_completed_api();
                         } catch (Exception e) {
                             // TODO: handle exception
+                            Toast.makeText(Delivery_chemist_page.this, "alertMessage_complete_order error", Toast.LENGTH_SHORT).show();
                         }
                         break;
 
@@ -508,45 +513,53 @@ public class Delivery_chemist_page extends AppCompatActivity {
         EditText enter_remarks = findViewById(R.id.enter_remarks);
         String message = enter_remarks.getText().toString();
 
-        ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-        Call<ResponseBody> call = apiService.upload_delivery_order_completed_api("98c08565401579448aad7c64033dcb4081906dcb",user_code,user_altercode,chemist_id,gstvno,message,getlatitude,getlongitude);
-        //Call<ResponseBody> call = apiService.testing("loginRequest");
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    // Handle success response
-                    // response.body() contains the response data
+        if (message.length() > 0) {
+            menu_loading1.setVisibility(View.VISIBLE);
 
-                    try {
-                        JSONArray jArray = new JSONArray(response.body().string());
-                        for (int i = 0; i < jArray.length(); i++) {
+            ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
+            Call<ResponseBody> call = apiService.upload_delivery_order_completed_api("98c08565401579448aad7c64033dcb4081906dcb", user_code, user_altercode, chemist_id, gstvno, message, getlatitude, getlongitude);
+            //Call<ResponseBody> call = apiService.testing("loginRequest");
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful()) {
+                        // Handle success response
+                        // response.body() contains the response data
+                        menu_loading1.setVisibility(View.GONE);
+                        try {
+                            JSONArray jArray = new JSONArray(response.body().string());
+                            for (int i = 0; i < jArray.length(); i++) {
 
-                            JSONObject jsonObject = jArray.getJSONObject(i);
-                            String return_id = jsonObject.getString("return_id");
-                            String return_message = jsonObject.getString("return_message");
+                                JSONObject jsonObject = jArray.getJSONObject(i);
+                                String return_id = jsonObject.getString("return_id");
+                                String return_message = jsonObject.getString("return_message");
 
-                            if(return_id.equals("1")){
-                                finish();
+                                if (return_id.equals("1")) {
+                                    finish();
+                                }
+
+                                Toast.makeText(Delivery_chemist_page.this, return_message, Toast.LENGTH_SHORT).show();
                             }
-
-                            Toast.makeText(Delivery_chemist_page.this, return_message, Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            // TODO: handle exception
+                            Log.e("Bg-service", "Error parsing data" + e.toString());
                         }
-                    } catch (Exception e) {
-                        // TODO: handle exception
-                        Log.e("Bg-service", "Error parsing data" + e.toString());
-                    }
 
-                } else {
-                    // Handle error response
+                    } else {
+                        // Handle error response
+                        menu_loading1.setVisibility(View.GONE);
+                    }
                 }
-            }
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // Handle network failures or other errors
-                Log.e("Bg-service-onFailure", " " + t.toString());
-                Toast.makeText(Delivery_chemist_page.this,"show_rider_chemist_photo_api onFailure",Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    // Handle network failures or other errors
+                    Log.e("Bg-service-onFailure", " " + t.toString());
+                    menu_loading1.setVisibility(View.GONE);
+                    Toast.makeText(Delivery_chemist_page.this, "show_rider_chemist_photo_api onFailure", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }else{
+            Toast.makeText(Delivery_chemist_page.this, "Enter Message", Toast.LENGTH_SHORT).show();
+        }
     }
 }
