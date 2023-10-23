@@ -66,10 +66,10 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             Cursor tbl_order_done = sql.rawQuery("Select * from tbl_user_loc", null);
-            Toast.makeText(MainActivity.this, "Total rec of : " + tbl_order_done.getCount(), Toast.LENGTH_LONG).show();
+            //Toast.makeText(MainActivity.this, "Total rec of : " + tbl_order_done.getCount(), Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             db.onUpgrade(sql, 1, 2);
-            Toast.makeText(MainActivity.this, "Update database", Toast.LENGTH_LONG).show();
+            //Toast.makeText(MainActivity.this, "Update database", Toast.LENGTH_LONG).show();
         }
 
         /*AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);

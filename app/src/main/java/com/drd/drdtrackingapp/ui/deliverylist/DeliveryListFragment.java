@@ -79,10 +79,14 @@ public class DeliveryListFragment extends Fragment {
                 startActivity(in);
             }
         });
+        return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         deliver_list_api();
-
-        return root;
     }
 
     private void deliver_list_api() {

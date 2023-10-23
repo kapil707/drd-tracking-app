@@ -79,6 +79,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
     NavController navController;
     UserSessionManager session;
     String user_session="",user_code="",user_altercode="",user_password="",user_fname="",user_image="",firebase_token="";
+    ImageView nav_user_image;
 
     GPSTracker mGPS;
     double latitude1, longitude1;
@@ -155,8 +156,8 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
         TextView nav_user_email = header.findViewById(R.id.nav_user_email);
         nav_user_email.setText("Code : " + user_altercode);
 
+        nav_user_image = header.findViewById(R.id.nav_user_image);
         try {
-            ImageView nav_user_image = header.findViewById(R.id.nav_user_image);
             Picasso.get().load(user_image).into(nav_user_image);
         } catch (Exception e) {
             // TODO: handle exception
@@ -421,7 +422,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
     @Override
     protected void onActivityResult(int requestCode, int resultCode,Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Toast.makeText(getBaseContext(),String.valueOf(requestCode), Toast.LENGTH_LONG).show();
+        //Toast.makeText(getBaseContext(),String.valueOf(requestCode), Toast.LENGTH_LONG).show();
         if (requestCode == CAMERA_REQUEST && requestCode == 1888) {
             bitmap = (Bitmap) data.getExtras().get("data");
             upload_master_profile_image();
@@ -474,6 +475,14 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
                         String return_id =  jsonObject.getString("return_id");
                         String return_message =  jsonObject.getString("return_message");
                         String user_image =  jsonObject.getString("user_image");
+
+                        try {
+                            Picasso.get().load(user_image).into(nav_user_image);
+                        } catch (Exception e) {
+                            // TODO: handle exception
+                            //mProgressDialog.dismiss();
+                            Toast.makeText(getBaseContext(), "error load image", Toast.LENGTH_SHORT).show();
+                        }
 
                         session.createUserLoginSession(user_session,user_code,user_altercode,user_password,user_fname,user_image,firebase_token);
                     }

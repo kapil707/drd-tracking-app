@@ -211,7 +211,6 @@ public class Delivery_chemist_page extends AppCompatActivity {
             }
         });
 
-
         gridview = findViewById(R.id.delivery_chamist_photo_gridview);
         adapter = new Delivery_chemist_photo_Adapter(Delivery_chemist_page.this, get_set);
         gridview.setAdapter(adapter);
@@ -236,7 +235,11 @@ public class Delivery_chemist_page extends AppCompatActivity {
                 return false;
             }
         });
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         get_delivery_order_photo_api();
     }
 
@@ -522,6 +525,10 @@ public class Delivery_chemist_page extends AppCompatActivity {
                             JSONObject jsonObject = jArray.getJSONObject(i);
                             String return_id = jsonObject.getString("return_id");
                             String return_message = jsonObject.getString("return_message");
+
+                            if(return_id.equals("1")){
+                                finish();
+                            }
 
                             Toast.makeText(Delivery_chemist_page.this, return_message, Toast.LENGTH_SHORT).show();
                         }

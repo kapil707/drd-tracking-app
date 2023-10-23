@@ -78,10 +78,14 @@ public class DeliveryDoneListFragment extends Fragment {
                 startActivity(in);
             }
         });
+        return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         delivery_done_api();
-
-        return root;
     }
 
     private void delivery_done_api() {
