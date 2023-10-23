@@ -273,15 +273,15 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
 
                         JSONObject jsonObject = jArray.getJSONObject(i);
 
-                        String token_id = jsonObject.getString("token_id");
                         String return_id = jsonObject.getString("return_id");
+                        String token_key = jsonObject.getString("token_key");
                         String date = jsonObject.getString("date");
                         String time = jsonObject.getString("time");
 
                         mGPS_info(); // locacation ati ha iss say scnner open kartay he
 
-                        if(return_id=="1") {
-                            upload_attendance_api(getlatitude, getlongitude, date, time, token_id);
+                        if(return_id.equals("1")) {
+                            upload_attendance_api(getlatitude, getlongitude, date, time, token_key);
                         }
                     }
                 } catch (Exception e) {
@@ -303,16 +303,17 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
     }
 
     private void upload_attendance_api(String latitude,String longitude,String date,String time,String token_key){
+        Toast.makeText(getApplicationContext(), "work1", Toast.LENGTH_LONG).show();
+
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-
         Call<ResponseBody> call = apiService.upload_attendance_api("98c08565401579448aad7c64033dcb4081906dcb", user_code,user_altercode,latitude,longitude,date,time,token_key);
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     // Handle success response
                     // response.body() contains the response data
+                    Toast.makeText(getApplicationContext(), "work2", Toast.LENGTH_LONG).show();
 
                     try {
                         Toast.makeText(getApplicationContext(), response.body().string(), Toast.LENGTH_LONG).show();
@@ -322,6 +323,8 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
                     }
                 } else {
                     // Handle error response
+                    Toast.makeText(getApplicationContext(), "upload_attendance_api error", Toast.LENGTH_LONG).show();
+
                 }
             }
 
@@ -329,6 +332,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Handle network failures or other errors
                 Log.e("Bg-service", " " + t.toString());
+                Toast.makeText(getApplicationContext(), "upload_attendance_api onFailure", Toast.LENGTH_LONG).show();
             }
         });
     }
