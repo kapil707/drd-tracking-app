@@ -156,14 +156,14 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
         TextView nav_user_email = header.findViewById(R.id.nav_user_email);
         nav_user_email.setText("Code : " + user_altercode);
 
-        nav_user_image = header.findViewById(R.id.nav_user_image);
-        try {
-            Picasso.get().load(user_image).into(nav_user_image);
-        } catch (Exception e) {
-            // TODO: handle exception
-            //mProgressDialog.dismiss();
-            Toast.makeText(getBaseContext(), "error load image", Toast.LENGTH_SHORT).show();
-        }
+//        nav_user_image = header.findViewById(R.id.nav_user_image);
+//        try {
+//            Picasso.get().load(user_image).into(nav_user_image);
+//        } catch (Exception e) {
+//            // TODO: handle exception
+//            //mProgressDialog.dismiss();
+//            Toast.makeText(getBaseContext(), "error load image", Toast.LENGTH_SHORT).show();
+//        }
 
         TextView edit_profile_btn = header.findViewById(R.id.edit_profile_btn);
         edit_profile_btn.setOnClickListener(new View.OnClickListener() {
@@ -362,8 +362,8 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
     protected void onResume() {
         super.onResume();
 
-        startService(new Intent(this, BackgroundLocationUpdateService.class));
-        insert_firebase_token();
+//        startService(new Intent(this, BackgroundLocationUpdateService.class));
+//        insert_firebase_token();
     }
     void insert_firebase_token(){
         if (firebase_token.length() == 0) {
@@ -384,7 +384,6 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
             mGPS_info(); // locacation ati ha iss say scnner open kartay he
 
             ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-
             Call<ResponseBody> call = apiService.update_firebase_token_api("98c08565401579448aad7c64033dcb4081906dcb", user_code,user_altercode,firebase_token,getlatitude,getlongitude);
             //Call<ResponseBody> call = apiService.testing("loginRequest");
             call.enqueue(new Callback<ResponseBody>() {
