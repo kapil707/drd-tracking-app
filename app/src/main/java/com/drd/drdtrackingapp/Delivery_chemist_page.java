@@ -69,9 +69,8 @@ public class Delivery_chemist_page extends AppCompatActivity {
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
     Bitmap bitmap1,bitmap2,bitmap3,bitmap4;
     Button photo_btn1,photo_btn2,photo_btn3,photo_btn4;
-    Button UploadImageServer, UploadImageServer1;
+    Button buttonUpload, buttonUpload1;
     boolean check = true;
-    String ImagePath = "image_path";
     String upload_delivery_order_photo_api = "";
 
 //    GridView gridview;
@@ -144,13 +143,8 @@ public class Delivery_chemist_page extends AppCompatActivity {
         photo4 = findViewById(R.id.nr_ackn_photo);
         photo_btn4 = findViewById(R.id.nr_ackn_photo_btn);
 
-        UploadImageServer = findViewById(R.id.buttonUpload);
-        UploadImageServer1 = findViewById(R.id.buttonUpload1);
-
-        if(edit_yes_no.equals("yes")) {
-            UploadImageServer.setVisibility(View.GONE);
-            UploadImageServer1.setVisibility(View.VISIBLE);
-        }
+        buttonUpload = findViewById(R.id.buttonUpload);
+        buttonUpload1 = findViewById(R.id.buttonUpload1);
 
         photo_btn1.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -203,6 +197,14 @@ public class Delivery_chemist_page extends AppCompatActivity {
                 }
             }
         });
+
+        buttonUpload.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View view) {
+                upload_delivery_order_photo_api();
+            }
+        });
     }
 
     @Override
@@ -248,7 +250,12 @@ public class Delivery_chemist_page extends AppCompatActivity {
         }
     }
 
-    public void ImageUploadToServerFunction() {
+    public void upload_delivery_order_photo_api() {
+        mGPS_info();
+
+        EditText enter_remarks = findViewById(R.id.enter_remarks);
+        String message = enter_remarks.getText().toString();
+
         String ConvertImage1 = null;
         String ConvertImage2 = null;
         String ConvertImage3 = null;
@@ -303,8 +310,8 @@ public class Delivery_chemist_page extends AppCompatActivity {
                 //progressDialog = ProgressDialog.show(User_image_uploading.this,"Uploading","Please Wait",false,false);
                 menu_loading1.setVisibility(View.VISIBLE);
 
-                UploadImageServer.setVisibility(View.GONE);
-                UploadImageServer1.setVisibility(View.VISIBLE);
+                buttonUpload.setVisibility(View.GONE);
+                buttonUpload1.setVisibility(View.VISIBLE);
             }
             @Override
             protected String doInBackground(Void... params) {
@@ -312,14 +319,20 @@ public class Delivery_chemist_page extends AppCompatActivity {
                 HashMap<String, String> HashMapParams = new HashMap<String, String>();
 
                 HashMapParams.put("api_key", "98c08565401579448aad7c64033dcb4081906dcb");
+                HashMapParams.put("user_code", user_code);
+                HashMapParams.put("user_altercode", user_altercode);
+
                 HashMapParams.put("ImagePath1", finalConvertImage1);
                 HashMapParams.put("ImagePath2", finalConvertImage2);
                 HashMapParams.put("ImagePath3", finalConvertImage3);
                 HashMapParams.put("ImagePath4", finalConvertImage4);
-                HashMapParams.put("user_code", user_code);
-                HashMapParams.put("user_altercode", user_altercode);
+
                 HashMapParams.put("chemist_id", chemist_id);
                 HashMapParams.put("gstvno", gstvno);
+
+                HashMapParams.put("message", message);
+                HashMapParams.put("latitude", getlatitude);
+                HashMapParams.put("longitude", getlongitude);
 
                 String FinalData = imageProcessClass.ImageHttpRequest(upload_delivery_order_photo_api, HashMapParams);
                 return FinalData;
@@ -475,7 +488,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
                     case DialogInterface.BUTTON_POSITIVE:
                         // Yes button clicked
                         try {
-                            mGPS_info();
+
                             upload_delivery_order_completed_api();
                         } catch (Exception e) {
                             // TODO: handle exception
@@ -509,57 +522,56 @@ public class Delivery_chemist_page extends AppCompatActivity {
         getlongitude = String.valueOf(longitude1);
     }
 
-    private void upload_delivery_order_completed_api(){
-        EditText enter_remarks = findViewById(R.id.enter_remarks);
-        String message = enter_remarks.getText().toString();
+    private void upload_delivery_order_completed_api() {
 
-        if (message.length() > 0) {
-            menu_loading1.setVisibility(View.VISIBLE);
 
-            ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-            Call<ResponseBody> call = apiService.upload_delivery_order_completed_api("98c08565401579448aad7c64033dcb4081906dcb", user_code, user_altercode, chemist_id, gstvno, message, getlatitude, getlongitude);
-            //Call<ResponseBody> call = apiService.testing("loginRequest");
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    if (response.isSuccessful()) {
-                        // Handle success response
-                        // response.body() contains the response data
-                        menu_loading1.setVisibility(View.GONE);
-                        try {
-                            JSONArray jArray = new JSONArray(response.body().string());
-                            for (int i = 0; i < jArray.length(); i++) {
-
-                                JSONObject jsonObject = jArray.getJSONObject(i);
-                                String return_id = jsonObject.getString("return_id");
-                                String return_message = jsonObject.getString("return_message");
-
-                                if (return_id.equals("1")) {
-                                    finish();
-                                }
-
-                                Toast.makeText(Delivery_chemist_page.this, return_message, Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (Exception e) {
-                            // TODO: handle exception
-                            Log.e("Bg-service", "Error parsing data" + e.toString());
-                        }
-
-                    } else {
-                        // Handle error response
-                        menu_loading1.setVisibility(View.GONE);
-                    }
-                }
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    // Handle network failures or other errors
-                    Log.e("Bg-service-onFailure", " " + t.toString());
-                    menu_loading1.setVisibility(View.GONE);
-                    Toast.makeText(Delivery_chemist_page.this, "show_rider_chemist_photo_api onFailure", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }else{
-            Toast.makeText(Delivery_chemist_page.this, "Enter Message", Toast.LENGTH_SHORT).show();
-        }
+//        if (message.length() > 0) {
+//            menu_loading1.setVisibility(View.VISIBLE);
+//
+//            ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
+//            Call<ResponseBody> call = apiService.upload_delivery_order_completed_api("98c08565401579448aad7c64033dcb4081906dcb", user_code, user_altercode, chemist_id, gstvno, );
+//            //Call<ResponseBody> call = apiService.testing("loginRequest");
+//            call.enqueue(new Callback<ResponseBody>() {
+//                @Override
+//                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                    if (response.isSuccessful()) {
+//                        // Handle success response
+//                        // response.body() contains the response data
+//                        menu_loading1.setVisibility(View.GONE);
+//                        try {
+//                            JSONArray jArray = new JSONArray(response.body().string());
+//                            for (int i = 0; i < jArray.length(); i++) {
+//
+//                                JSONObject jsonObject = jArray.getJSONObject(i);
+//                                String return_id = jsonObject.getString("return_id");
+//                                String return_message = jsonObject.getString("return_message");
+//
+//                                if (return_id.equals("1")) {
+//                                    finish();
+//                                }
+//
+//                                Toast.makeText(Delivery_chemist_page.this, return_message, Toast.LENGTH_SHORT).show();
+//                            }
+//                        } catch (Exception e) {
+//                            // TODO: handle exception
+//                            Log.e("Bg-service", "Error parsing data" + e.toString());
+//                        }
+//
+//                    } else {
+//                        // Handle error response
+//                        menu_loading1.setVisibility(View.GONE);
+//                    }
+//                }
+//                @Override
+//                public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                    // Handle network failures or other errors
+//                    Log.e("Bg-service-onFailure", " " + t.toString());
+//                    menu_loading1.setVisibility(View.GONE);
+//                    Toast.makeText(Delivery_chemist_page.this, "show_rider_chemist_photo_api onFailure", Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//        }else{
+//            Toast.makeText(Delivery_chemist_page.this, "Enter Message", Toast.LENGTH_SHORT).show();
+//        }
     }
 }
