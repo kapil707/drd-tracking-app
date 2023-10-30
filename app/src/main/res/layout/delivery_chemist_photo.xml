@@ -120,17 +120,27 @@
                 android:drawableLeft="@drawable/baseline_camera_alt_24" />
 
 
-            <EditText
-                android:id="@+id/enter_remarks"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:background="@null"
-                android:ems="10"
-                android:hint="Enter remarks"
-                android:inputType="textEmailAddress"
-                style="@style/textbox_theme"></EditText>
+            <LinearLayout
+                android:id="@+id/textbox_bg1"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dip"
+                android:layout_marginTop="10dip"
+                android:layout_marginRight="10dip"
+                android:orientation="horizontal"
+                android:background="@drawable/textbox_shap"
+                android:elevation="2dp">
+                <EditText
+                    android:id="@+id/enter_remarks"
+                    android:hint="Enter Remarks"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dip"
+                    android:background="@null"
+                    android:ems="10"
+                    style="@style/textbox_theme"/>
+            </LinearLayout>
 
             <Button
                 android:id="@+id/buttonUpload"

@@ -67,7 +67,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
     String chemist_id = "", gstvno = "";
     private ImageView photo1,photo2,photo3,photo4;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
-    Bitmap bitmap;
+    Bitmap bitmap1,bitmap2,bitmap3,bitmap4;
     Button photo_btn1,photo_btn2,photo_btn3,photo_btn4;
     Button UploadImageServer, UploadImageServer1;
     boolean check = true;
@@ -97,13 +97,13 @@ public class Delivery_chemist_page extends AppCompatActivity {
                 window.setStatusBarColor(getResources().getColor(R.color.header_bg_dark));
             }
 
-//            LinearLayout textbox_bg1 = findViewById(R.id.textbox_bg1);
-//            textbox_bg1.setBackgroundResource(R.drawable.textbox_shap);
+            LinearLayout textbox_bg1 = findViewById(R.id.textbox_bg1);
+            textbox_bg1.setBackgroundResource(R.drawable.textbox_shap);
 
-//            GradientDrawable drawable2 = (GradientDrawable) textbox_bg1.getBackground();
-//            if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
-//                drawable2.setColor(getResources().getColor(R.color.textbox_bg_dark));
-//            }
+            GradientDrawable drawable2 = (GradientDrawable) textbox_bg1.getBackground();
+            if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
+                drawable2.setColor(getResources().getColor(R.color.textbox_bg_dark));
+            }
         }
 
         Intent in = getIntent();
@@ -151,18 +151,6 @@ public class Delivery_chemist_page extends AppCompatActivity {
             UploadImageServer.setVisibility(View.GONE);
             UploadImageServer1.setVisibility(View.VISIBLE);
         }
-//        galery_select.setOnClickListener(new View.OnClickListener() {
-//            @RequiresApi(api = Build.VERSION_CODES.M)
-//            @Override
-//            public void onClick(View view) {
-//
-//                Intent intent = new Intent();
-//                intent.setType("image/*");
-//                intent.setAction(Intent.ACTION_GET_CONTENT);
-//                startActivityForResult(Intent.createChooser(intent, "Select image from gallery"), 1989);
-//
-//            }
-//        });
 
         photo_btn1.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -215,75 +203,6 @@ public class Delivery_chemist_page extends AppCompatActivity {
                 }
             }
         });
-
-        /*UploadImageServer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ImageUploadToServerFunction();
-            }
-        });
-
-        final LinearLayout upload_order_LinearLayout = findViewById(R.id.upload_order_LinearLayout);
-        final LinearLayout complete_order_LinearLayout = findViewById(R.id.complete_order_LinearLayout);
-        final ImageView upload_btn = findViewById(R.id.upload_btn);
-        if(edit_yes_no.equals("yes")) {
-            upload_btn.setVisibility(View.VISIBLE);
-            upload_order_LinearLayout.setVisibility(View.VISIBLE);
-        }
-        final ImageView upload_cancel = findViewById(R.id.upload_cancel);
-        upload_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                upload_btn.setVisibility(View.GONE);
-                upload_order_LinearLayout.setVisibility(View.GONE);
-                upload_cancel.setVisibility(View.VISIBLE);
-                complete_order_LinearLayout.setVisibility(View.VISIBLE);
-            }
-        });
-
-        upload_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                upload_btn.setVisibility(View.VISIBLE);
-                upload_order_LinearLayout.setVisibility(View.VISIBLE);
-                upload_cancel.setVisibility(View.GONE);
-                complete_order_LinearLayout.setVisibility(View.GONE);
-            }
-        });*/
-
-        /*Button complete_order = findViewById(R.id.complete_order);
-        complete_order.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                alertMessage_complete_order();
-            }
-        });*/
-
-        /*
-        gridview = findViewById(R.id.delivery_chamist_photo_gridview);
-        adapter = new Delivery_chemist_photo_Adapter(Delivery_chemist_page.this, get_set);
-        gridview.setAdapter(adapter);
-
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1,
-                                    int arg2, long arg3) {
-                // TODO Auto-generated method stub
-                Dilivery_chemist_photo_get_or_set clickedCategory = get_set.get(arg2);
-                String id = clickedCategory.id();
-                //alertMessage_delete_rider_chemist_photo(id);
-                //alertMessage_selected_acm();
-            }
-        });
-
-        gridview.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View arg0) {
-                // TODO Auto-generated method stub
-                //Toast.makeText(getApplicationContext(), "Position",Toast.LENGTH_LONG).show();
-                return false;
-            }
-        }); */
     }
 
     @Override
@@ -312,41 +231,78 @@ public class Delivery_chemist_page extends AppCompatActivity {
         super.onActivityResult(RC, RQC, I);
         //Toast.makeText(User_image_uploading.this, String.valueOf(RC), Toast.LENGTH_LONG).show();
         if (RC == 1891) {
-            bitmap = (Bitmap) I.getExtras().get("data");
-            photo1.setImageBitmap(bitmap);
+            bitmap1 = (Bitmap) I.getExtras().get("data");
+            photo1.setImageBitmap(bitmap1);
         }
         if (RC == 1892) {
-            bitmap = (Bitmap) I.getExtras().get("data");
-            photo2.setImageBitmap(bitmap);
+            bitmap2 = (Bitmap) I.getExtras().get("data");
+            photo2.setImageBitmap(bitmap2);
         }
         if (RC == 1893) {
-            bitmap = (Bitmap) I.getExtras().get("data");
-            photo3.setImageBitmap(bitmap);
+            bitmap3 = (Bitmap) I.getExtras().get("data");
+            photo3.setImageBitmap(bitmap3);
         }
         if (RC == 1894) {
-            bitmap = (Bitmap) I.getExtras().get("data");
-            photo4.setImageBitmap(bitmap);
+            bitmap4 = (Bitmap) I.getExtras().get("data");
+            photo4.setImageBitmap(bitmap4);
         }
     }
 
     public void ImageUploadToServerFunction() {
-        String ConvertImage = null;
+        String ConvertImage1 = null;
+        String ConvertImage2 = null;
+        String ConvertImage3 = null;
+        String ConvertImage4 = null;
         try {
             ByteArrayOutputStream byteArrayOutputStreamObject;
             byteArrayOutputStreamObject = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStreamObject);
+            bitmap1.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStreamObject);
             byte[] byteArrayVar = byteArrayOutputStreamObject.toByteArray();
-            ConvertImage = Base64.encodeToString(byteArrayVar, Base64.DEFAULT);
+            ConvertImage1 = Base64.encodeToString(byteArrayVar, Base64.DEFAULT);
         } catch (Exception ee) {
 
         }
-        final String finalConvertImage = ConvertImage;
+
+        try {
+            ByteArrayOutputStream byteArrayOutputStreamObject;
+            byteArrayOutputStreamObject = new ByteArrayOutputStream();
+            bitmap2.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStreamObject);
+            byte[] byteArrayVar = byteArrayOutputStreamObject.toByteArray();
+            ConvertImage2 = Base64.encodeToString(byteArrayVar, Base64.DEFAULT);
+        } catch (Exception ee) {
+
+        }
+
+        try {
+            ByteArrayOutputStream byteArrayOutputStreamObject;
+            byteArrayOutputStreamObject = new ByteArrayOutputStream();
+            bitmap3.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStreamObject);
+            byte[] byteArrayVar = byteArrayOutputStreamObject.toByteArray();
+            ConvertImage3 = Base64.encodeToString(byteArrayVar, Base64.DEFAULT);
+        } catch (Exception ee) {
+
+        }
+
+        try {
+            ByteArrayOutputStream byteArrayOutputStreamObject;
+            byteArrayOutputStreamObject = new ByteArrayOutputStream();
+            bitmap4.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStreamObject);
+            byte[] byteArrayVar = byteArrayOutputStreamObject.toByteArray();
+            ConvertImage4 = Base64.encodeToString(byteArrayVar, Base64.DEFAULT);
+        } catch (Exception ee) {
+
+        }
+        final String finalConvertImage1 = ConvertImage1;
+        final String finalConvertImage2 = ConvertImage2;
+        final String finalConvertImage3 = ConvertImage3;
+        final String finalConvertImage4 = ConvertImage4;
         class AsyncTaskUploadClass extends AsyncTask<Void, Void, String> {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
                 //progressDialog = ProgressDialog.show(User_image_uploading.this,"Uploading","Please Wait",false,false);
                 menu_loading1.setVisibility(View.VISIBLE);
+
                 UploadImageServer.setVisibility(View.GONE);
                 UploadImageServer1.setVisibility(View.VISIBLE);
             }
@@ -356,7 +312,10 @@ public class Delivery_chemist_page extends AppCompatActivity {
                 HashMap<String, String> HashMapParams = new HashMap<String, String>();
 
                 HashMapParams.put("api_key", "98c08565401579448aad7c64033dcb4081906dcb");
-                HashMapParams.put(ImagePath, finalConvertImage);
+                HashMapParams.put("ImagePath1", finalConvertImage1);
+                HashMapParams.put("ImagePath2", finalConvertImage2);
+                HashMapParams.put("ImagePath3", finalConvertImage3);
+                HashMapParams.put("ImagePath4", finalConvertImage4);
                 HashMapParams.put("user_code", user_code);
                 HashMapParams.put("user_altercode", user_altercode);
                 HashMapParams.put("chemist_id", chemist_id);
