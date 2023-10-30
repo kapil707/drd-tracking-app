@@ -65,19 +65,18 @@ public class Delivery_chemist_page extends AppCompatActivity {
     UserSessionManager session;
     String user_code="",user_altercode = "";
     String chemist_id = "", gstvno = "";
-    private static final int CAMERA_REQUEST = 1888;
-    private ImageView imageView;
+    private ImageView photo1,photo2,photo3,photo4;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
     Bitmap bitmap;
-    Button take_photo,galery_select;
+    Button photo_btn1,photo_btn2,photo_btn3,photo_btn4;
     Button UploadImageServer, UploadImageServer1;
     boolean check = true;
     String ImagePath = "image_path";
     String upload_delivery_order_photo_api = "";
 
-    GridView gridview;
-    Delivery_chemist_photo_Adapter adapter;
-    List<Dilivery_chemist_photo_get_or_set> get_set = new ArrayList<Dilivery_chemist_photo_get_or_set>();
+//    GridView gridview;
+//    Delivery_chemist_photo_Adapter adapter;
+//    List<Dilivery_chemist_photo_get_or_set> get_set = new ArrayList<Dilivery_chemist_photo_get_or_set>();
     GPSTracker mGPS;
     double latitude1, longitude1;
     String getlatitude = "", getlongitude = "";
@@ -98,13 +97,13 @@ public class Delivery_chemist_page extends AppCompatActivity {
                 window.setStatusBarColor(getResources().getColor(R.color.header_bg_dark));
             }
 
-            LinearLayout textbox_bg1 = findViewById(R.id.textbox_bg1);
-            textbox_bg1.setBackgroundResource(R.drawable.textbox_shap);
+//            LinearLayout textbox_bg1 = findViewById(R.id.textbox_bg1);
+//            textbox_bg1.setBackgroundResource(R.drawable.textbox_shap);
 
-            GradientDrawable drawable2 = (GradientDrawable) textbox_bg1.getBackground();
-            if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
-                drawable2.setColor(getResources().getColor(R.color.textbox_bg_dark));
-            }
+//            GradientDrawable drawable2 = (GradientDrawable) textbox_bg1.getBackground();
+//            if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
+//                drawable2.setColor(getResources().getColor(R.color.textbox_bg_dark));
+//            }
         }
 
         Intent in = getIntent();
@@ -136,30 +135,36 @@ public class Delivery_chemist_page extends AppCompatActivity {
         String mainurl = ma.main_url;
         upload_delivery_order_photo_api = mainurl + "upload_delivery_order_photo_api";
 
-        imageView = (ImageView) findViewById(R.id.imageView);
-        take_photo = findViewById(R.id.take_photo);
-        galery_select = findViewById(R.id.galery_select);
-        UploadImageServer = (Button) findViewById(R.id.buttonUpload);
-        UploadImageServer1 = (Button) findViewById(R.id.buttonUpload1);
+        photo1 = findViewById(R.id.material_photo1);
+        photo_btn1 = findViewById(R.id.material_photo_btn1);
+        photo2 = findViewById(R.id.material_photo2);
+        photo_btn2 = findViewById(R.id.material_photo_btn2);
+        photo3 = findViewById(R.id.payment_detail_photo);
+        photo_btn3 = findViewById(R.id.payment_detail_photo_btn);
+        photo4 = findViewById(R.id.nr_ackn_photo);
+        photo_btn4 = findViewById(R.id.nr_ackn_photo_btn);
+
+        UploadImageServer = findViewById(R.id.buttonUpload);
+        UploadImageServer1 = findViewById(R.id.buttonUpload1);
 
         if(edit_yes_no.equals("yes")) {
             UploadImageServer.setVisibility(View.GONE);
             UploadImageServer1.setVisibility(View.VISIBLE);
         }
-        galery_select.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onClick(View view) {
+//        galery_select.setOnClickListener(new View.OnClickListener() {
+//            @RequiresApi(api = Build.VERSION_CODES.M)
+//            @Override
+//            public void onClick(View view) {
+//
+//                Intent intent = new Intent();
+//                intent.setType("image/*");
+//                intent.setAction(Intent.ACTION_GET_CONTENT);
+//                startActivityForResult(Intent.createChooser(intent, "Select image from gallery"), 1989);
+//
+//            }
+//        });
 
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select image from gallery"), 1989);
-
-            }
-        });
-
-        take_photo.setOnClickListener(new View.OnClickListener() {
+        photo_btn1.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
@@ -167,12 +172,51 @@ public class Delivery_chemist_page extends AppCompatActivity {
                     requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
                 } else {
                     Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                    startActivityForResult(cameraIntent, 1891);
                 }
             }
         });
 
-        UploadImageServer.setOnClickListener(new View.OnClickListener() {
+        photo_btn2.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View view) {
+                if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
+                } else {
+                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(cameraIntent, 1892);
+                }
+            }
+        });
+
+        photo_btn3.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View view) {
+                if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
+                } else {
+                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(cameraIntent, 1893);
+                }
+            }
+        });
+
+        photo_btn4.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View view) {
+                if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
+                } else {
+                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(cameraIntent, 1894);
+                }
+            }
+        });
+
+        /*UploadImageServer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ImageUploadToServerFunction();
@@ -205,16 +249,17 @@ public class Delivery_chemist_page extends AppCompatActivity {
                 upload_cancel.setVisibility(View.GONE);
                 complete_order_LinearLayout.setVisibility(View.GONE);
             }
-        });
+        });*/
 
-        Button complete_order = findViewById(R.id.complete_order);
+        /*Button complete_order = findViewById(R.id.complete_order);
         complete_order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 alertMessage_complete_order();
             }
-        });
+        });*/
 
+        /*
         gridview = findViewById(R.id.delivery_chamist_photo_gridview);
         adapter = new Delivery_chemist_photo_Adapter(Delivery_chemist_page.this, get_set);
         gridview.setAdapter(adapter);
@@ -235,10 +280,10 @@ public class Delivery_chemist_page extends AppCompatActivity {
             @Override
             public boolean onLongClick(View arg0) {
                 // TODO Auto-generated method stub
-                /* Toast.makeText(getApplicationContext(), "Position",Toast.LENGTH_LONG).show(); */
+                //Toast.makeText(getApplicationContext(), "Position",Toast.LENGTH_LONG).show();
                 return false;
             }
-        });
+        }); */
     }
 
     @Override
@@ -254,7 +299,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
                 Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                startActivityForResult(cameraIntent, 1891);
             } else {
                 Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
             }
@@ -266,25 +311,21 @@ public class Delivery_chemist_page extends AppCompatActivity {
     protected void onActivityResult(int RC, int RQC, Intent I) {
         super.onActivityResult(RC, RQC, I);
         //Toast.makeText(User_image_uploading.this, String.valueOf(RC), Toast.LENGTH_LONG).show();
-        if (RC == CAMERA_REQUEST) {
+        if (RC == 1891) {
             bitmap = (Bitmap) I.getExtras().get("data");
-            imageView.setImageBitmap(bitmap);
-            imageView.setVisibility(View.VISIBLE);
-
-            UploadImageServer.setVisibility(View.VISIBLE);
-            UploadImageServer1.setVisibility(View.GONE);
+            photo1.setImageBitmap(bitmap);
         }
-        if (RC == 1989) {
-            Uri uri = I.getData();
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                imageView.setImageBitmap(bitmap);
-                imageView.setVisibility(View.VISIBLE);
-                UploadImageServer.setVisibility(View.VISIBLE);
-                UploadImageServer1.setVisibility(View.GONE);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (RC == 1892) {
+            bitmap = (Bitmap) I.getExtras().get("data");
+            photo2.setImageBitmap(bitmap);
+        }
+        if (RC == 1893) {
+            bitmap = (Bitmap) I.getExtras().get("data");
+            photo3.setImageBitmap(bitmap);
+        }
+        if (RC == 1894) {
+            bitmap = (Bitmap) I.getExtras().get("data");
+            photo4.setImageBitmap(bitmap);
         }
     }
 
@@ -328,7 +369,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
             protected void onPostExecute(String response) {
                 super.onPostExecute(response);
                 menu_loading1.setVisibility(View.GONE);
-                imageView.setVisibility(View.GONE);
+
                 try {
                     int intid = 0;
                     JSONArray jArray = new JSONArray(response);
@@ -422,11 +463,11 @@ public class Delivery_chemist_page extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     // Handle success response
                     // response.body() contains the response data
-                    try {
-                        writeTv(response.body().string());
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+//                    try {
+//                        writeTv(response.body().string());
+//                    } catch (IOException e) {
+//                        throw new RuntimeException(e);
+//                    }
                 } else {
                     // Handle error response
                 }
@@ -443,29 +484,29 @@ public class Delivery_chemist_page extends AppCompatActivity {
     private void writeTv(String response) {
         //https://demonuts.com/retrofit-android-get-json/
         //Log.e("Bg-service", response.toString());
-        get_set.clear();
-        try {
-            int intid = 0;
-            JSONArray jArray = new JSONArray(response);
-            for (int i = 0; i < jArray.length(); i++) {
-
-                JSONObject jsonObject = jArray.getJSONObject(i);
-                String id =  jsonObject.getString("id");
-                String image = jsonObject.getString("image");
-                String time = jsonObject.getString("time");
-
-                Dilivery_chemist_photo_get_or_set mylist = new Dilivery_chemist_photo_get_or_set();
-                mylist.id(id);
-                mylist.image(image);
-                mylist.time(time);
-                mylist.intid(String.valueOf(intid++));
-                get_set.add(mylist);
-            }
-        } catch (Exception e) {
-            // TODO: handle exception
-            Log.e("Bg-service", "Error parsing data" + e.toString());
-        }
-        adapter.notifyDataSetChanged();
+//        get_set.clear();
+//        try {
+//            int intid = 0;
+//            JSONArray jArray = new JSONArray(response);
+//            for (int i = 0; i < jArray.length(); i++) {
+//
+//                JSONObject jsonObject = jArray.getJSONObject(i);
+//                String id =  jsonObject.getString("id");
+//                String image = jsonObject.getString("image");
+//                String time = jsonObject.getString("time");
+//
+//                Dilivery_chemist_photo_get_or_set mylist = new Dilivery_chemist_photo_get_or_set();
+//                mylist.id(id);
+//                mylist.image(image);
+//                mylist.time(time);
+//                mylist.intid(String.valueOf(intid++));
+//                get_set.add(mylist);
+//            }
+//        } catch (Exception e) {
+//            // TODO: handle exception
+//            Log.e("Bg-service", "Error parsing data" + e.toString());
+//        }
+//        adapter.notifyDataSetChanged();
     }
 
     public void alertMessage_complete_order() {
