@@ -45,6 +45,9 @@
     <color name="textbox_textclr_light">#171010</color>
     <color name="textbox_textclr_dark">#D5D5D5</color>
 
+    <color name="page_textclr_error_light">#E91E63</color>
+    <color name="page_textclr_error_dark">#E91E63</color>
+
     <color name="textbox_textclr_hint_light">#727272</color>
     <color name="textbox_textclr_hint_dark">#C5C2C2</color>
 

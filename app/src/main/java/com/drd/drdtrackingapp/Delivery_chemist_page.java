@@ -202,7 +202,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
-                upload_delivery_order_photo_api();
+                alertMessage_complete_order();
             }
         });
     }
@@ -250,16 +250,54 @@ public class Delivery_chemist_page extends AppCompatActivity {
         }
     }
 
+    public void alertMessage_complete_order() {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        // Yes button clicked
+                        try {
+                            upload_delivery_order_photo_api();
+                        } catch (Exception e) {
+                            // TODO: handle exception
+                            Toast.makeText(Delivery_chemist_page.this, "alertMessage_complete_order error", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        // No button clicked
+                        // do nothing
+
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure to completed order?")
+                .setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+    }
+
+    public void mGPS_info() {
+        mGPS = new GPSTracker(this);
+        mGPS.getLocation();
+
+        latitude1 = mGPS.getLatitude();
+        longitude1 = mGPS.getLongitude();
+
+        getlatitude = String.valueOf(latitude1);
+        getlongitude = String.valueOf(longitude1);
+    }
+
+
     public void upload_delivery_order_photo_api() {
         mGPS_info();
 
         EditText enter_remarks = findViewById(R.id.enter_remarks);
         String message = enter_remarks.getText().toString();
 
-        String ConvertImage1 = null;
-        String ConvertImage2 = null;
-        String ConvertImage3 = null;
-        String ConvertImage4 = null;
+        String ConvertImage1 = "", ConvertImage2 = "", ConvertImage3 = "", ConvertImage4 = "";
         try {
             ByteArrayOutputStream byteArrayOutputStreamObject;
             byteArrayOutputStreamObject = new ByteArrayOutputStream();
@@ -303,6 +341,28 @@ public class Delivery_chemist_page extends AppCompatActivity {
         final String finalConvertImage2 = ConvertImage2;
         final String finalConvertImage3 = ConvertImage3;
         final String finalConvertImage4 = ConvertImage4;
+
+        int error = 0;
+        if (ConvertImage1.equals(null) || ConvertImage1.isEmpty()) {
+            error = 1;
+            Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
+        }
+        if (ConvertImage2.equals(null) || ConvertImage2.isEmpty()) {
+            error = 1;
+            Toast.makeText(Delivery_chemist_page.this, "Select Material photo2", Toast.LENGTH_LONG).show();
+        }
+        if (ConvertImage3.equals(null) || ConvertImage3.isEmpty()) {
+            error = 1;
+            Toast.makeText(Delivery_chemist_page.this, "Select Payment Detail", Toast.LENGTH_LONG).show();
+        }
+        if (ConvertImage3.equals(null) || ConvertImage3.isEmpty()) {
+            error = 1;
+            Toast.makeText(Delivery_chemist_page.this, "Select NR ackn", Toast.LENGTH_LONG).show();
+        }
+        if (message.equals(null) || message.isEmpty()) {
+            error = 1;
+            Toast.makeText(Delivery_chemist_page.this, "Enter Remarks", Toast.LENGTH_LONG).show();
+        }
         class AsyncTaskUploadClass extends AsyncTask<Void, Void, String> {
             @Override
             protected void onPreExecute() {
@@ -313,6 +373,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
                 buttonUpload.setVisibility(View.GONE);
                 buttonUpload1.setVisibility(View.VISIBLE);
             }
+
             @Override
             protected String doInBackground(Void... params) {
                 ImageProcessClass imageProcessClass = new ImageProcessClass();
@@ -337,21 +398,21 @@ public class Delivery_chemist_page extends AppCompatActivity {
                 String FinalData = imageProcessClass.ImageHttpRequest(upload_delivery_order_photo_api, HashMapParams);
                 return FinalData;
             }
+
             @Override
             protected void onPostExecute(String response) {
                 super.onPostExecute(response);
                 menu_loading1.setVisibility(View.GONE);
 
                 try {
-                    int intid = 0;
                     JSONArray jArray = new JSONArray(response);
                     for (int i = 0; i < jArray.length(); i++) {
 
                         JSONObject jsonObject = jArray.getJSONObject(i);
-                        String return_id =  jsonObject.getString("return_id");
-                        String return_message =  jsonObject.getString("return_message");
+                        String return_id = jsonObject.getString("return_id");
+                        String return_message = jsonObject.getString("return_message");
 
-                        if(return_id.equals("1")){
+                        if (return_id.equals("1")) {
                             get_delivery_order_photo_api();
                         }
 
@@ -363,8 +424,11 @@ public class Delivery_chemist_page extends AppCompatActivity {
                 }
             }
         }
-        AsyncTaskUploadClass AsyncTaskUploadClassOBJ = new AsyncTaskUploadClass();
-        AsyncTaskUploadClassOBJ.execute();
+
+        if (error == 0) {
+            AsyncTaskUploadClass AsyncTaskUploadClassOBJ = new AsyncTaskUploadClass();
+            AsyncTaskUploadClassOBJ.execute();
+        }
     }
 
     public class ImageProcessClass {
@@ -451,127 +515,5 @@ public class Delivery_chemist_page extends AppCompatActivity {
                 Toast.makeText(Delivery_chemist_page.this,"show_rider_chemist_photo_api onFailure",Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private void writeTv(String response) {
-        //https://demonuts.com/retrofit-android-get-json/
-        //Log.e("Bg-service", response.toString());
-//        get_set.clear();
-//        try {
-//            int intid = 0;
-//            JSONArray jArray = new JSONArray(response);
-//            for (int i = 0; i < jArray.length(); i++) {
-//
-//                JSONObject jsonObject = jArray.getJSONObject(i);
-//                String id =  jsonObject.getString("id");
-//                String image = jsonObject.getString("image");
-//                String time = jsonObject.getString("time");
-//
-//                Dilivery_chemist_photo_get_or_set mylist = new Dilivery_chemist_photo_get_or_set();
-//                mylist.id(id);
-//                mylist.image(image);
-//                mylist.time(time);
-//                mylist.intid(String.valueOf(intid++));
-//                get_set.add(mylist);
-//            }
-//        } catch (Exception e) {
-//            // TODO: handle exception
-//            Log.e("Bg-service", "Error parsing data" + e.toString());
-//        }
-//        adapter.notifyDataSetChanged();
-    }
-
-    public void alertMessage_complete_order() {
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case DialogInterface.BUTTON_POSITIVE:
-                        // Yes button clicked
-                        try {
-
-                            upload_delivery_order_completed_api();
-                        } catch (Exception e) {
-                            // TODO: handle exception
-                            Toast.makeText(Delivery_chemist_page.this, "alertMessage_complete_order error", Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        // No button clicked
-                        // do nothing
-
-                        break;
-                }
-            }
-        };
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Are you sure to completed order?")
-                .setPositiveButton("Yes", dialogClickListener)
-                .setNegativeButton("No", dialogClickListener).show();
-    }
-
-    public void mGPS_info() {
-        mGPS = new GPSTracker(this);
-        mGPS.getLocation();
-
-        latitude1 = mGPS.getLatitude();
-        longitude1 = mGPS.getLongitude();
-
-        getlatitude = String.valueOf(latitude1);
-        getlongitude = String.valueOf(longitude1);
-    }
-
-    private void upload_delivery_order_completed_api() {
-
-
-//        if (message.length() > 0) {
-//            menu_loading1.setVisibility(View.VISIBLE);
-//
-//            ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-//            Call<ResponseBody> call = apiService.upload_delivery_order_completed_api("98c08565401579448aad7c64033dcb4081906dcb", user_code, user_altercode, chemist_id, gstvno, );
-//            //Call<ResponseBody> call = apiService.testing("loginRequest");
-//            call.enqueue(new Callback<ResponseBody>() {
-//                @Override
-//                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//                    if (response.isSuccessful()) {
-//                        // Handle success response
-//                        // response.body() contains the response data
-//                        menu_loading1.setVisibility(View.GONE);
-//                        try {
-//                            JSONArray jArray = new JSONArray(response.body().string());
-//                            for (int i = 0; i < jArray.length(); i++) {
-//
-//                                JSONObject jsonObject = jArray.getJSONObject(i);
-//                                String return_id = jsonObject.getString("return_id");
-//                                String return_message = jsonObject.getString("return_message");
-//
-//                                if (return_id.equals("1")) {
-//                                    finish();
-//                                }
-//
-//                                Toast.makeText(Delivery_chemist_page.this, return_message, Toast.LENGTH_SHORT).show();
-//                            }
-//                        } catch (Exception e) {
-//                            // TODO: handle exception
-//                            Log.e("Bg-service", "Error parsing data" + e.toString());
-//                        }
-//
-//                    } else {
-//                        // Handle error response
-//                        menu_loading1.setVisibility(View.GONE);
-//                    }
-//                }
-//                @Override
-//                public void onFailure(Call<ResponseBody> call, Throwable t) {
-//                    // Handle network failures or other errors
-//                    Log.e("Bg-service-onFailure", " " + t.toString());
-//                    menu_loading1.setVisibility(View.GONE);
-//                    Toast.makeText(Delivery_chemist_page.this, "show_rider_chemist_photo_api onFailure", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//        }else{
-//            Toast.makeText(Delivery_chemist_page.this, "Enter Message", Toast.LENGTH_SHORT).show();
-//        }
     }
 }
