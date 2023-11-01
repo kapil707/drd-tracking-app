@@ -14,7 +14,8 @@
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:paddingTop="50dip"
+        android:layout_marginTop="50dip"
+        android:paddingTop="10dp"
         tools:ignore="MissingConstraints">
 
         <LinearLayout
@@ -35,8 +36,17 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:theme="@style/page_textclr_theme"
+                        android:textSize="18dip"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:text="Material photo1"/>
+
                     <ImageView
-                        android:id="@+id/material_photo1"
+                        android:id="@+id/pg_photo1"
                         android:layout_width="fill_parent"
                         android:layout_height="120dp"
                         android:layout_above="@+id/editTextImageName"
@@ -44,7 +54,7 @@
                         android:src="@drawable/attendance_svgrepo_com"/>
 
                     <TextView
-                        android:id="@+id/material_photo_error1"
+                        android:id="@+id/pg_photo_error1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:theme="@style/page_textclr_error_theme"
@@ -54,9 +64,10 @@
                         android:text="Select Material photo1"/>
 
                     <Button
-                        android:id="@+id/material_photo_btn1"
+                        android:id="@+id/pg_photo_btn1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
                         android:gravity="center"
                         android:layout_gravity="center"
                         android:background="@drawable/button_shap"
@@ -71,8 +82,18 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:theme="@style/page_textclr_theme"
+                        android:textSize="18dip"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:text="Material photo2"/>
+
                     <ImageView
-                        android:id="@+id/material_photo2"
+                        android:id="@+id/pg_photo2"
                         android:layout_width="fill_parent"
                         android:layout_height="120dp"
                         android:layout_above="@+id/editTextImageName"
@@ -80,7 +101,7 @@
                         android:src="@drawable/attendance_svgrepo_com"/>
 
                     <TextView
-                        android:id="@+id/material_photo_error2"
+                        android:id="@+id/pg_photo_error2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:theme="@style/page_textclr_error_theme"
@@ -90,9 +111,10 @@
                         android:text="Select Material photo2"/>
 
                     <Button
-                        android:id="@+id/material_photo_btn2"
+                        android:id="@+id/pg_photo_btn2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
                         android:gravity="center"
                         android:layout_gravity="center"
                         android:background="@drawable/button_shap"
@@ -115,8 +137,18 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:theme="@style/page_textclr_theme"
+                        android:textSize="18dip"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:text="Payment Detail"/>
+
                     <ImageView
-                        android:id="@+id/payment_detail_photo"
+                        android:id="@+id/pg_photo3"
                         android:layout_width="fill_parent"
                         android:layout_height="120dp"
                         android:layout_above="@+id/editTextImageName"
@@ -124,7 +156,7 @@
                         android:src="@drawable/attendance_svgrepo_com"/>
 
                     <TextView
-                        android:id="@+id/payment_detail_photo_error"
+                        android:id="@+id/pg_photo_error3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16dip"
@@ -134,9 +166,10 @@
                         android:text="Select Payment Detail"/>
 
                     <Button
-                        android:id="@+id/payment_detail_photo_btn"
+                        android:id="@+id/pg_photo_btn3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
                         android:gravity="center"
                         android:layout_gravity="center"
                         android:background="@drawable/button_shap"
@@ -151,8 +184,18 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:theme="@style/page_textclr_theme"
+                        android:textSize="18dip"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:text="NR ackn"/>
+
                     <ImageView
-                        android:id="@+id/nr_ackn_photo"
+                        android:id="@+id/pg_photo4"
                         android:layout_width="fill_parent"
                         android:layout_height="120dp"
                         android:layout_above="@+id/editTextImageName"
@@ -160,7 +203,7 @@
                         android:src="@drawable/attendance_svgrepo_com"/>
 
                     <TextView
-                        android:id="@+id/nr_ackn_photo_error"
+                        android:id="@+id/pg_photo_error4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16dip"
@@ -170,9 +213,10 @@
                         android:text="Select NR ackn"/>
 
                     <Button
-                        android:id="@+id/nr_ackn_photo_btn"
+                        android:id="@+id/pg_photo_btn4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
                         android:gravity="center"
                         android:layout_gravity="center"
                         android:background="@drawable/button_shap"
@@ -182,6 +226,26 @@
                         android:drawableLeft="@drawable/baseline_camera_alt_24" />
                 </LinearLayout>
             </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:theme="@style/page_textclr_theme"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:layout_marginTop="20dp"
+                android:textSize="18dip"
+                android:text="Message"/>
+
+            <TextView
+                android:id="@+id/enter_remarks_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:theme="@style/page_textclr_theme"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:layout_marginTop="20dp"
+                android:textSize="18dip"/>
 
             <LinearLayout
                 android:id="@+id/textbox_bg1"
@@ -204,6 +268,17 @@
                     android:ems="10"
                     style="@style/textbox_theme"/>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/enter_remarks_error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textSize="16dip"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:theme="@style/page_textclr_error_theme"
+                android:text="Select Payment Detail"/>
 
             <Button
                 android:id="@+id/buttonUpload"

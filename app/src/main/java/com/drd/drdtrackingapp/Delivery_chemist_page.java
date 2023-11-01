@@ -34,6 +34,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -63,22 +65,25 @@ import retrofit2.Response;
 public class Delivery_chemist_page extends AppCompatActivity {
     ProgressBar menu_loading1;
     UserSessionManager session;
-    String user_code="",user_altercode = "";
+    String user_code = "", user_altercode = "";
     String chemist_id = "", gstvno = "";
-    private ImageView photo1,photo2,photo3,photo4;
+    private ImageView photo1, photo2, photo3, photo4;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
-    Bitmap bitmap1,bitmap2,bitmap3,bitmap4;
-    Button photo_btn1,photo_btn2,photo_btn3,photo_btn4;
+    Bitmap bitmap1, bitmap2, bitmap3, bitmap4;
+    Button photo_btn1, photo_btn2, photo_btn3, photo_btn4;
+    TextView tv_error1, tv_error2, tv_error3, tv_error4, enter_remarks_error,enter_remarks_tv;
     Button buttonUpload, buttonUpload1;
+    EditText enter_remarks;
     boolean check = true;
     String upload_delivery_order_photo_api = "";
 
-//    GridView gridview;
+    //    GridView gridview;
 //    Delivery_chemist_photo_Adapter adapter;
 //    List<Dilivery_chemist_photo_get_or_set> get_set = new ArrayList<Dilivery_chemist_photo_get_or_set>();
     GPSTracker mGPS;
     double latitude1, longitude1;
     String getlatitude = "", getlongitude = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,10 +94,10 @@ public class Delivery_chemist_page extends AppCompatActivity {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
             int nightModeFlags = getApplicationContext().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-            if (nightModeFlags== Configuration.UI_MODE_NIGHT_NO || nightModeFlags== Configuration.UI_MODE_NIGHT_UNDEFINED) {
+            if (nightModeFlags == Configuration.UI_MODE_NIGHT_NO || nightModeFlags == Configuration.UI_MODE_NIGHT_UNDEFINED) {
                 window.setStatusBarColor(getResources().getColor(R.color.header_bg_light));
             }
-            if (nightModeFlags== Configuration.UI_MODE_NIGHT_YES) {
+            if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
                 window.setStatusBarColor(getResources().getColor(R.color.header_bg_dark));
             }
 
@@ -115,7 +120,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
         TextView action_bar_title11 = (TextView) findViewById(R.id.action_bar_title1);
         action_bar_title11.setText(gstvno);
         action_bar_title11.setVisibility(View.VISIBLE);
-        ImageButton imageButton = (ImageButton) findViewById(R.id.action_bar_back);
+        ImageButton imageButton = findViewById(R.id.action_bar_back);
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,18 +139,37 @@ public class Delivery_chemist_page extends AppCompatActivity {
         String mainurl = ma.main_url;
         upload_delivery_order_photo_api = mainurl + "upload_delivery_order_photo_api";
 
-        photo1 = findViewById(R.id.material_photo1);
-        photo_btn1 = findViewById(R.id.material_photo_btn1);
-        photo2 = findViewById(R.id.material_photo2);
-        photo_btn2 = findViewById(R.id.material_photo_btn2);
-        photo3 = findViewById(R.id.payment_detail_photo);
-        photo_btn3 = findViewById(R.id.payment_detail_photo_btn);
-        photo4 = findViewById(R.id.nr_ackn_photo);
-        photo_btn4 = findViewById(R.id.nr_ackn_photo_btn);
+        photo1 = findViewById(R.id.pg_photo1);
+        tv_error1 = findViewById(R.id.pg_photo_error1);
+        photo_btn1 = findViewById(R.id.pg_photo_btn1);
+
+        photo2 = findViewById(R.id.pg_photo2);
+        tv_error2 = findViewById(R.id.pg_photo_error2);
+        photo_btn2 = findViewById(R.id.pg_photo_btn2);
+
+        photo3 = findViewById(R.id.pg_photo3);
+        tv_error3 = findViewById(R.id.pg_photo_error3);
+        photo_btn3 = findViewById(R.id.pg_photo_btn3);
+
+        photo4 = findViewById(R.id.pg_photo4);
+        tv_error4 = findViewById(R.id.pg_photo_error4);
+        photo_btn4 = findViewById(R.id.pg_photo_btn4);
+
+        enter_remarks = findViewById(R.id.enter_remarks);
+        enter_remarks_error = findViewById(R.id.enter_remarks_error);
+        enter_remarks_tv = findViewById(R.id.enter_remarks_tv);
+
+        tv_error1.setVisibility(View.GONE);
+        tv_error2.setVisibility(View.GONE);
+        tv_error3.setVisibility(View.GONE);
+        tv_error4.setVisibility(View.GONE);
+        enter_remarks_error.setVisibility(View.GONE);
 
         buttonUpload = findViewById(R.id.buttonUpload);
         buttonUpload1 = findViewById(R.id.buttonUpload1);
 
+
+        edit_or_not(edit_yes_no);
         photo_btn1.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -207,6 +231,29 @@ public class Delivery_chemist_page extends AppCompatActivity {
         });
     }
 
+    public void edit_or_not(String ii){
+        if(ii.equals("no")){
+            tv_error1.setVisibility(View.GONE);
+            tv_error2.setVisibility(View.GONE);
+            tv_error3.setVisibility(View.GONE);
+            tv_error4.setVisibility(View.GONE);
+
+            photo_btn1.setVisibility(View.GONE);
+            photo_btn2.setVisibility(View.GONE);
+            photo_btn3.setVisibility(View.GONE);
+            photo_btn4.setVisibility(View.GONE);
+
+            enter_remarks.setVisibility(View.GONE);
+            enter_remarks_error.setVisibility(View.GONE);
+
+            LinearLayout textbox_bg1 = findViewById(R.id.textbox_bg1);
+            textbox_bg1.setVisibility(View.GONE);
+
+            buttonUpload.setVisibility(View.GONE);
+            buttonUpload1.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -235,18 +282,22 @@ public class Delivery_chemist_page extends AppCompatActivity {
         if (RC == 1891) {
             bitmap1 = (Bitmap) I.getExtras().get("data");
             photo1.setImageBitmap(bitmap1);
+            tv_error1.setVisibility(View.GONE);
         }
         if (RC == 1892) {
             bitmap2 = (Bitmap) I.getExtras().get("data");
             photo2.setImageBitmap(bitmap2);
+            tv_error2.setVisibility(View.GONE);
         }
         if (RC == 1893) {
             bitmap3 = (Bitmap) I.getExtras().get("data");
             photo3.setImageBitmap(bitmap3);
+            tv_error3.setVisibility(View.GONE);
         }
         if (RC == 1894) {
             bitmap4 = (Bitmap) I.getExtras().get("data");
             photo4.setImageBitmap(bitmap4);
+            tv_error4.setVisibility(View.GONE);
         }
     }
 
@@ -293,8 +344,6 @@ public class Delivery_chemist_page extends AppCompatActivity {
 
     public void upload_delivery_order_photo_api() {
         mGPS_info();
-
-        EditText enter_remarks = findViewById(R.id.enter_remarks);
         String message = enter_remarks.getText().toString();
 
         String ConvertImage1 = "", ConvertImage2 = "", ConvertImage3 = "", ConvertImage4 = "";
@@ -343,25 +392,35 @@ public class Delivery_chemist_page extends AppCompatActivity {
         final String finalConvertImage4 = ConvertImage4;
 
         int error = 0;
+        tv_error1.setVisibility(View.GONE);
+        tv_error2.setVisibility(View.GONE);
+        tv_error3.setVisibility(View.GONE);
+        tv_error4.setVisibility(View.GONE);
+        enter_remarks_error.setVisibility(View.GONE);
         if (ConvertImage1.equals(null) || ConvertImage1.isEmpty()) {
             error = 1;
-            Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
+            tv_error1.setVisibility(View.VISIBLE);
+            //Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
         }
         if (ConvertImage2.equals(null) || ConvertImage2.isEmpty()) {
             error = 1;
-            Toast.makeText(Delivery_chemist_page.this, "Select Material photo2", Toast.LENGTH_LONG).show();
+            tv_error2.setVisibility(View.VISIBLE);
+            //Toast.makeText(Delivery_chemist_page.this, "Select Material photo2", Toast.LENGTH_LONG).show();
         }
         if (ConvertImage3.equals(null) || ConvertImage3.isEmpty()) {
             error = 1;
-            Toast.makeText(Delivery_chemist_page.this, "Select Payment Detail", Toast.LENGTH_LONG).show();
+            tv_error3.setVisibility(View.VISIBLE);
+            //Toast.makeText(Delivery_chemist_page.this, "Select Payment Detail", Toast.LENGTH_LONG).show();
         }
         if (ConvertImage3.equals(null) || ConvertImage3.isEmpty()) {
             error = 1;
-            Toast.makeText(Delivery_chemist_page.this, "Select NR ackn", Toast.LENGTH_LONG).show();
+            tv_error4.setVisibility(View.VISIBLE);
+            //Toast.makeText(Delivery_chemist_page.this, "Select NR ackn", Toast.LENGTH_LONG).show();
         }
         if (message.equals(null) || message.isEmpty()) {
             error = 1;
-            Toast.makeText(Delivery_chemist_page.this, "Enter Remarks", Toast.LENGTH_LONG).show();
+            enter_remarks_error.setVisibility(View.VISIBLE);
+            //Toast.makeText(Delivery_chemist_page.this, "Enter Remarks", Toast.LENGTH_LONG).show();
         }
         class AsyncTaskUploadClass extends AsyncTask<Void, Void, String> {
             @Override
@@ -489,9 +548,10 @@ public class Delivery_chemist_page extends AppCompatActivity {
         }
     }
 
-    private void get_delivery_order_photo_api(){
+    private void get_delivery_order_photo_api() {
+        menu_loading1.setVisibility(View.VISIBLE);
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-        Call<ResponseBody> call = apiService.get_delivery_order_photo_api("98c08565401579448aad7c64033dcb4081906dcb",user_code,user_altercode,chemist_id,gstvno);
+        Call<ResponseBody> call = apiService.get_delivery_order_photo_api("98c08565401579448aad7c64033dcb4081906dcb", user_code, user_altercode, chemist_id, gstvno);
         //Call<ResponseBody> call = apiService.testing("loginRequest");
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -499,20 +559,43 @@ public class Delivery_chemist_page extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     // Handle success response
                     // response.body() contains the response data
-//                    try {
-//                        writeTv(response.body().string());
-//                    } catch (IOException e) {
-//                        throw new RuntimeException(e);
-//                    }
+                    try {
+                        menu_loading1.setVisibility(View.GONE);
+                        JSONArray jArray = new JSONArray(response.body().string());
+                        for (int i = 0; i < jArray.length(); i++) {
+
+                            JSONObject jsonObject = jArray.getJSONObject(i);
+                            String image1 =  jsonObject.getString("image1");
+                            String image2 =  jsonObject.getString("image2");
+                            String image3 =  jsonObject.getString("image3");
+                            String image4 =  jsonObject.getString("image4");
+                            String message =  jsonObject.getString("message");
+
+                            Picasso.get().load(image1).into(photo1);
+                            Picasso.get().load(image2).into(photo2);
+                            Picasso.get().load(image3).into(photo3);
+                            Picasso.get().load(image4).into(photo4);
+
+                            enter_remarks_tv.setText(message);
+
+                            edit_or_not("no");
+                        }
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                        Log.e("Bg-service", "Error parsing data" + e.toString());
+                        Toast.makeText(getApplicationContext(),"get_delivery_order_photo_api error2", Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     // Handle error response
+                    menu_loading1.setVisibility(View.GONE);
                 }
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Handle network failures or other errors
+                menu_loading1.setVisibility(View.GONE);
                 Log.e("Bg-service-onFailure", " " + t.toString());
-                Toast.makeText(Delivery_chemist_page.this,"show_rider_chemist_photo_api onFailure",Toast.LENGTH_SHORT).show();
+                Toast.makeText(Delivery_chemist_page.this, "show_rider_chemist_photo_api onFailure", Toast.LENGTH_SHORT).show();
             }
         });
     }
