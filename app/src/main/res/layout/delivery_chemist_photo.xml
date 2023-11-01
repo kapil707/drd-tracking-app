@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".Delivery_chemist_page"
-        android:layout_centerHorizontal="true">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Delivery_chemist_page"
+    android:layout_centerHorizontal="true">
 
-        <include layout="@layout/menu"></include>
+    <include layout="@layout/menu"></include>
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -18,158 +18,177 @@
         tools:ignore="MissingConstraints">
 
         <LinearLayout
-            android:id="@+id/upload_order_LinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/material_photo1"
-                android:layout_width="fill_parent"
-                android:layout_height="120dp"
-                android:layout_above="@+id/editTextImageName"
-                android:layout_below="@+id/buttonSelect"
-                android:layout_marginTop="20dip"
-                android:layout_marginBottom="20dip"
-                android:src="@drawable/attendance_svgrepo_com"/>
-
-            <TextView
-                android:id="@+id/material_photo_error1"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="15dip"
-                android:layout_marginRight="15dip"
-                android:theme="@style/page_textclr_error_theme"
-                android:textSize="20dip"
-                android:text="Select Material photo1"/>
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/material_photo_btn1"
-                android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/material_photo1"
+                        android:layout_width="fill_parent"
+                        android:layout_height="120dp"
+                        android:layout_above="@+id/editTextImageName"
+                        android:layout_below="@+id/buttonSelect"
+                        android:src="@drawable/attendance_svgrepo_com"/>
+
+                    <TextView
+                        android:id="@+id/material_photo_error1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:theme="@style/page_textclr_error_theme"
+                        android:textSize="16dip"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:text="Select Material photo1"/>
+
+                    <Button
+                        android:id="@+id/material_photo_btn1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:background="@drawable/button_shap"
+                        android:text="Material photo1"
+                        android:textAllCaps="false"
+                        android:textColor="#ffffff"
+                        android:drawableLeft="@drawable/baseline_camera_alt_24" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:id="@+id/material_photo2"
+                        android:layout_width="fill_parent"
+                        android:layout_height="120dp"
+                        android:layout_above="@+id/editTextImageName"
+                        android:layout_below="@+id/buttonSelect"
+                        android:src="@drawable/attendance_svgrepo_com"/>
+
+                    <TextView
+                        android:id="@+id/material_photo_error2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:theme="@style/page_textclr_error_theme"
+                        android:textSize="16dip"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:text="Select Material photo2"/>
+
+                    <Button
+                        android:id="@+id/material_photo_btn2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:background="@drawable/button_shap"
+                        android:text="Material photo2"
+                        android:textAllCaps="false"
+                        android:textColor="#ffffff"
+                        android:drawableLeft="@drawable/baseline_camera_alt_24" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip"
-                android:layout_weight="1"
-                android:background="@drawable/button_shap"
-                android:text="Material photo1"
-                android:textAllCaps="false"
-                android:textColor="#ffffff"
-                android:drawableLeft="@drawable/baseline_camera_alt_24" />
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dip">
 
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:id="@+id/payment_detail_photo"
+                        android:layout_width="fill_parent"
+                        android:layout_height="120dp"
+                        android:layout_above="@+id/editTextImageName"
+                        android:layout_below="@+id/buttonSelect"
+                        android:src="@drawable/attendance_svgrepo_com"/>
 
-            <ImageView
-                android:id="@+id/material_photo2"
-                android:layout_width="fill_parent"
-                android:layout_height="120dp"
-                android:layout_above="@+id/editTextImageName"
-                android:layout_below="@+id/buttonSelect"
-                android:layout_marginTop="20dip"
-                android:layout_marginBottom="20dip"
-                android:src="@drawable/attendance_svgrepo_com"/>
+                    <TextView
+                        android:id="@+id/payment_detail_photo_error"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16dip"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:theme="@style/page_textclr_error_theme"
+                        android:text="Select Payment Detail"/>
 
-            <TextView
-                android:id="@+id/material_photo_error2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="15dip"
-                android:layout_marginRight="15dip"
-                android:theme="@style/page_textclr_error_theme"
-                android:textSize="20dip"
-                android:text="Select Material photo2"/>
+                    <Button
+                        android:id="@+id/payment_detail_photo_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:background="@drawable/button_shap"
+                        android:text="Payment Detail"
+                        android:textAllCaps="false"
+                        android:textColor="#ffffff"
+                        android:drawableLeft="@drawable/baseline_camera_alt_24" />
 
-            <Button
-                android:id="@+id/material_photo_btn2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip"
-                android:layout_weight="1"
-                android:background="@drawable/button_shap"
-                android:text="Material photo2"
-                android:textAllCaps="false"
-                android:textColor="#ffffff"
-                android:drawableLeft="@drawable/baseline_camera_alt_24" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:id="@+id/nr_ackn_photo"
+                        android:layout_width="fill_parent"
+                        android:layout_height="120dp"
+                        android:layout_above="@+id/editTextImageName"
+                        android:layout_below="@+id/buttonSelect"
+                        android:src="@drawable/attendance_svgrepo_com"/>
 
+                    <TextView
+                        android:id="@+id/nr_ackn_photo_error"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16dip"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:theme="@style/page_textclr_error_theme"
+                        android:text="Select NR ackn"/>
 
-            <ImageView
-                android:id="@+id/payment_detail_photo"
-                android:layout_width="fill_parent"
-                android:layout_height="120dp"
-                android:layout_above="@+id/editTextImageName"
-                android:layout_below="@+id/buttonSelect"
-                android:layout_marginTop="20dip"
-                android:layout_marginBottom="20dip"
-                android:src="@drawable/attendance_svgrepo_com"/>
-
-            <TextView
-                android:id="@+id/payment_detail_photo_error"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="15dip"
-                android:layout_marginRight="15dip"
-                android:theme="@style/page_textclr_error_theme"
-                android:textSize="20dip"
-                android:text="Select Payment Detail"/>
-
-            <Button
-                android:id="@+id/payment_detail_photo_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip"
-                android:layout_weight="1"
-                android:background="@drawable/button_shap"
-                android:text="Payment Detail"
-                android:textAllCaps="false"
-                android:textColor="#ffffff"
-                android:drawableLeft="@drawable/baseline_camera_alt_24" />
-
-
-            <ImageView
-                android:id="@+id/nr_ackn_photo"
-                android:layout_width="fill_parent"
-                android:layout_height="120dp"
-                android:layout_above="@+id/editTextImageName"
-                android:layout_below="@+id/buttonSelect"
-                android:layout_marginTop="20dip"
-                android:layout_marginBottom="20dip"
-                android:src="@drawable/attendance_svgrepo_com"/>
-
-            <TextView
-                android:id="@+id/nr_ackn_photo_error"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="15dip"
-                android:layout_marginRight="15dip"
-                android:theme="@style/page_textclr_error_theme"
-                android:textSize="20dip"
-                android:text="Select NR ackn"/>
-
-            <Button
-                android:id="@+id/nr_ackn_photo_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip"
-                android:layout_weight="1"
-                android:background="@drawable/button_shap"
-                android:text="NR ackn"
-                android:textAllCaps="false"
-                android:textColor="#ffffff"
-                android:drawableLeft="@drawable/baseline_camera_alt_24" />
-
+                    <Button
+                        android:id="@+id/nr_ackn_photo_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:background="@drawable/button_shap"
+                        android:text="NR ackn"
+                        android:textAllCaps="false"
+                        android:textColor="#ffffff"
+                        android:drawableLeft="@drawable/baseline_camera_alt_24" />
+                </LinearLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/textbox_bg1"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="20dip"
                 android:layout_marginLeft="10dip"
-                android:layout_marginTop="10dip"
                 android:layout_marginRight="10dip"
                 android:orientation="horizontal"
                 android:background="@drawable/textbox_shap"
@@ -190,8 +209,8 @@
                 android:id="@+id/buttonUpload"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dip"
                 android:layout_marginLeft="10dip"
-                android:layout_marginTop="10dip"
                 android:layout_marginRight="10dip"
                 android:layout_marginBottom="10dip"
                 android:background="@drawable/button_shap"
@@ -203,8 +222,8 @@
                 android:id="@+id/buttonUpload1"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dip"
                 android:layout_marginLeft="10dip"
-                android:layout_marginTop="10dip"
                 android:layout_marginRight="10dip"
                 android:layout_marginBottom="10dip"
                 android:background="@drawable/button_dis_shap"
@@ -215,4 +234,4 @@
 
         </LinearLayout>
     </ScrollView>
-    </RelativeLayout>
+</RelativeLayout>
