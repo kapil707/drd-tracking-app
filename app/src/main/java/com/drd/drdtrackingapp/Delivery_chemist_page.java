@@ -590,6 +590,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
                     menu_loading1.setVisibility(View.GONE);
                 }
             }
+
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Handle network failures or other errors
