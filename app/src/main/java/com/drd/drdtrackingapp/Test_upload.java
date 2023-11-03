@@ -1,34 +1,25 @@
 package com.drd.drdtrackingapp;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultCaller;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.ImageCapture;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
-import android.content.Context;
-import android.content.CursorLoader;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -39,136 +30,107 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Test_upload extends AppCompatActivity {
-    private File photoFile;
 
-    private static final int MY_CAMERA_PERMISSION_CODE = 100;
+    private static final int camra_code = 1;
+    ActivityResultLauncher<Uri> tackpic;
+    Uri imageuri;
+
+    ImageView iv;
+    Button btn,btn1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_upload);
 
-        Button captureButton = findViewById(R.id.captureButton);
-        Button captureButton1 = findViewById(R.id.captureButton1);
+        imageuri = createuri();
+        regpiclun();
 
+        iv = findViewById(R.id.imageviews);
+        btn = findViewById(R.id.captureButton);
+        btn1 = findViewById(R.id.upload_btn);
 
-        captureButton.setOnClickListener(new View.OnClickListener() {
+        btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
-                } else {
-                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(cameraIntent, 1894);
-                }
-
-//                if (ContextCompat.checkSelfPermission(getApplicationContext(),
-//                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-//                    Intent intent = new Intent();
-//                    intent.setType("image/*");
-//                    intent.setAction(Intent.ACTION_GET_CONTENT);
-//                    startActivityForResult(intent, 10);
-//                } else {
-//                    ActivityCompat.requestPermissions(Test_upload.this,
-//                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
-//                }
+            public void onClick(View arg0) {
+                checkcamrapermissionandopencamra();
             }
         });
 
-        captureButton1.setOnClickListener(new View.OnClickListener() {
+        btn1.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View arg0) {
                 uploadFile();
             }
         });
     }
 
-    Uri selectedImage;
-    String path;
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        //Toast.makeText(Test_upload.this, String.valueOf(requestCode), Toast.LENGTH_LONG).show();
+    private Uri createuri(){
+        File imagefile = new File(getApplicationContext().getFilesDir(),"kamalg.jpg");
+        return FileProvider.getUriForFile(
+                getApplicationContext(),
+                "com.drd.drdtrackingapp.FileProvider",
+                imagefile
+        );
+    }
 
-        if (requestCode == 1894 && resultCode == RESULT_OK) {
 
+    private void regpiclun() {
+        tackpic = registerForActivityResult(
+                new ActivityResultContracts.TakePicture(),
+                new ActivityResultCallback<Boolean>() {
+                    @Override
+                    public void onActivityResult(Boolean result) {
+                        try {
+                            iv.setImageURI(null);
+                            iv.setImageURI(imageuri);
 
-            selectedImage = data.getData();
+                            Toast.makeText(Test_upload.this,imageuri.toString(), Toast.LENGTH_LONG).show();
 
-            Bundle ext = data.getExtras();
-            Bitmap imagebit = (Bitmap) ext.get("data");
+                        } catch (Exception exception) {
+                            exception.getStackTrace();
+                        }
+                    }
+                }
 
-            try {
-                saveImage(imagebit);
-            } catch (IOException ex) {
+        );
+    }
 
-            }
-
-            //uploadFile(selectedImage, "My Image");
-
-//            Uri uri = data.getData();
-//            Context context = Test_upload.this;
-//            path = RealPathUtil.getRealPath(context, uri);
-//            Bitmap bitmap = BitmapFactory.decodeFile(path);
-//
-//
-//            ImageView pg_photo1 = findViewById(R.id.pg_photo1);
-//            pg_photo1.setImageBitmap(bitmap);
-
+    private void checkcamrapermissionandopencamra(){
+        if(ActivityCompat.checkSelfPermission(Test_upload.this,
+                Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(Test_upload.this,
+                    new String[]{Manifest.permission.CAMERA},camra_code);
+        }else{
+            tackpic.launch(imageuri);
         }
     }
 
-    private void saveImage(Bitmap finalBitmap) throws IOException {
-        Toast.makeText(Test_upload.this, "saveImage", Toast.LENGTH_LONG).show();
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
+        if(requestCode==camra_code){
+            if(grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                tackpic.launch(imageuri);
 
-        File photoFile = new File(image.getAbsolutePath());
-
-        // Continue only if the File was successfully created
-        if (photoFile != null) {
-            Uri photoURI = FileProvider.getUriForFile(this,
-                    "com.drd.drdtrackingapp.FileProvider",
-                    photoFile);
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+            }else{
+                Toast.makeText(this,"camra no prmission", Toast.LENGTH_LONG).show();
+            }
         }
-
-//        String root = Environment.getExternalStorageDirectory().toString();
-//        File myDir = new File(root + "/saved_images");
-//        myDir.mkdirs();
-//
-//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-//        String fname = "Shutta_"+ timeStamp +".jpg";
-//
-//        File file = new File(myDir, fname);
-//        if (file.exists()) file.delete ();
-//        try {
-//            FileOutputStream out = new FileOutputStream(file);
-//            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-//            out.flush();
-//            out.close();
-//
-//            Toast.makeText(Test_upload.this, "saveImage 1", Toast.LENGTH_LONG).show();
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//
-//            Toast.makeText(Test_upload.this, "saveImage 2", Toast.LENGTH_LONG).show();
-//
-//        }
     }
 
     private void uploadFile() {
 
-        File photoFile = new File(getExternalFilesDir(null), "photo.jpg");
+        String URL = "content://com.drd.drdtrackingapp.FileProvider"+imageuri.getPath();
+
+        Uri students = Uri.parse(URL);
+
+        File photoFile = new File(getApplicationContext().getFilesDir(), "kamalg.jpg");
+
+        //File photoFile = new File(String.valueOf(students));
+
+        Toast.makeText(getApplicationContext(),  photoFile.toString(), Toast.LENGTH_LONG).show();
+
 
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), photoFile);
         MultipartBody.Part imagePart = MultipartBody.Part.createFormData("image", photoFile.getName(), requestFile);

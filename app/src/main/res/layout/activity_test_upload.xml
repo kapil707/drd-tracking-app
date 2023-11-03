@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,7 +8,7 @@
 
 
     <ImageView
-        android:id="@+id/pg_photo1"
+        android:id="@+id/imageviews"
         android:layout_width="fill_parent"
         android:layout_height="120dp"
         android:src="@drawable/attendance_svgrepo_com"
@@ -16,42 +16,30 @@
 
     <Button
         android:id="@+id/captureButton"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="100dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         app:backgroundTint="@null"
         android:background="@drawable/button_shap"
-        android:text="Select"
+        android:text="Tack Photo"
         style="@style/button_theme"
         android:textColor="#ffffff"
-        android:layout_marginLeft="15dip"
-        android:layout_marginRight="15dip"
         android:textAllCaps="false"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        app:layout_constraintTop_toBottomOf="@+id/imageviews"/>
 
     <Button
-        android:id="@+id/captureButton1"
-        android:layout_marginTop="300dp"
+        android:id="@+id/upload_btn"
+        android:layout_marginTop="100dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         app:backgroundTint="@null"
         android:background="@drawable/button_shap"
-        android:text="Upload"
+        android:text="Upload Photo"
         style="@style/button_theme"
         android:textColor="#ffffff"
-        android:layout_marginLeft="15dip"
-        android:layout_marginRight="15dip"
         android:textAllCaps="false"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        app:layout_constraintTop_toBottomOf="@+id/captureButton"/>
 
-    <Button
-        android:layout_marginTop="400dp"
-        android:id="@+id/btnTakePhoto"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dip"
-        android:layout_marginRight="15dip"
-        android:text="Take Photo"
-        android:onClick="takePhoto" />
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
