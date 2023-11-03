@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Test_upload">
+
+
+    <ImageView
+        android:id="@+id/pg_photo1"
+        android:layout_width="fill_parent"
+        android:layout_height="120dp"
+        android:src="@drawable/attendance_svgrepo_com"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/captureButton"
+        android:layout_marginTop="200dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        app:backgroundTint="@null"
+        android:background="@drawable/button_shap"
+        android:text="Select"
+        style="@style/button_theme"
+        android:textColor="#ffffff"
+        android:layout_marginLeft="15dip"
+        android:layout_marginRight="15dip"
+        android:textAllCaps="false"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/captureButton1"
+        android:layout_marginTop="300dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        app:backgroundTint="@null"
+        android:background="@drawable/button_shap"
+        android:text="Upload"
+        style="@style/button_theme"
+        android:textColor="#ffffff"
+        android:layout_marginLeft="15dip"
+        android:layout_marginRight="15dip"
+        android:textAllCaps="false"
+        tools:ignore="MissingConstraints" />
+
+</RelativeLayout>

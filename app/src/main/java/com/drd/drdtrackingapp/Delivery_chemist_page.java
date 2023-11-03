@@ -350,7 +350,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
         try {
             ByteArrayOutputStream byteArrayOutputStreamObject;
             byteArrayOutputStreamObject = new ByteArrayOutputStream();
-            bitmap1.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStreamObject);
+            bitmap1.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStreamObject);
             byte[] byteArrayVar = byteArrayOutputStreamObject.toByteArray();
             ConvertImage1 = Base64.encodeToString(byteArrayVar, Base64.DEFAULT);
         } catch (Exception ee) {
@@ -360,7 +360,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
         try {
             ByteArrayOutputStream byteArrayOutputStreamObject;
             byteArrayOutputStreamObject = new ByteArrayOutputStream();
-            bitmap2.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStreamObject);
+            bitmap2.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStreamObject);
             byte[] byteArrayVar = byteArrayOutputStreamObject.toByteArray();
             ConvertImage2 = Base64.encodeToString(byteArrayVar, Base64.DEFAULT);
         } catch (Exception ee) {
@@ -370,7 +370,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
         try {
             ByteArrayOutputStream byteArrayOutputStreamObject;
             byteArrayOutputStreamObject = new ByteArrayOutputStream();
-            bitmap3.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStreamObject);
+            bitmap3.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStreamObject);
             byte[] byteArrayVar = byteArrayOutputStreamObject.toByteArray();
             ConvertImage3 = Base64.encodeToString(byteArrayVar, Base64.DEFAULT);
         } catch (Exception ee) {
@@ -380,7 +380,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
         try {
             ByteArrayOutputStream byteArrayOutputStreamObject;
             byteArrayOutputStreamObject = new ByteArrayOutputStream();
-            bitmap4.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStreamObject);
+            bitmap4.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStreamObject);
             byte[] byteArrayVar = byteArrayOutputStreamObject.toByteArray();
             ConvertImage4 = Base64.encodeToString(byteArrayVar, Base64.DEFAULT);
         } catch (Exception ee) {
