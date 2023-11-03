@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.ImageCapture;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.content.Context;
@@ -16,6 +17,7 @@ import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
@@ -23,7 +25,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -55,20 +60,20 @@ public class Test_upload extends AppCompatActivity {
                 if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
                 } else {
-//                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-//                    startActivityForResult(cameraIntent, 1894);
+                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(cameraIntent, 1894);
                 }
 
-                if (ContextCompat.checkSelfPermission(getApplicationContext(),
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    Intent intent = new Intent();
-                    intent.setType("image/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(intent, 10);
-                } else {
-                    ActivityCompat.requestPermissions(Test_upload.this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
-                }
+//                if (ContextCompat.checkSelfPermission(getApplicationContext(),
+//                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+//                    Intent intent = new Intent();
+//                    intent.setType("image/*");
+//                    intent.setAction(Intent.ACTION_GET_CONTENT);
+//                    startActivityForResult(intent, 10);
+//                } else {
+//                    ActivityCompat.requestPermissions(Test_upload.this,
+//                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
+//                }
             }
         });
 
@@ -87,23 +92,81 @@ public class Test_upload extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         //Toast.makeText(Test_upload.this, String.valueOf(requestCode), Toast.LENGTH_LONG).show();
 
-        if (requestCode == 10 && resultCode == RESULT_OK) {
+        if (requestCode == 1894 && resultCode == RESULT_OK) {
 
 
             selectedImage = data.getData();
 
+            Bundle ext = data.getExtras();
+            Bitmap imagebit = (Bitmap) ext.get("data");
+
+            try {
+                saveImage(imagebit);
+            } catch (IOException ex) {
+
+            }
+
             //uploadFile(selectedImage, "My Image");
 
-            Uri uri = data.getData();
-            Context context = Test_upload.this;
-            path = RealPathUtil.getRealPath(context, uri);
-            Bitmap bitmap = BitmapFactory.decodeFile(path);
-
-
-            ImageView pg_photo1 = findViewById(R.id.pg_photo1);
-            pg_photo1.setImageBitmap(bitmap);
+//            Uri uri = data.getData();
+//            Context context = Test_upload.this;
+//            path = RealPathUtil.getRealPath(context, uri);
+//            Bitmap bitmap = BitmapFactory.decodeFile(path);
+//
+//
+//            ImageView pg_photo1 = findViewById(R.id.pg_photo1);
+//            pg_photo1.setImageBitmap(bitmap);
 
         }
+    }
+
+    private void saveImage(Bitmap finalBitmap) throws IOException {
+        Toast.makeText(Test_upload.this, "saveImage", Toast.LENGTH_LONG).show();
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        File photoFile = new File(image.getAbsolutePath());
+
+        // Continue only if the File was successfully created
+        if (photoFile != null) {
+            Uri photoURI = FileProvider.getUriForFile(this,
+                    "com.drd.drdtrackingapp.FileProvider",
+                    photoFile);
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+        }
+
+//        String root = Environment.getExternalStorageDirectory().toString();
+//        File myDir = new File(root + "/saved_images");
+//        myDir.mkdirs();
+//
+//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//        String fname = "Shutta_"+ timeStamp +".jpg";
+//
+//        File file = new File(myDir, fname);
+//        if (file.exists()) file.delete ();
+//        try {
+//            FileOutputStream out = new FileOutputStream(file);
+//            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+//            out.flush();
+//            out.close();
+//
+//            Toast.makeText(Test_upload.this, "saveImage 1", Toast.LENGTH_LONG).show();
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//
+//            Toast.makeText(Test_upload.this, "saveImage 2", Toast.LENGTH_LONG).show();
+//
+//        }
     }
 
     private void uploadFile() {
