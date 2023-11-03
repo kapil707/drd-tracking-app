@@ -40,7 +40,6 @@ import retrofit2.Response;
 
 public class Test_upload extends AppCompatActivity {
     private File photoFile;
-    private ImageCapture imageCapture;
 
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
     @Override
@@ -51,8 +50,6 @@ public class Test_upload extends AppCompatActivity {
         Button captureButton = findViewById(R.id.captureButton);
         Button captureButton1 = findViewById(R.id.captureButton1);
 
-        // Initialize the ImageCapture use case
-        imageCapture = new ImageCapture.Builder().build();
 
         captureButton.setOnClickListener(new View.OnClickListener() {
             @Override
