@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
     <!-- Permission for camera -->
     <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!-- Permission to vibrate -->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -22,15 +22,23 @@
         android:excludeFromRecents="false"
         android:fullBackupContent="@xml/backup_rules"
         android:hardwareAccelerated="false"
-        android:requestLegacyExternalStorage="true"
-        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher_logo"
         android:label="@string/app_name"
         android:largeHeap="true"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DrdTrackingApp"
+        android:usesCleartextTraffic="true"
         tools:targetApi="24">
+        <activity
+            android:name=".Testme11"
+            android:exported="false" />
+        <activity
+            android:name=".Test11"
+            android:exported="false"
+            android:label="@string/title_activity_test11"
+            android:theme="@style/Theme.DrdTrackingApp" />
         <activity
             android:name=".Test_upload"
             android:exported="false" />
@@ -135,8 +143,9 @@
             android:authorities="com.drd.drdtrackingapp.FileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
-            <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
         </provider>
     </application>
 
