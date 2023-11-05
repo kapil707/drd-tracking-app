@@ -356,6 +356,7 @@ public class Testme11 extends AppCompatActivity {
             //         write the compressed bitmap at the destination specified by filename.
             scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
 
+
         } catch (FileNotFoundException e) {
             //e.printStackTrace();
             Toast.makeText(getApplicationContext(), "compressImage4", Toast.LENGTH_LONG).show();
