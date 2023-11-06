@@ -62,16 +62,16 @@ public interface ApiService {
             @Field("token_key") String token_key
     );
 
-    //@FormUrlEncoded
     @Multipart
+    //@FormUrlEncoded
     @POST("drd_master_api/api01/upload_meter_photo_api")
     Call<ResponseBody> upload_meter_photo_api(
-            @Field("api_key") String api_key,
-            @Field("user_code") String user_code,
-            @Field("user_altercode") String user_altercode,
-            @Field("latitude") String latitude,
-            @Field("longitude") String longitude,
-            @Field("meter_text") String meter_text,
+            @Part("api_key") String api_key,
+            @Part("user_code") String user_code,
+            @Part("user_altercode") String user_altercode,
+            @Part("latitude") String latitude,
+            @Part("longitude") String longitude,
+            @Part("meter_text") String meter_text,
             @Part MultipartBody.Part image
     );
 

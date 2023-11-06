@@ -306,14 +306,14 @@ public class Meter_photo extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     // Handle network errors or exceptions
-                    delete_image(currentPhotoPath);
-                    delete_image(selectedPath);
+//                    delete_image(currentPhotoPath);
+//                    delete_image(selectedPath);
                     Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
         } catch (Exception e) {
-            delete_image(currentPhotoPath);
-            delete_image(selectedPath);
+//            delete_image(currentPhotoPath);
+//            delete_image(selectedPath);
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
