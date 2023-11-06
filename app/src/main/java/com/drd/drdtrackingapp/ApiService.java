@@ -75,7 +75,6 @@ public interface ApiService {
             @Part MultipartBody.Part image
     );
 
-
     @Multipart
     @POST("drd_master_api/api01/test_upload")
     Call<ResponseBody> uploadImage(
