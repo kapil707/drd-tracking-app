@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".Test_upload">
 
+
     <ImageView
         android:id="@+id/displayImageView"
         android:layout_width="300dp"

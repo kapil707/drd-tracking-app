@@ -51,7 +51,29 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("drd_master_api/api01/upload_attendance_api")
-    Call<ResponseBody> upload_attendance_api(@Field("api_key") String api_key,@Field("user_code") String user_code,@Field("user_altercode") String user_altercode,@Field("latitude") String latitude,@Field("longitude") String longitude,@Field("getdate") String getdate,@Field("gettime") String gettime,@Field("token_key") String token_key);
+    Call<ResponseBody> upload_attendance_api(
+            @Field("api_key") String api_key,
+            @Field("user_code") String user_code,
+            @Field("user_altercode") String user_altercode,
+            @Field("latitude") String latitude,
+            @Field("longitude") String longitude,
+            @Field("getdate") String getdate,
+            @Field("gettime") String gettime,
+            @Field("token_key") String token_key
+    );
+
+    //@FormUrlEncoded
+    @Multipart
+    @POST("drd_master_api/api01/upload_meter_photo_api")
+    Call<ResponseBody> upload_meter_photo_api(
+            @Field("api_key") String api_key,
+            @Field("user_code") String user_code,
+            @Field("user_altercode") String user_altercode,
+            @Field("latitude") String latitude,
+            @Field("longitude") String longitude,
+            @Field("meter_text") String meter_text,
+            @Part MultipartBody.Part image
+    );
 
 
     @Multipart

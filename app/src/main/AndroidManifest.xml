@@ -35,11 +35,6 @@
             android:name=".Testme11"
             android:exported="false" />
         <activity
-            android:name=".Test11"
-            android:exported="false"
-            android:label="@string/title_activity_test11"
-            android:theme="@style/Theme.DrdTrackingApp" />
-        <activity
             android:name=".Test_upload"
             android:exported="false" />
         <activity

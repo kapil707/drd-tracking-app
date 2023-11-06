@@ -259,6 +259,10 @@ public class Meter_photo extends AppCompatActivity {
 
     private void Upload() {
         try {
+            String message = meter_text.getText().toString();
+
+            String latitude="",longitude="";
+
             selectedPath = compressImage(currentPhotoPath);
             File imageFile = new File(selectedPath);
 
@@ -269,7 +273,14 @@ public class Meter_photo extends AppCompatActivity {
                     MultipartBody.Part.createFormData("image", imageFile.getName(), requestFile);
 
             ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-            Call<ResponseBody> call = apiService.uploadImage(body);
+            Call<ResponseBody> call = apiService.upload_meter_photo_api(
+                    "98c08565401579448aad7c64033dcb4081906dcb",
+                    user_code,
+                    user_altercode,
+                    latitude,
+                    longitude,
+                    message,
+                    body);
 
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
