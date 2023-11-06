@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }else{
             Intent in = new Intent();
-            in.setClass(this, Test_upload.class);
+            in.setClass(this, Home_page.class);
             startActivity(in);
             finish();
         }

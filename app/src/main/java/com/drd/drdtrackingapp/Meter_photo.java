@@ -1,26 +1,40 @@
 package com.drd.drdtrackingapp;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.drawable.GradientDrawable;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -35,6 +49,9 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -43,27 +60,33 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class Meter_photo extends AppCompatActivity {
     UserSessionManager session;
     String user_code="",user_altercode = "";
+    public static final int CAMERA_PERM_CODE = 101;
+    public static final int CAMERA_REQUEST_CODE = 102;
+    public static final int GALLERY_REQUEST_CODE = 105;
 
-    Bitmap bitmap;
-    Button take_photo,galery_select;
-    private ImageView imageView;
-    Button UploadImageServer, UploadImageServer1;
-
-    private static final int CAMERA_REQUEST = 1888;
-    private static final int MY_CAMERA_PERMISSION_CODE = 100;
+    ImageView selectedImage;
+    Button cameraBtn, uploadbtn,uploadbtn1;
+    String currentPhotoPath, selectedPath;
 
     ProgressBar menu_loading1;
-    String upload_meter_photo_api = "";
     TextView meter_text;
-    boolean check = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,13 +104,13 @@ public class Meter_photo extends AppCompatActivity {
                 window.setStatusBarColor(getResources().getColor(R.color.header_bg_dark));
             }
 
-            Button login_btn1 = findViewById(R.id.buttonUpload);
-            login_btn1.setBackgroundResource(R.drawable.button_shap);
+            Button uploadbtn_ = findViewById(R.id.uploadbtn);
+            uploadbtn_.setBackgroundResource(R.drawable.button_shap);
 
             LinearLayout textbox_bg1 = findViewById(R.id.textbox_bg1);
             textbox_bg1.setBackgroundResource(R.drawable.textbox_shap);
 
-            GradientDrawable drawable1 = (GradientDrawable) login_btn1.getBackground();
+            GradientDrawable drawable1 = (GradientDrawable) uploadbtn_.getBackground();
             GradientDrawable drawable2 = (GradientDrawable) textbox_bg1.getBackground();
             if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
                 drawable1.setColor(getResources().getColor(R.color.button_bg_dark));
@@ -118,220 +141,335 @@ public class Meter_photo extends AppCompatActivity {
         menu_loading1 = (ProgressBar) findViewById(R.id.menu_loading1);
         /**********************************************************/
 
-        MainActivity ma = new MainActivity();
-        String mainurl = ma.main_url;
-        upload_meter_photo_api = mainurl + "upload_meter_photo_api";
+        selectedImage = findViewById(R.id.selectedImage);
+        cameraBtn = findViewById(R.id.cameraBtn);
+        meter_text = findViewById(R.id.meter_text);
+        uploadbtn = findViewById(R.id.uploadbtn);
+        uploadbtn1 = findViewById(R.id.uploadbtn1);
 
-        imageView = findViewById(R.id.preview_image);
-        take_photo = findViewById(R.id.take_photo);
-        //galery_select = findViewById(R.id.galery_select);
-        UploadImageServer = findViewById(R.id.buttonUpload);
-        UploadImageServer1 = findViewById(R.id.buttonUpload1);
-
-        /*galery_select.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
+        cameraBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select image from gallery"), 1989);
-
-            }
-        });*/
-
-        take_photo.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onClick(View view) {
-                if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
-                } else {
-                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(cameraIntent, CAMERA_REQUEST);
-                }
+                askCameraPermissions();
             }
         });
 
-        meter_text = findViewById(R.id.meter_text);
-        UploadImageServer.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
+
+        uploadbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String message = meter_text.getText().toString();
 
                 if (message.length() > 0) {
-                    ImageUploadToServerFunction();
+                    Upload();
                 }else{
                     Toast.makeText(Meter_photo.this, "Enter Meter Reading", Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
-
+    private void askCameraPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
+        } else {
+            dispatchTakePictureIntent();
+        }
+    }
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @android.support.annotation.NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == MY_CAMERA_PERMISSION_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+        if (requestCode == CAMERA_PERM_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                dispatchTakePictureIntent();
             } else {
-                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Camera Permission is Required to Use camera.", Toast.LENGTH_SHORT).show();
             }
         }
     }
-
-    @SuppressLint("MissingSuperCall")
     @Override
-    protected void onActivityResult(int RC, int RQC, Intent I) {
-        super.onActivityResult(RC, RQC, I);
-        //Toast.makeText(User_image_uploading.this, String.valueOf(RC), Toast.LENGTH_LONG).show();
-        if (RC == CAMERA_REQUEST) {
-            bitmap = (Bitmap) I.getExtras().get("data");
-            imageView.setImageBitmap(bitmap);
-            imageView.setVisibility(View.VISIBLE);
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CAMERA_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                File f = new File(currentPhotoPath);
+                selectedImage.setImageURI(Uri.fromFile(f));
+                Log.d("tag", "ABsolute Url of Image is " + Uri.fromFile(f));
 
-            UploadImageServer.setVisibility(View.VISIBLE);
-            UploadImageServer1.setVisibility(View.GONE);
+                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                Uri contentUri = Uri.fromFile(f);
+                mediaScanIntent.setData(contentUri);
+                this.sendBroadcast(mediaScanIntent);
+            }
         }
-        if (RC == 1989) {
-            Uri uri = I.getData();
+
+        if (requestCode == GALLERY_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Uri contentUri = data.getData();
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
+                Log.d("tag", "onActivityResult: Gallery Image Uri:  " + imageFileName);
+                selectedImage.setImageURI(contentUri);
+            }
+        }
+    }
+    private String getFileExt(Uri contentUri) {
+        ContentResolver c = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(c.getType(contentUri));
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
             try {
-                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                imageView.setImageBitmap(bitmap);
-                imageView.setVisibility(View.VISIBLE);
-                UploadImageServer.setVisibility(View.VISIBLE);
-                UploadImageServer1.setVisibility(View.GONE);
-            } catch (IOException e) {
-                e.printStackTrace();
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.drd.drdtrackingapp.FileProvider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
             }
         }
     }
 
-    public void ImageUploadToServerFunction() {
-        String ConvertImage = null;
+    private void Upload() {
         try {
-            ByteArrayOutputStream byteArrayOutputStreamObject;
-            byteArrayOutputStreamObject = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStreamObject);
-            byte[] byteArrayVar = byteArrayOutputStreamObject.toByteArray();
-            ConvertImage = Base64.encodeToString(byteArrayVar, Base64.DEFAULT);
-        } catch (Exception ee) {
+            selectedPath = compressImage(currentPhotoPath);
+            File imageFile = new File(selectedPath);
 
-        }
-        final String finalConvertImage = ConvertImage;
-        class AsyncTaskUploadClass extends AsyncTask<Void, Void, String> {
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                //progressDialog = ProgressDialog.show(User_image_uploading.this,"Uploading","Please Wait",false,false);
-                menu_loading1.setVisibility(View.VISIBLE);
-                UploadImageServer.setVisibility(View.GONE);
-                UploadImageServer1.setVisibility(View.VISIBLE);
-            }
-            @Override
-            protected String doInBackground(Void... params) {
-                ImageProcessClass imageProcessClass = new ImageProcessClass();
-                HashMap<String, String> HashMapParams = new HashMap<String, String>();
+            RequestBody requestFile =
+                    RequestBody.create(MultipartBody.FORM, imageFile);
+            // MultipartBody.Part is used to send also the actual file name
+            MultipartBody.Part body =
+                    MultipartBody.Part.createFormData("image", imageFile.getName(), requestFile);
 
-                String meter_text1 = meter_text.getText().toString();
+            ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
+            Call<ResponseBody> call = apiService.uploadImage(body);
 
-                HashMapParams.put("api_key", "98c08565401579448aad7c64033dcb4081906dcb");
-                HashMapParams.put("image_path", finalConvertImage);
-                HashMapParams.put("user_code", user_code);
-                HashMapParams.put("user_altercode", user_altercode);
-                HashMapParams.put("meter_text", meter_text1);
-
-                String FinalData = imageProcessClass.ImageHttpRequest(upload_meter_photo_api, HashMapParams);
-                return FinalData;
-            }
-            @Override
-            protected void onPostExecute(String response) {
-                super.onPostExecute(response);
-                menu_loading1.setVisibility(View.GONE);
-                imageView.setVisibility(View.GONE);
-                try {
-                    JSONArray jArray = new JSONArray(response);
-                    for (int i = 0; i < jArray.length(); i++) {
-
-                        JSONObject jsonObject = jArray.getJSONObject(i);
-                        String return_id =  jsonObject.getString("return_id");
-                        String return_message =  jsonObject.getString("return_message");
-
-                        if(return_id.equals("1")){
-                            finish();
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful()) {
+                        // Image uploaded successfully
+                        // Handle the response, if any
+                        try {
+                            Toast.makeText(getApplicationContext(), response.body().string(), Toast.LENGTH_LONG).show();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
                         }
-                        Toast.makeText(getApplicationContext(), return_message.toString(), Toast.LENGTH_LONG).show();
+                        delete_image(currentPhotoPath);
+                        delete_image(selectedPath);
+                    } else {
+                        delete_image(currentPhotoPath);
+                        delete_image(selectedPath);
+                        // Handle the error
+                        Toast.makeText(getApplicationContext(), "Some error occurred...", Toast.LENGTH_LONG).show();
                     }
-                } catch (Exception e) {
-                    // TODO: handle exception
-                    Log.e("Bg-service", "Error parsing data" + e.toString());
-                    Toast.makeText(getApplicationContext(),"upload_meter_photo_api error2", Toast.LENGTH_LONG).show();
                 }
-            }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    // Handle network errors or exceptions
+                    delete_image(currentPhotoPath);
+                    delete_image(selectedPath);
+                    Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (Exception e) {
+            delete_image(currentPhotoPath);
+            delete_image(selectedPath);
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
-        AsyncTaskUploadClass AsyncTaskUploadClassOBJ = new AsyncTaskUploadClass();
-        AsyncTaskUploadClassOBJ.execute();
     }
 
-    public class ImageProcessClass {
-        public String ImageHttpRequest(String requestURL, HashMap<String, String> PData) {
-            StringBuilder stringBuilder = new StringBuilder();
-            try {
-                URL url;
-                HttpURLConnection httpURLConnectionObject;
-                OutputStream OutPutStream;
-                BufferedWriter bufferedWriterObject;
-                BufferedReader bufferedReaderObject;
-                int RC;
-                url = new URL(requestURL);
-                httpURLConnectionObject = (HttpURLConnection) url.openConnection();
-                httpURLConnectionObject.setReadTimeout(19000);
-                httpURLConnectionObject.setConnectTimeout(19000);
-                httpURLConnectionObject.setRequestMethod("POST");
-                httpURLConnectionObject.setDoInput(true);
-                httpURLConnectionObject.setDoOutput(true);
-                OutPutStream = httpURLConnectionObject.getOutputStream();
-                bufferedWriterObject = new BufferedWriter(
-                        new OutputStreamWriter(OutPutStream, "UTF-8"));
-                bufferedWriterObject.write(bufferedWriterDataFN(PData));
-                bufferedWriterObject.flush();
-                bufferedWriterObject.close();
-                OutPutStream.close();
-                RC = httpURLConnectionObject.getResponseCode();
-                if (RC == HttpsURLConnection.HTTP_OK) {
-                    bufferedReaderObject = new BufferedReader(new InputStreamReader(httpURLConnectionObject.getInputStream()));
-                    stringBuilder = new StringBuilder();
-                    String RC2;
-                    while ((RC2 = bufferedReaderObject.readLine()) != null) {
-                        stringBuilder.append(RC2);
-                    }
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
+    private void delete_image(String val){
+        File fdelete = new File(val);
+        if (fdelete.exists()) {
+            if (fdelete.delete()) {
+                //Toast.makeText(this, "Delete Photo", Toast.LENGTH_SHORT).show();
+            } else {
+                //Toast.makeText(this, "Not delete Photo", Toast.LENGTH_SHORT).show();
             }
-            return stringBuilder.toString();
+        }
+    }
+
+    public String compressImage(String imageUri) {
+        String filePath = getRealPathFromURI(imageUri);
+        Bitmap scaledBitmap = null;
+        BitmapFactory.Options options = new BitmapFactory.Options();
+
+        //     by setting this field as true, the actual bitmap pixels are not loaded in the memory. Just the bounds are loaded. If
+        //     you try the use the bitmap here, you will get null.
+        options.inJustDecodeBounds = true;
+        Bitmap bmp = BitmapFactory.decodeFile(filePath, options);
+
+        int actualHeight = options.outHeight;
+        int actualWidth = options.outWidth;
+
+        //     max Height and width values of the compressed image is taken as 816x612
+
+        float maxHeight = 816.0f;
+        float maxWidth = 612.0f;
+        float imgRatio = actualWidth / actualHeight;
+        float maxRatio = maxWidth / maxHeight;
+
+        //     width and height values are set maintaining the aspect ratio of the image
+
+        if (actualHeight > maxHeight || actualWidth > maxWidth) {
+            if (imgRatio < maxRatio) {
+                imgRatio = maxHeight / actualHeight;
+                actualWidth = (int) (imgRatio * actualWidth);
+                actualHeight = (int) maxHeight;
+            } else if (imgRatio > maxRatio) {
+                imgRatio = maxWidth / actualWidth;
+                actualHeight = (int) (imgRatio * actualHeight);
+                actualWidth = (int) maxWidth;
+            } else {
+                actualHeight = (int) maxHeight;
+                actualWidth = (int) maxWidth;
+            }
         }
 
-        private String bufferedWriterDataFN(HashMap<String, String> HashMapParams) throws UnsupportedEncodingException {
+        //     setting inSampleSize value allows to load a scaled down version of the original image
 
-            StringBuilder stringBuilderObject;
-            stringBuilderObject = new StringBuilder();
-            for (Map.Entry<String, String> KEY : HashMapParams.entrySet()) {
-                if (check)
-                    check = false;
-                else
-                    stringBuilderObject.append("&");
+        options.inSampleSize = calculateInSampleSize(options, actualWidth, actualHeight);
 
-                stringBuilderObject.append(URLEncoder.encode(KEY.getKey(), "UTF-8"));
-                stringBuilderObject.append("=");
-                stringBuilderObject.append(URLEncoder.encode(KEY.getValue(), "UTF-8"));
-            }
-            return stringBuilderObject.toString();
+        //     inJustDecodeBounds set to false to load the actual bitmap
+        options.inJustDecodeBounds = false;
+
+        //     this options allow android to claim the bitmap memory if it runs low on memory
+        options.inPurgeable = true;
+        options.inInputShareable = true;
+        options.inTempStorage = new byte[16 * 1024];
+
+        try {
+            //         load the bitmap from its path
+            bmp = BitmapFactory.decodeFile(filePath, options);
+        } catch (OutOfMemoryError exception) {
+            //exception.printStackTrace();
+            Toast.makeText(getApplicationContext(), "compressImage1", Toast.LENGTH_LONG).show();
         }
+        try {
+            scaledBitmap = Bitmap.createBitmap(actualWidth, actualHeight, Bitmap.Config.ARGB_8888);
+        } catch (OutOfMemoryError exception) {
+            //exception.printStackTrace();
+            Toast.makeText(getApplicationContext(), "compressImage2", Toast.LENGTH_LONG).show();
+        }
+
+        float ratioX = actualWidth / (float) options.outWidth;
+        float ratioY = actualHeight / (float) options.outHeight;
+        float middleX = actualWidth / 2.0f;
+        float middleY = actualHeight / 2.0f;
+
+        Matrix scaleMatrix = new Matrix();
+        scaleMatrix.setScale(ratioX, ratioY, middleX, middleY);
+
+        Canvas canvas = new Canvas(scaledBitmap);
+        canvas.setMatrix(scaleMatrix);
+        canvas.drawBitmap(bmp, middleX - bmp.getWidth() / 2, middleY - bmp.getHeight() / 2, new Paint(Paint.FILTER_BITMAP_FLAG));
+
+        //     check the rotation of the image and display it properly
+        ExifInterface exif;
+        try {
+            exif = new ExifInterface(filePath);
+
+            int orientation = exif.getAttributeInt(
+                    ExifInterface.TAG_ORIENTATION, 0);
+            Log.d("EXIF", "Exif: " + orientation);
+            Matrix matrix = new Matrix();
+            if (orientation == 6) {
+                matrix.postRotate(90);
+                Log.d("EXIF", "Exif: " + orientation);
+            } else if (orientation == 3) {
+                matrix.postRotate(180);
+                Log.d("EXIF", "Exif: " + orientation);
+            } else if (orientation == 8) {
+                matrix.postRotate(270);
+                Log.d("EXIF", "Exif: " + orientation);
+            }
+            scaledBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0,
+                    scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
+        } catch (IOException e) {
+            //e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "compressImage3", Toast.LENGTH_LONG).show();
+        }
+
+        FileOutputStream out = null;
+        String filename = getFilename();
+        try {
+            out = new FileOutputStream(filename);
+
+            //write the compressed bitmap at the destination specified by filename.
+            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+
+        } catch (FileNotFoundException e) {
+            //e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "compressImage4", Toast.LENGTH_LONG).show();
+        }
+        return filename;
+    }
+
+    private String getRealPathFromURI(String contentURI) {
+        Uri contentUri = Uri.parse(contentURI);
+        Cursor cursor = getContentResolver().query(contentUri, null, null, null, null);
+        if (cursor == null) {
+            return contentUri.getPath();
+        } else {
+            cursor.moveToFirst();
+            int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            return cursor.getString(index);
+        }
+    }
+
+    public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            final int heightRatio = Math.round((float) height / (float) reqHeight);
+            final int widthRatio = Math.round((float) width / (float) reqWidth);
+            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+        }
+        final float totalPixels = width * height;
+        final float totalReqPixelsCap = reqWidth * reqHeight * 2;
+        while (totalPixels / (inSampleSize * inSampleSize) > totalReqPixelsCap) {
+            inSampleSize++;
+        }
+        return inSampleSize;
+    }
+
+    public String getFilename() {
+        File file = new File(Environment.getExternalStorageDirectory().getPath(), "Pictures/");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        String uriSting = (file.getAbsolutePath() + "/" + System.currentTimeMillis() + ".png");
+        return uriSting;
     }
 }

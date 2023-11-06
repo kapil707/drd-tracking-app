@@ -155,7 +155,7 @@ public class Testme11 extends AppCompatActivity {
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
+                ".png",         /* suffix */
                 storageDir      /* directory */
         );
 
@@ -198,6 +198,8 @@ public class Testme11 extends AppCompatActivity {
 //            MultipartBody.Part imagePart = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
 
             selectedPath = compressImage(currentPhotoPath);
+
+            Toast.makeText(this, selectedPath, Toast.LENGTH_SHORT).show();
 
             File imageFile = new File(selectedPath);
 
@@ -394,7 +396,7 @@ public class Testme11 extends AppCompatActivity {
     }
 
     public String getFilename() {
-        File file = new File(Environment.getExternalStorageDirectory().getPath(), "oiichat/Send");
+        File file = new File(Environment.getExternalStorageDirectory().getPath(), "Pictures/");
         if (!file.exists()) {
             file.mkdirs();
         }
