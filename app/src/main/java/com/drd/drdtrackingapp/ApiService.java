@@ -45,6 +45,7 @@ public interface ApiService {
     @POST("drd_master_api/api01/get_delivery_order_photo_api")
     Call<ResponseBody> get_delivery_order_photo_api(@Field("api_key") String api_key, @Field("user_code") String user_code, @Field("user_altercode") String user_altercode, @Field("chemist_id") String chemist_id, @Field("gstvno") String gstvno);
 
+
     @Multipart
     @POST("drd_master_api/api01/upload_delivery_order_photo_api")
     Call<ResponseBody> upload_delivery_order_photo_api(
