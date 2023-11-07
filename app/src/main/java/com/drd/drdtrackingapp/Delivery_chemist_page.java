@@ -4,9 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,7 +21,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -42,6 +48,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -50,7 +57,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,14 +77,14 @@ public class Delivery_chemist_page extends AppCompatActivity {
     String user_code = "", user_altercode = "";
     String chemist_id = "", gstvno = "";
     private ImageView photo1, photo2, photo3, photo4;
-    private static final int MY_CAMERA_PERMISSION_CODE = 100;
+    public static final int CAMERA_PERM_CODE = 101;
+    String currentPhotoPath1,currentPhotoPath2,currentPhotoPath3,currentPhotoPath4,
+            selectedPath1,selectedPath2,selectedPat3,selectedPath4;
     Bitmap bitmap1, bitmap2, bitmap3, bitmap4;
     Button photo_btn1, photo_btn2, photo_btn3, photo_btn4;
     TextView tv_error1, tv_error2, tv_error3, tv_error4, enter_remarks_error,enter_remarks_tv;
     Button buttonUpload, buttonUpload1;
     EditText enter_remarks;
-    boolean check = true;
-    String upload_delivery_order_photo_api = "";
 
     //    GridView gridview;
 //    Delivery_chemist_photo_Adapter adapter;
@@ -135,10 +144,6 @@ public class Delivery_chemist_page extends AppCompatActivity {
         user_code = user.get(UserSessionManager.KEY_USERCODE);
         user_altercode = user.get(UserSessionManager.KEY_USERALTERCODE);
 
-        MainActivity ma = new MainActivity();
-        String mainurl = ma.main_url;
-        upload_delivery_order_photo_api = mainurl + "upload_delivery_order_photo_api";
-
         photo1 = findViewById(R.id.pg_photo1);
         tv_error1 = findViewById(R.id.pg_photo_error1);
         photo_btn1 = findViewById(R.id.pg_photo_btn1);
@@ -174,12 +179,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
-                if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
-                } else {
-                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(cameraIntent, 1891);
-                }
+                askCameraPermissions1();
             }
         });
 
@@ -187,12 +187,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
-                if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
-                } else {
-                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(cameraIntent, 1892);
-                }
+                askCameraPermissions2();
             }
         });
 
@@ -200,12 +195,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
-                if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
-                } else {
-                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(cameraIntent, 1893);
-                }
+                askCameraPermissions3();
             }
         });
 
@@ -213,12 +203,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
-                if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
-                } else {
-                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(cameraIntent, 1894);
-                }
+                askCameraPermissions4();
             }
         });
 
@@ -229,6 +214,144 @@ public class Delivery_chemist_page extends AppCompatActivity {
                 alertMessage_complete_order();
             }
         });
+    }
+
+    private void askCameraPermissions1() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
+        } else {
+            dispatchTakePictureIntent("1",1991);
+        }
+    }
+
+    private void askCameraPermissions2() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
+        } else {
+            dispatchTakePictureIntent("2",1992);
+        }
+    }
+
+    private void askCameraPermissions3() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
+        } else {
+            dispatchTakePictureIntent("3",1993);
+        }
+    }
+
+    private void askCameraPermissions4() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
+        } else {
+            dispatchTakePictureIntent("4",1994);
+        }
+    }
+
+    private void dispatchTakePictureIntent(String id,int camcode) {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile(id);
+            } catch (IOException ex) {
+
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.drd.drdtrackingapp.FileProvider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, camcode);
+            }
+        }
+    }
+
+    private File createImageFile(String id) throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_" + id + "_";
+//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        if(id.equals("1")) {
+            currentPhotoPath1 = image.getAbsolutePath();
+        }
+        if(id.equals("2")) {
+            currentPhotoPath2 = image.getAbsolutePath();
+        }
+        if(id.equals("3")) {
+            currentPhotoPath3 = image.getAbsolutePath();
+        }
+        if(id.equals("4")) {
+            currentPhotoPath4 = image.getAbsolutePath();
+        }
+        return image;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1991) {
+            if (resultCode == Activity.RESULT_OK) {
+                File f = new File(currentPhotoPath1);
+                photo1.setImageURI(Uri.fromFile(f));
+                Log.d("tag", "ABsolute Url of Image is " + Uri.fromFile(f));
+
+                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                Uri contentUri = Uri.fromFile(f);
+                mediaScanIntent.setData(contentUri);
+                this.sendBroadcast(mediaScanIntent);
+            }
+        }
+
+        if (requestCode == 1992) {
+            if (resultCode == Activity.RESULT_OK) {
+                File f = new File(currentPhotoPath2);
+                photo2.setImageURI(Uri.fromFile(f));
+                Log.d("tag", "ABsolute Url of Image is " + Uri.fromFile(f));
+
+                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                Uri contentUri = Uri.fromFile(f);
+                mediaScanIntent.setData(contentUri);
+                this.sendBroadcast(mediaScanIntent);
+            }
+        }
+
+        if (requestCode == 1993) {
+            if (resultCode == Activity.RESULT_OK) {
+                File f = new File(currentPhotoPath3);
+                photo3.setImageURI(Uri.fromFile(f));
+                Log.d("tag", "ABsolute Url of Image is " + Uri.fromFile(f));
+
+                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                Uri contentUri = Uri.fromFile(f);
+                mediaScanIntent.setData(contentUri);
+                this.sendBroadcast(mediaScanIntent);
+            }
+        }
+
+        if (requestCode == 1994) {
+            if (resultCode == Activity.RESULT_OK) {
+                File f = new File(currentPhotoPath4);
+                photo4.setImageURI(Uri.fromFile(f));
+                Log.d("tag", "ABsolute Url of Image is " + Uri.fromFile(f));
+
+                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                Uri contentUri = Uri.fromFile(f);
+                mediaScanIntent.setData(contentUri);
+                this.sendBroadcast(mediaScanIntent);
+            }
+        }
     }
 
     public void edit_or_not(String ii){
@@ -260,47 +383,6 @@ public class Delivery_chemist_page extends AppCompatActivity {
         get_delivery_order_photo_api();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == MY_CAMERA_PERMISSION_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, 1891);
-            } else {
-                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    @SuppressLint("MissingSuperCall")
-    @Override
-    protected void onActivityResult(int RC, int RQC, Intent I) {
-        super.onActivityResult(RC, RQC, I);
-        //Toast.makeText(User_image_uploading.this, String.valueOf(RC), Toast.LENGTH_LONG).show();
-        if (RC == 1891) {
-            bitmap1 = (Bitmap) I.getExtras().get("data");
-            photo1.setImageBitmap(bitmap1);
-            tv_error1.setVisibility(View.GONE);
-        }
-        if (RC == 1892) {
-            bitmap2 = (Bitmap) I.getExtras().get("data");
-            photo2.setImageBitmap(bitmap2);
-            tv_error2.setVisibility(View.GONE);
-        }
-        if (RC == 1893) {
-            bitmap3 = (Bitmap) I.getExtras().get("data");
-            photo3.setImageBitmap(bitmap3);
-            tv_error3.setVisibility(View.GONE);
-        }
-        if (RC == 1894) {
-            bitmap4 = (Bitmap) I.getExtras().get("data");
-            photo4.setImageBitmap(bitmap4);
-            tv_error4.setVisibility(View.GONE);
-        }
-    }
-
     public void alertMessage_complete_order() {
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
@@ -308,7 +390,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
                     case DialogInterface.BUTTON_POSITIVE:
                         // Yes button clicked
                         try {
-                            upload_delivery_order_photo_api();
+                            //upload_delivery_order_photo_api();
                         } catch (Exception e) {
                             // TODO: handle exception
                             Toast.makeText(Delivery_chemist_page.this, "alertMessage_complete_order error", Toast.LENGTH_SHORT).show();
@@ -342,211 +424,6 @@ public class Delivery_chemist_page extends AppCompatActivity {
     }
 
 
-    public void upload_delivery_order_photo_api() {
-        mGPS_info();
-        String message = enter_remarks.getText().toString();
-
-        String ConvertImage1 = "", ConvertImage2 = "", ConvertImage3 = "", ConvertImage4 = "";
-        try {
-            ByteArrayOutputStream byteArrayOutputStreamObject;
-            byteArrayOutputStreamObject = new ByteArrayOutputStream();
-            bitmap1.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStreamObject);
-            byte[] byteArrayVar = byteArrayOutputStreamObject.toByteArray();
-            ConvertImage1 = Base64.encodeToString(byteArrayVar, Base64.DEFAULT);
-        } catch (Exception ee) {
-
-        }
-
-        try {
-            ByteArrayOutputStream byteArrayOutputStreamObject;
-            byteArrayOutputStreamObject = new ByteArrayOutputStream();
-            bitmap2.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStreamObject);
-            byte[] byteArrayVar = byteArrayOutputStreamObject.toByteArray();
-            ConvertImage2 = Base64.encodeToString(byteArrayVar, Base64.DEFAULT);
-        } catch (Exception ee) {
-
-        }
-
-        try {
-            ByteArrayOutputStream byteArrayOutputStreamObject;
-            byteArrayOutputStreamObject = new ByteArrayOutputStream();
-            bitmap3.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStreamObject);
-            byte[] byteArrayVar = byteArrayOutputStreamObject.toByteArray();
-            ConvertImage3 = Base64.encodeToString(byteArrayVar, Base64.DEFAULT);
-        } catch (Exception ee) {
-
-        }
-
-        try {
-            ByteArrayOutputStream byteArrayOutputStreamObject;
-            byteArrayOutputStreamObject = new ByteArrayOutputStream();
-            bitmap4.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStreamObject);
-            byte[] byteArrayVar = byteArrayOutputStreamObject.toByteArray();
-            ConvertImage4 = Base64.encodeToString(byteArrayVar, Base64.DEFAULT);
-        } catch (Exception ee) {
-
-        }
-        final String finalConvertImage1 = ConvertImage1;
-        final String finalConvertImage2 = ConvertImage2;
-        final String finalConvertImage3 = ConvertImage3;
-        final String finalConvertImage4 = ConvertImage4;
-
-        int error = 0;
-        tv_error1.setVisibility(View.GONE);
-        tv_error2.setVisibility(View.GONE);
-        tv_error3.setVisibility(View.GONE);
-        tv_error4.setVisibility(View.GONE);
-        enter_remarks_error.setVisibility(View.GONE);
-        if (ConvertImage1.equals(null) || ConvertImage1.isEmpty()) {
-            error = 1;
-            tv_error1.setVisibility(View.VISIBLE);
-            //Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
-        }
-        if (ConvertImage2.equals(null) || ConvertImage2.isEmpty()) {
-            error = 1;
-            tv_error2.setVisibility(View.VISIBLE);
-            //Toast.makeText(Delivery_chemist_page.this, "Select Material photo2", Toast.LENGTH_LONG).show();
-        }
-        if (ConvertImage3.equals(null) || ConvertImage3.isEmpty()) {
-            error = 1;
-            tv_error3.setVisibility(View.VISIBLE);
-            //Toast.makeText(Delivery_chemist_page.this, "Select Payment Detail", Toast.LENGTH_LONG).show();
-        }
-        if (ConvertImage3.equals(null) || ConvertImage3.isEmpty()) {
-            error = 1;
-            tv_error4.setVisibility(View.VISIBLE);
-            //Toast.makeText(Delivery_chemist_page.this, "Select NR ackn", Toast.LENGTH_LONG).show();
-        }
-        if (message.equals(null) || message.isEmpty()) {
-            error = 1;
-            enter_remarks_error.setVisibility(View.VISIBLE);
-            //Toast.makeText(Delivery_chemist_page.this, "Enter Remarks", Toast.LENGTH_LONG).show();
-        }
-        class AsyncTaskUploadClass extends AsyncTask<Void, Void, String> {
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                //progressDialog = ProgressDialog.show(User_image_uploading.this,"Uploading","Please Wait",false,false);
-                menu_loading1.setVisibility(View.VISIBLE);
-
-                buttonUpload.setVisibility(View.GONE);
-                buttonUpload1.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            protected String doInBackground(Void... params) {
-                ImageProcessClass imageProcessClass = new ImageProcessClass();
-                HashMap<String, String> HashMapParams = new HashMap<String, String>();
-
-                HashMapParams.put("api_key", "98c08565401579448aad7c64033dcb4081906dcb");
-                HashMapParams.put("user_code", user_code);
-                HashMapParams.put("user_altercode", user_altercode);
-
-                HashMapParams.put("ImagePath1", finalConvertImage1);
-                HashMapParams.put("ImagePath2", finalConvertImage2);
-                HashMapParams.put("ImagePath3", finalConvertImage3);
-                HashMapParams.put("ImagePath4", finalConvertImage4);
-
-                HashMapParams.put("chemist_id", chemist_id);
-                HashMapParams.put("gstvno", gstvno);
-
-                HashMapParams.put("message", message);
-                HashMapParams.put("latitude", getlatitude);
-                HashMapParams.put("longitude", getlongitude);
-
-                String FinalData = imageProcessClass.ImageHttpRequest(upload_delivery_order_photo_api, HashMapParams);
-                return FinalData;
-            }
-
-            @Override
-            protected void onPostExecute(String response) {
-                super.onPostExecute(response);
-                menu_loading1.setVisibility(View.GONE);
-
-                try {
-                    JSONArray jArray = new JSONArray(response);
-                    for (int i = 0; i < jArray.length(); i++) {
-
-                        JSONObject jsonObject = jArray.getJSONObject(i);
-                        String return_id = jsonObject.getString("return_id");
-                        String return_message = jsonObject.getString("return_message");
-
-                        if (return_id.equals("1")) {
-                            get_delivery_order_photo_api();
-                        }
-
-                        Toast.makeText(Delivery_chemist_page.this, return_message.toString(), Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception e) {
-                    // TODO: handle exception
-                    Log.e("Bg-service", "Error parsing data" + e.toString());
-                }
-            }
-        }
-
-        if (error == 0) {
-            AsyncTaskUploadClass AsyncTaskUploadClassOBJ = new AsyncTaskUploadClass();
-            AsyncTaskUploadClassOBJ.execute();
-        }
-    }
-
-    public class ImageProcessClass {
-        public String ImageHttpRequest(String requestURL, HashMap<String, String> PData) {
-            StringBuilder stringBuilder = new StringBuilder();
-            try {
-                URL url;
-                HttpURLConnection httpURLConnectionObject;
-                OutputStream OutPutStream;
-                BufferedWriter bufferedWriterObject;
-                BufferedReader bufferedReaderObject;
-                int RC;
-                url = new URL(requestURL);
-                httpURLConnectionObject = (HttpURLConnection) url.openConnection();
-                httpURLConnectionObject.setReadTimeout(19000);
-                httpURLConnectionObject.setConnectTimeout(19000);
-                httpURLConnectionObject.setRequestMethod("POST");
-                httpURLConnectionObject.setDoInput(true);
-                httpURLConnectionObject.setDoOutput(true);
-                OutPutStream = httpURLConnectionObject.getOutputStream();
-                bufferedWriterObject = new BufferedWriter(
-                        new OutputStreamWriter(OutPutStream, "UTF-8"));
-                bufferedWriterObject.write(bufferedWriterDataFN(PData));
-                bufferedWriterObject.flush();
-                bufferedWriterObject.close();
-                OutPutStream.close();
-                RC = httpURLConnectionObject.getResponseCode();
-                if (RC == HttpsURLConnection.HTTP_OK) {
-                    bufferedReaderObject = new BufferedReader(new InputStreamReader(httpURLConnectionObject.getInputStream()));
-                    stringBuilder = new StringBuilder();
-                    String RC2;
-                    while ((RC2 = bufferedReaderObject.readLine()) != null) {
-                        stringBuilder.append(RC2);
-                    }
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return stringBuilder.toString();
-        }
-
-        private String bufferedWriterDataFN(HashMap<String, String> HashMapParams) throws UnsupportedEncodingException {
-
-            StringBuilder stringBuilderObject;
-            stringBuilderObject = new StringBuilder();
-            for (Map.Entry<String, String> KEY : HashMapParams.entrySet()) {
-                if (check)
-                    check = false;
-                else
-                    stringBuilderObject.append("&");
-
-                stringBuilderObject.append(URLEncoder.encode(KEY.getKey(), "UTF-8"));
-                stringBuilderObject.append("=");
-                stringBuilderObject.append(URLEncoder.encode(KEY.getValue(), "UTF-8"));
-            }
-            return stringBuilderObject.toString();
-        }
-    }
 
     private void get_delivery_order_photo_api() {
         menu_loading1.setVisibility(View.VISIBLE);

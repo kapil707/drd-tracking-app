@@ -326,7 +326,6 @@ public class Meter_photo extends AppCompatActivity {
                                 if (return_id.equals("1")) {
                                     finish();
                                 }
-
                                 Toast.makeText(Meter_photo.this, return_message.toString(), Toast.LENGTH_LONG).show();
                             }
                         } catch (Exception e) {
