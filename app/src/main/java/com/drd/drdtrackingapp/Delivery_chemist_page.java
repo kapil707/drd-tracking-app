@@ -225,13 +225,13 @@ public class Delivery_chemist_page extends AppCompatActivity {
                 } else {
                     work++;
                     enter_remarks_error.setVisibility(View.VISIBLE);
-                    Toast.makeText(Delivery_chemist_page.this, "Enter Message", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(Delivery_chemist_page.this, "Enter Message", Toast.LENGTH_LONG).show();
                 }
 
                 if (currentPhotoPath1.isEmpty()) {
                     work++;
                     tv_error1.setVisibility(View.VISIBLE);
-                    Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
                 }else{
                     tv_error1.setVisibility(View.GONE);
                 }
@@ -239,7 +239,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
                 if (currentPhotoPath2.isEmpty()) {
                     work++;
                     tv_error2.setVisibility(View.VISIBLE);
-                    Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
                 }else{
                     tv_error2.setVisibility(View.GONE);
                 }
@@ -247,7 +247,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
                 if (currentPhotoPath3.isEmpty()) {
                     work++;
                     tv_error3.setVisibility(View.VISIBLE);
-                    Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
                 }else{
                     tv_error3.setVisibility(View.GONE);
                 }
@@ -255,7 +255,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
                 if (currentPhotoPath4.isEmpty()) {
                     work++;
                     tv_error4.setVisibility(View.VISIBLE);
-                    Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
                 }else{
                     tv_error4.setVisibility(View.GONE);
                 }

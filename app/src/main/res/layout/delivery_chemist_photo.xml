@@ -269,7 +269,7 @@
                 android:gravity="center"
                 android:layout_gravity="center"
                 android:theme="@style/page_textclr_error_theme"
-                android:text="Select Payment Detail"/>
+                android:text="Enter Remarks"/>
 
             <Button
                 android:id="@+id/buttonUpload"
