@@ -66,12 +66,12 @@ public interface ApiService {
     //@FormUrlEncoded
     @POST("drd_master_api/api01/upload_meter_photo_api")
     Call<ResponseBody> upload_meter_photo_api(
-            @Part("api_key") String api_key,
-            @Part("user_code") String user_code,
-            @Part("user_altercode") String user_altercode,
-            @Part("latitude") String latitude,
-            @Part("longitude") String longitude,
-            @Part("meter_text") String meter_text,
+            @Part("api_key") RequestBody api_key,
+            @Part("user_code") RequestBody user_code,
+            @Part("user_altercode") RequestBody user_altercode,
+            @Part("latitude") RequestBody latitude,
+            @Part("longitude") RequestBody longitude,
+            @Part("meter_text") RequestBody meter_text,
             @Part MultipartBody.Part image
     );
 

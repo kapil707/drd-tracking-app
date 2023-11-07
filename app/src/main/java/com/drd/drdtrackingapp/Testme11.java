@@ -206,13 +206,12 @@ public class Testme11 extends AppCompatActivity {
             RequestBody requestFile =
                     RequestBody.create(MultipartBody.FORM, imageFile);
 
-// MultipartBody.Part is used to send also the actual file name
+            // MultipartBody.Part is used to send also the actual file name
             MultipartBody.Part body =
                     MultipartBody.Part.createFormData("image", imageFile.getName(), requestFile);
 
-// add another part within the multipart request
-            RequestBody fullName =
-                    RequestBody.create(MultipartBody.FORM, "Your Name");
+            // add another part within the multipart request
+            RequestBody fullName = RequestBody.create(MultipartBody.FORM, "Your Name");
 
 
             ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);

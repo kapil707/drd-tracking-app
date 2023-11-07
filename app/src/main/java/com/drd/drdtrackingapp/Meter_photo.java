@@ -76,17 +76,22 @@ import retrofit2.Response;
 
 public class Meter_photo extends AppCompatActivity {
     UserSessionManager session;
-    String user_code="",user_altercode = "";
+    String user_code = "", user_altercode = "";
     public static final int CAMERA_PERM_CODE = 101;
     public static final int CAMERA_REQUEST_CODE = 102;
     public static final int GALLERY_REQUEST_CODE = 105;
 
     ImageView selectedImage;
-    Button cameraBtn, uploadbtn,uploadbtn1;
+    Button cameraBtn, uploadbtn, uploadbtn1;
     String currentPhotoPath, selectedPath;
 
     ProgressBar menu_loading1;
     TextView meter_text;
+
+    GPSTracker mGPS;
+    double latitude1, longitude1;
+    String getlatitude = "", getlongitude = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,10 +102,10 @@ public class Meter_photo extends AppCompatActivity {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
             int nightModeFlags = getApplicationContext().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-            if (nightModeFlags== Configuration.UI_MODE_NIGHT_NO || nightModeFlags== Configuration.UI_MODE_NIGHT_UNDEFINED) {
+            if (nightModeFlags == Configuration.UI_MODE_NIGHT_NO || nightModeFlags == Configuration.UI_MODE_NIGHT_UNDEFINED) {
                 window.setStatusBarColor(getResources().getColor(R.color.header_bg_light));
             }
-            if (nightModeFlags== Configuration.UI_MODE_NIGHT_YES) {
+            if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
                 window.setStatusBarColor(getResources().getColor(R.color.header_bg_dark));
             }
 
@@ -158,16 +163,17 @@ public class Meter_photo extends AppCompatActivity {
         uploadbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mGPS_info();
                 String message = meter_text.getText().toString();
-
                 if (message.length() > 0) {
                     Upload();
-                }else{
+                } else {
                     Toast.makeText(Meter_photo.this, "Enter Meter Reading", Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
+
     private void askCameraPermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
@@ -175,6 +181,7 @@ public class Meter_photo extends AppCompatActivity {
             dispatchTakePictureIntent();
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @android.support.annotation.NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -186,6 +193,7 @@ public class Meter_photo extends AppCompatActivity {
             }
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -212,6 +220,7 @@ public class Meter_photo extends AppCompatActivity {
             }
         }
     }
+
     private String getFileExt(Uri contentUri) {
         ContentResolver c = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
@@ -257,11 +266,23 @@ public class Meter_photo extends AppCompatActivity {
         }
     }
 
+    public void mGPS_info() {
+        mGPS = new GPSTracker(this);
+        mGPS.getLocation();
+
+        latitude1 = mGPS.getLatitude();
+        longitude1 = mGPS.getLongitude();
+
+        getlatitude = String.valueOf(latitude1);
+        getlongitude = String.valueOf(longitude1);
+    }
+
     private void Upload() {
         try {
             String message = meter_text.getText().toString();
 
-            String latitude="",longitude="";
+            String latitude = getlatitude;
+            String longitude = getlongitude;
 
             selectedPath = compressImage(currentPhotoPath);
             File imageFile = new File(selectedPath);
@@ -269,18 +290,24 @@ public class Meter_photo extends AppCompatActivity {
             RequestBody requestFile =
                     RequestBody.create(MultipartBody.FORM, imageFile);
             // MultipartBody.Part is used to send also the actual file name
-            MultipartBody.Part body =
-                    MultipartBody.Part.createFormData("image", imageFile.getName(), requestFile);
+            MultipartBody.Part image1 = MultipartBody.Part.createFormData("image", imageFile.getName(), requestFile);
+            // add another part within the multipart request
+            RequestBody api_key1 = RequestBody.create(MultipartBody.FORM, "98c08565401579448aad7c64033dcb4081906dcb");
+            RequestBody user_code1 = RequestBody.create(MultipartBody.FORM, user_code);
+            RequestBody user_altercode1 = RequestBody.create(MultipartBody.FORM, user_altercode);
+            RequestBody latitude11 = RequestBody.create(MultipartBody.FORM, latitude);
+            RequestBody longitude11 = RequestBody.create(MultipartBody.FORM, longitude);
+            RequestBody message1 = RequestBody.create(MultipartBody.FORM, message);
 
             ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
             Call<ResponseBody> call = apiService.upload_meter_photo_api(
-                    "98c08565401579448aad7c64033dcb4081906dcb",
-                    user_code,
-                    user_altercode,
-                    latitude,
-                    longitude,
-                    message,
-                    body);
+                    api_key1,
+                    user_code1,
+                    user_altercode1,
+                    latitude11,
+                    longitude11,
+                    message1,
+                    image1);
 
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
@@ -289,9 +316,22 @@ public class Meter_photo extends AppCompatActivity {
                         // Image uploaded successfully
                         // Handle the response, if any
                         try {
-                            Toast.makeText(getApplicationContext(), response.body().string(), Toast.LENGTH_LONG).show();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
+                            JSONArray jArray = new JSONArray(response.body().string());
+                            for (int i = 0; i < jArray.length(); i++) {
+
+                                JSONObject jsonObject = jArray.getJSONObject(i);
+                                String return_id = jsonObject.getString("return_id");
+                                String return_message = jsonObject.getString("return_message");
+
+                                if (return_id.equals("1")) {
+                                    finish();
+                                }
+
+                                Toast.makeText(Meter_photo.this, return_message.toString(), Toast.LENGTH_LONG).show();
+                            }
+                        } catch (Exception e) {
+                            // TODO: handle exception
+                            Log.e("Bg-service", "Error parsing data" + e.toString());
                         }
                         delete_image(currentPhotoPath);
                         delete_image(selectedPath);
@@ -318,7 +358,7 @@ public class Meter_photo extends AppCompatActivity {
         }
     }
 
-    private void delete_image(String val){
+    private void delete_image(String val) {
         File fdelete = new File(val);
         if (fdelete.exists()) {
             if (fdelete.delete()) {
