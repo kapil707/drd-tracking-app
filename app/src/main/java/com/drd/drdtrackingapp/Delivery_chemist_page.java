@@ -88,8 +88,8 @@ public class Delivery_chemist_page extends AppCompatActivity {
     String chemist_id = "", gstvno = "";
     private ImageView photo1, photo2, photo3, photo4;
     public static final int CAMERA_PERM_CODE = 101;
-    String currentPhotoPath1,currentPhotoPath2,currentPhotoPath3,currentPhotoPath4,
-            selectedPath1,selectedPath2,selectedPath3,selectedPath4;
+    String currentPhotoPath1="",currentPhotoPath2="",currentPhotoPath3="",currentPhotoPath4="",
+            selectedPath1="",selectedPath2="",selectedPath3="",selectedPath4="";
     Button photo_btn1, photo_btn2, photo_btn3, photo_btn4;
     TextView tv_error1, tv_error2, tv_error3, tv_error4, enter_remarks_error,enter_remarks_tv;
     Button buttonUpload, buttonUpload1;
@@ -235,30 +235,30 @@ public class Delivery_chemist_page extends AppCompatActivity {
                 }else{
                     tv_error1.setVisibility(View.GONE);
                 }
-//
-//                if (currentPhotoPath2.isEmpty()) {
-//                    work++;
-//                    tv_error2.setVisibility(View.VISIBLE);
-//                    Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
-//                }else{
-//                    tv_error2.setVisibility(View.GONE);
-//                }
-//
-//                if (currentPhotoPath3.isEmpty()) {
-//                    work++;
-//                    tv_error3.setVisibility(View.VISIBLE);
-//                    Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
-//                }else{
-//                    tv_error3.setVisibility(View.GONE);
-//                }
-//
-//                if (currentPhotoPath4.isEmpty()) {
-//                    work++;
-//                    tv_error4.setVisibility(View.VISIBLE);
-//                    Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
-//                }else{
-//                    tv_error4.setVisibility(View.GONE);
-//                }
+
+                if (currentPhotoPath2.isEmpty()) {
+                    work++;
+                    tv_error2.setVisibility(View.VISIBLE);
+                    Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
+                }else{
+                    tv_error2.setVisibility(View.GONE);
+                }
+
+                if (currentPhotoPath3.isEmpty()) {
+                    work++;
+                    tv_error3.setVisibility(View.VISIBLE);
+                    Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
+                }else{
+                    tv_error3.setVisibility(View.GONE);
+                }
+
+                if (currentPhotoPath4.isEmpty()) {
+                    work++;
+                    tv_error4.setVisibility(View.VISIBLE);
+                    Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
+                }else{
+                    tv_error4.setVisibility(View.GONE);
+                }
 
                 if(work==0) {
                     alertMessage_complete_order();
