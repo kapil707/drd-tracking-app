@@ -36,6 +36,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -84,14 +85,11 @@ public class Meter_photo extends AppCompatActivity {
     ImageView selectedImage;
     Button cameraBtn, uploadbtn, uploadbtn1;
     String currentPhotoPath, selectedPath;
-
     ProgressBar menu_loading1;
-    TextView meter_text;
-
+    EditText enter_message;
     GPSTracker mGPS;
     double latitude1, longitude1;
     String getlatitude = "", getlongitude = "";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,7 +146,7 @@ public class Meter_photo extends AppCompatActivity {
 
         selectedImage = findViewById(R.id.selectedImage);
         cameraBtn = findViewById(R.id.cameraBtn);
-        meter_text = findViewById(R.id.meter_text);
+        enter_message = findViewById(R.id.enter_message);
         uploadbtn = findViewById(R.id.uploadbtn);
         uploadbtn1 = findViewById(R.id.uploadbtn1);
 
@@ -164,7 +162,7 @@ public class Meter_photo extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mGPS_info();
-                String message = meter_text.getText().toString();
+                String message = enter_message.getText().toString();
                 if (message.length() > 0) {
                     Upload();
                 } else {
@@ -278,8 +276,9 @@ public class Meter_photo extends AppCompatActivity {
     }
 
     private void Upload() {
+        menu_loading1.setVisibility(View.VISIBLE);
         try {
-            String message = meter_text.getText().toString();
+            String message = enter_message.getText().toString();
 
             String latitude = getlatitude;
             String longitude = getlongitude;
@@ -326,33 +325,32 @@ public class Meter_photo extends AppCompatActivity {
                                 if (return_id.equals("1")) {
                                     finish();
                                 }
+                                menu_loading1.setVisibility(View.GONE);
                                 Toast.makeText(Meter_photo.this, return_message.toString(), Toast.LENGTH_LONG).show();
                             }
                         } catch (Exception e) {
                             // TODO: handle exception
+                            menu_loading1.setVisibility(View.GONE);
                             Log.e("Bg-service", "Error parsing data" + e.toString());
+                            Toast.makeText(Meter_photo.this, "Error " + e.toString(), Toast.LENGTH_LONG).show();
                         }
                         delete_image(currentPhotoPath);
                         delete_image(selectedPath);
                     } else {
-                        delete_image(currentPhotoPath);
-                        delete_image(selectedPath);
                         // Handle the error
+                        menu_loading1.setVisibility(View.GONE);
                         Toast.makeText(getApplicationContext(), "Some error occurred...", Toast.LENGTH_LONG).show();
                     }
                 }
-
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     // Handle network errors or exceptions
-//                    delete_image(currentPhotoPath);
-//                    delete_image(selectedPath);
+                    menu_loading1.setVisibility(View.GONE);
                     Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
         } catch (Exception e) {
-//            delete_image(currentPhotoPath);
-//            delete_image(selectedPath);
+            menu_loading1.setVisibility(View.GONE);
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }

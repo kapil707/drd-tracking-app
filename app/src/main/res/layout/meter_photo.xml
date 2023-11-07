@@ -24,14 +24,16 @@
             android:layout_above="@+id/editTextImageName"
             android:layout_below="@+id/buttonSelect"
             android:layout_marginTop="20dip"
-            android:layout_marginBottom="20dip" />
+            android:layout_marginBottom="20dip"
+            android:src="@drawable/attendance_svgrepo_com"/>
 
             <Button
                 android:id="@+id/cameraBtn"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="10dip"
+                android:layout_marginBottom="100dp"
                 android:layout_weight="1"
                 android:textAllCaps="false"
                 android:textColor="#ffffff"
@@ -50,7 +52,7 @@
             android:background="@drawable/textbox_shap"
             android:elevation="2dp">
             <EditText
-                android:id="@+id/meter_text"
+                android:id="@+id/enter_message"
                 android:hint="Enter meter Value"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

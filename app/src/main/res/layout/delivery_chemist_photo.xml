@@ -228,6 +228,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/enter_remarks_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:theme="@style/page_textclr_theme"
@@ -236,16 +237,6 @@
                 android:layout_marginTop="20dp"
                 android:textSize="18dip"
                 android:text="Message"/>
-
-            <TextView
-                android:id="@+id/enter_remarks_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:theme="@style/page_textclr_theme"
-                android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip"
-                android:layout_marginTop="20dp"
-                android:textSize="18dip"/>
 
             <LinearLayout
                 android:id="@+id/textbox_bg1"
@@ -258,7 +249,7 @@
                 android:background="@drawable/textbox_shap"
                 android:elevation="2dp">
                 <EditText
-                    android:id="@+id/enter_remarks"
+                    android:id="@+id/enter_message"
                     android:hint="Enter Remarks"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"

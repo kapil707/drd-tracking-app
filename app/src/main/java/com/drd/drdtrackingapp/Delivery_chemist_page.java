@@ -15,8 +15,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.drawable.GradientDrawable;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -49,6 +55,8 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -66,6 +74,8 @@ import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -79,12 +89,11 @@ public class Delivery_chemist_page extends AppCompatActivity {
     private ImageView photo1, photo2, photo3, photo4;
     public static final int CAMERA_PERM_CODE = 101;
     String currentPhotoPath1,currentPhotoPath2,currentPhotoPath3,currentPhotoPath4,
-            selectedPath1,selectedPath2,selectedPat3,selectedPath4;
-    Bitmap bitmap1, bitmap2, bitmap3, bitmap4;
+            selectedPath1,selectedPath2,selectedPath3,selectedPath4;
     Button photo_btn1, photo_btn2, photo_btn3, photo_btn4;
     TextView tv_error1, tv_error2, tv_error3, tv_error4, enter_remarks_error,enter_remarks_tv;
     Button buttonUpload, buttonUpload1;
-    EditText enter_remarks;
+    EditText enter_message;
 
     //    GridView gridview;
 //    Delivery_chemist_photo_Adapter adapter;
@@ -160,7 +169,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
         tv_error4 = findViewById(R.id.pg_photo_error4);
         photo_btn4 = findViewById(R.id.pg_photo_btn4);
 
-        enter_remarks = findViewById(R.id.enter_remarks);
+        enter_message = findViewById(R.id.enter_message);
         enter_remarks_error = findViewById(R.id.enter_remarks_error);
         enter_remarks_tv = findViewById(R.id.enter_remarks_tv);
 
@@ -172,7 +181,6 @@ public class Delivery_chemist_page extends AppCompatActivity {
 
         buttonUpload = findViewById(R.id.buttonUpload);
         buttonUpload1 = findViewById(R.id.buttonUpload1);
-
 
         edit_or_not(edit_yes_no);
         photo_btn1.setOnClickListener(new View.OnClickListener() {
@@ -208,10 +216,53 @@ public class Delivery_chemist_page extends AppCompatActivity {
         });
 
         buttonUpload.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
-                alertMessage_complete_order();
+                String message = enter_message.getText().toString();
+                int work = 0;
+                if (message.length() > 0) {
+                    enter_remarks_error.setVisibility(View.GONE);
+                } else {
+                    work++;
+                    enter_remarks_error.setVisibility(View.VISIBLE);
+                    Toast.makeText(Delivery_chemist_page.this, "Enter Message", Toast.LENGTH_LONG).show();
+                }
+
+                if (currentPhotoPath1.isEmpty()) {
+                    work++;
+                    tv_error1.setVisibility(View.VISIBLE);
+                    Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
+                }else{
+                    tv_error1.setVisibility(View.GONE);
+                }
+//
+//                if (currentPhotoPath2.isEmpty()) {
+//                    work++;
+//                    tv_error2.setVisibility(View.VISIBLE);
+//                    Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
+//                }else{
+//                    tv_error2.setVisibility(View.GONE);
+//                }
+//
+//                if (currentPhotoPath3.isEmpty()) {
+//                    work++;
+//                    tv_error3.setVisibility(View.VISIBLE);
+//                    Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
+//                }else{
+//                    tv_error3.setVisibility(View.GONE);
+//                }
+//
+//                if (currentPhotoPath4.isEmpty()) {
+//                    work++;
+//                    tv_error4.setVisibility(View.VISIBLE);
+//                    Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
+//                }else{
+//                    tv_error4.setVisibility(View.GONE);
+//                }
+
+                if(work==0) {
+                    alertMessage_complete_order();
+                }
             }
         });
     }
@@ -366,7 +417,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
             photo_btn3.setVisibility(View.GONE);
             photo_btn4.setVisibility(View.GONE);
 
-            enter_remarks.setVisibility(View.GONE);
+            enter_message.setVisibility(View.GONE);
             enter_remarks_error.setVisibility(View.GONE);
 
             LinearLayout textbox_bg1 = findViewById(R.id.textbox_bg1);
@@ -390,7 +441,8 @@ public class Delivery_chemist_page extends AppCompatActivity {
                     case DialogInterface.BUTTON_POSITIVE:
                         // Yes button clicked
                         try {
-                            //upload_delivery_order_photo_api();
+                            mGPS_info();
+                            Upload();
                         } catch (Exception e) {
                             // TODO: handle exception
                             Toast.makeText(Delivery_chemist_page.this, "alertMessage_complete_order error", Toast.LENGTH_SHORT).show();
@@ -459,12 +511,14 @@ public class Delivery_chemist_page extends AppCompatActivity {
                         }
                     } catch (Exception e) {
                         // TODO: handle exception
+                        menu_loading1.setVisibility(View.GONE);
                         Log.e("Bg-service", "Error parsing data" + e.toString());
                         Toast.makeText(getApplicationContext(),"get_delivery_order_photo_api error2", Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    // Handle error response
+                    // Handle the error
                     menu_loading1.setVisibility(View.GONE);
+                    Toast.makeText(getApplicationContext(), "Some error occurred...", Toast.LENGTH_LONG).show();
                 }
             }
             @Override
@@ -475,5 +529,279 @@ public class Delivery_chemist_page extends AppCompatActivity {
                 Toast.makeText(Delivery_chemist_page.this, "show_rider_chemist_photo_api onFailure", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void Upload() {
+        menu_loading1.setVisibility(View.VISIBLE);
+        try {
+            String message = enter_message.getText().toString();
+
+            String latitude = getlatitude;
+            String longitude = getlongitude;
+
+            selectedPath1 = compressImage(currentPhotoPath1);
+            selectedPath2 = compressImage(currentPhotoPath2);
+            selectedPath3 = compressImage(currentPhotoPath3);
+            selectedPath4 = compressImage(currentPhotoPath4);
+            File imageFile1 = new File(selectedPath1);
+            File imageFile2 = new File(selectedPath2);
+            File imageFile3 = new File(selectedPath3);
+            File imageFile4 = new File(selectedPath4);
+
+            RequestBody requestFile1 = RequestBody.create(MultipartBody.FORM, imageFile1);
+            MultipartBody.Part image1 = MultipartBody.Part.createFormData("image1", imageFile1.getName(), requestFile1);
+            RequestBody requestFile2 = RequestBody.create(MultipartBody.FORM, imageFile2);
+            MultipartBody.Part image2 = MultipartBody.Part.createFormData("image2", imageFile2.getName(), requestFile2);
+            RequestBody requestFile3 = RequestBody.create(MultipartBody.FORM, imageFile3);
+            MultipartBody.Part image3 = MultipartBody.Part.createFormData("image3", imageFile3.getName(), requestFile3);
+            RequestBody requestFile4 = RequestBody.create(MultipartBody.FORM, imageFile4);
+            MultipartBody.Part image4 = MultipartBody.Part.createFormData("image4", imageFile4.getName(), requestFile4);
+
+            // add another part within the multipart request
+            RequestBody api_key1 = RequestBody.create(MultipartBody.FORM, "98c08565401579448aad7c64033dcb4081906dcb");
+            RequestBody user_code1 = RequestBody.create(MultipartBody.FORM, user_code);
+            RequestBody user_altercode1 = RequestBody.create(MultipartBody.FORM, user_altercode);
+            RequestBody latitude11 = RequestBody.create(MultipartBody.FORM, latitude);
+            RequestBody longitude11 = RequestBody.create(MultipartBody.FORM, longitude);
+            RequestBody chemist_id1 = RequestBody.create(MultipartBody.FORM, chemist_id);
+            RequestBody gstvno1 = RequestBody.create(MultipartBody.FORM, gstvno);
+            RequestBody message1 = RequestBody.create(MultipartBody.FORM, message);
+
+            ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
+            Call<ResponseBody> call = apiService.upload_delivery_order_photo_api(
+                    api_key1,
+                    user_code1,
+                    user_altercode1,
+                    latitude11,
+                    longitude11,
+                    chemist_id1,
+                    gstvno1,
+                    message1,
+                    image1,
+                    image2,
+                    image3,
+                    image4);
+
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful()) {
+                        // Image uploaded successfully
+                        // Handle the response, if any
+                        try {
+                            //Toast.makeText(Delivery_chemist_page.this, response.body().string(), Toast.LENGTH_LONG).show();
+                            menu_loading1.setVisibility(View.GONE);
+                            JSONArray jArray = new JSONArray(response.body().string());
+                            for (int i = 0; i < jArray.length(); i++) {
+
+                                JSONObject jsonObject = jArray.getJSONObject(i);
+                                String return_id = jsonObject.getString("return_id");
+                                String return_message = jsonObject.getString("return_message");
+
+                                if (return_id.equals("1")) {
+                                    //finish();
+                                    get_delivery_order_photo_api();
+                                }
+                                Toast.makeText(Delivery_chemist_page.this, return_message.toString(), Toast.LENGTH_LONG).show();
+                            }
+
+                            delete_image(currentPhotoPath1);
+                            delete_image(selectedPath1);
+                            delete_image(currentPhotoPath2);
+                            delete_image(selectedPath2);
+                            delete_image(currentPhotoPath3);
+                            delete_image(selectedPath3);
+                            delete_image(currentPhotoPath4);
+                            delete_image(selectedPath4);
+                        } catch (Exception e) {
+                            // TODO: handle exception
+                            menu_loading1.setVisibility(View.GONE);
+                            Log.e("Bg-service", "Error parsing data" + e.toString());
+                            Toast.makeText(Delivery_chemist_page.this, "Error " + e.toString(), Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        // Handle the error
+                        menu_loading1.setVisibility(View.GONE);
+                        Toast.makeText(getApplicationContext(), "Some error occurred...", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    // Handle network errors or exceptions
+                    menu_loading1.setVisibility(View.GONE);
+                    Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (Exception e) {
+            menu_loading1.setVisibility(View.GONE);
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void delete_image(String val) {
+        File fdelete = new File(val);
+        if (fdelete.exists()) {
+            if (fdelete.delete()) {
+                //Toast.makeText(this, "Delete Photo", Toast.LENGTH_SHORT).show();
+            } else {
+                //Toast.makeText(this, "Not delete Photo", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public String compressImage(String imageUri) {
+        String filePath = getRealPathFromURI(imageUri);
+        Bitmap scaledBitmap = null;
+        BitmapFactory.Options options = new BitmapFactory.Options();
+
+        //     by setting this field as true, the actual bitmap pixels are not loaded in the memory. Just the bounds are loaded. If
+        //     you try the use the bitmap here, you will get null.
+        options.inJustDecodeBounds = true;
+        Bitmap bmp = BitmapFactory.decodeFile(filePath, options);
+
+        int actualHeight = options.outHeight;
+        int actualWidth = options.outWidth;
+
+        //     max Height and width values of the compressed image is taken as 816x612
+
+        float maxHeight = 816.0f;
+        float maxWidth = 612.0f;
+        float imgRatio = actualWidth / actualHeight;
+        float maxRatio = maxWidth / maxHeight;
+
+        //     width and height values are set maintaining the aspect ratio of the image
+
+        if (actualHeight > maxHeight || actualWidth > maxWidth) {
+            if (imgRatio < maxRatio) {
+                imgRatio = maxHeight / actualHeight;
+                actualWidth = (int) (imgRatio * actualWidth);
+                actualHeight = (int) maxHeight;
+            } else if (imgRatio > maxRatio) {
+                imgRatio = maxWidth / actualWidth;
+                actualHeight = (int) (imgRatio * actualHeight);
+                actualWidth = (int) maxWidth;
+            } else {
+                actualHeight = (int) maxHeight;
+                actualWidth = (int) maxWidth;
+            }
+        }
+
+        //     setting inSampleSize value allows to load a scaled down version of the original image
+
+        options.inSampleSize = calculateInSampleSize(options, actualWidth, actualHeight);
+
+        //     inJustDecodeBounds set to false to load the actual bitmap
+        options.inJustDecodeBounds = false;
+
+        //     this options allow android to claim the bitmap memory if it runs low on memory
+        options.inPurgeable = true;
+        options.inInputShareable = true;
+        options.inTempStorage = new byte[16 * 1024];
+
+        try {
+            //         load the bitmap from its path
+            bmp = BitmapFactory.decodeFile(filePath, options);
+        } catch (OutOfMemoryError exception) {
+            //exception.printStackTrace();
+            Toast.makeText(getApplicationContext(), "compressImage1", Toast.LENGTH_LONG).show();
+        }
+        try {
+            scaledBitmap = Bitmap.createBitmap(actualWidth, actualHeight, Bitmap.Config.ARGB_8888);
+        } catch (OutOfMemoryError exception) {
+            //exception.printStackTrace();
+            Toast.makeText(getApplicationContext(), "compressImage2", Toast.LENGTH_LONG).show();
+        }
+
+        float ratioX = actualWidth / (float) options.outWidth;
+        float ratioY = actualHeight / (float) options.outHeight;
+        float middleX = actualWidth / 2.0f;
+        float middleY = actualHeight / 2.0f;
+
+        Matrix scaleMatrix = new Matrix();
+        scaleMatrix.setScale(ratioX, ratioY, middleX, middleY);
+
+        Canvas canvas = new Canvas(scaledBitmap);
+        canvas.setMatrix(scaleMatrix);
+        canvas.drawBitmap(bmp, middleX - bmp.getWidth() / 2, middleY - bmp.getHeight() / 2, new Paint(Paint.FILTER_BITMAP_FLAG));
+
+        //     check the rotation of the image and display it properly
+        ExifInterface exif;
+        try {
+            exif = new ExifInterface(filePath);
+
+            int orientation = exif.getAttributeInt(
+                    ExifInterface.TAG_ORIENTATION, 0);
+            Log.d("EXIF", "Exif: " + orientation);
+            Matrix matrix = new Matrix();
+            if (orientation == 6) {
+                matrix.postRotate(90);
+                Log.d("EXIF", "Exif: " + orientation);
+            } else if (orientation == 3) {
+                matrix.postRotate(180);
+                Log.d("EXIF", "Exif: " + orientation);
+            } else if (orientation == 8) {
+                matrix.postRotate(270);
+                Log.d("EXIF", "Exif: " + orientation);
+            }
+            scaledBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0,
+                    scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
+        } catch (IOException e) {
+            //e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "compressImage3", Toast.LENGTH_LONG).show();
+        }
+
+        FileOutputStream out = null;
+        String filename = getFilename();
+        try {
+            out = new FileOutputStream(filename);
+
+            //write the compressed bitmap at the destination specified by filename.
+            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+
+        } catch (FileNotFoundException e) {
+            //e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "compressImage4", Toast.LENGTH_LONG).show();
+        }
+        return filename;
+    }
+
+    private String getRealPathFromURI(String contentURI) {
+        Uri contentUri = Uri.parse(contentURI);
+        Cursor cursor = getContentResolver().query(contentUri, null, null, null, null);
+        if (cursor == null) {
+            return contentUri.getPath();
+        } else {
+            cursor.moveToFirst();
+            int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            return cursor.getString(index);
+        }
+    }
+
+    public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            final int heightRatio = Math.round((float) height / (float) reqHeight);
+            final int widthRatio = Math.round((float) width / (float) reqWidth);
+            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+        }
+        final float totalPixels = width * height;
+        final float totalReqPixelsCap = reqWidth * reqHeight * 2;
+        while (totalPixels / (inSampleSize * inSampleSize) > totalReqPixelsCap) {
+            inSampleSize++;
+        }
+        return inSampleSize;
+    }
+
+    public String getFilename() {
+        File file = new File(Environment.getExternalStorageDirectory().getPath(), "Pictures/");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        String uriSting = (file.getAbsolutePath() + "/" + System.currentTimeMillis() + ".png");
+        return uriSting;
     }
 }

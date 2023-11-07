@@ -19,7 +19,7 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("drd_master_api/api01/get_login_api")
-    Call<ResponseBody> get_login_api(@Field("api_key") String api_key,@Field("user_name") String user_name,@Field("password") String password,@Field("firebase_token") String firebase_token);
+    Call<ResponseBody> get_login_api(@Field("api_key") String api_key, @Field("user_name") String user_name, @Field("password") String password, @Field("firebase_token") String firebase_token);
 
     @FormUrlEncoded
     @POST("drd_master_api/api01/get_slider_api")
@@ -27,27 +27,40 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("drd_master_api/api01/update_firebase_token_api")
-    Call<ResponseBody> update_firebase_token_api(@Field("api_key") String api_key,@Field("user_code") String user_code,@Field("user_altercode") String user_altercode,@Field("firebase_token") String firebase_token,@Field("latitude") String latitude,@Field("longitude") String longitude);
+    Call<ResponseBody> update_firebase_token_api(@Field("api_key") String api_key, @Field("user_code") String user_code, @Field("user_altercode") String user_altercode, @Field("firebase_token") String firebase_token, @Field("latitude") String latitude, @Field("longitude") String longitude);
 
     @FormUrlEncoded
     @POST("drd_master_api/api01/update_tracking_api")
-    Call<ResponseBody> update_tracking_api(@Field("api_key") String api_key,@Field("user_code") String user_code,@Field("user_altercode") String user_altercode,@Field("firebase_token") String firebase_token,@Field("latitude") String latitude,@Field("longitude") String longitude,@Field("getdate") String getdate,@Field("gettime") String gettime);
+    Call<ResponseBody> update_tracking_api(@Field("api_key") String api_key, @Field("user_code") String user_code, @Field("user_altercode") String user_altercode, @Field("firebase_token") String firebase_token, @Field("latitude") String latitude, @Field("longitude") String longitude, @Field("getdate") String getdate, @Field("gettime") String gettime);
 
     @FormUrlEncoded
     @POST("drd_master_api/api01/get_delivery_order_api")
-    Call<ResponseBody> get_delivery_order_api(@Field("api_key") String api_key,@Field("user_code") String user_code,@Field("user_altercode") String user_altercode);
+    Call<ResponseBody> get_delivery_order_api(@Field("api_key") String api_key, @Field("user_code") String user_code, @Field("user_altercode") String user_altercode);
 
     @FormUrlEncoded
     @POST("drd_master_api/api01/get_delivery_order_done_api")
-    Call<ResponseBody> get_delivery_order_done_api(@Field("api_key") String api_key,@Field("user_code") String user_code,@Field("user_altercode") String user_altercode);
+    Call<ResponseBody> get_delivery_order_done_api(@Field("api_key") String api_key, @Field("user_code") String user_code, @Field("user_altercode") String user_altercode);
 
     @FormUrlEncoded
     @POST("drd_master_api/api01/get_delivery_order_photo_api")
-    Call<ResponseBody> get_delivery_order_photo_api(@Field("api_key") String api_key,@Field("user_code") String user_code,@Field("user_altercode") String user_altercode,@Field("chemist_id") String chemist_id,@Field("gstvno") String gstvno);
+    Call<ResponseBody> get_delivery_order_photo_api(@Field("api_key") String api_key, @Field("user_code") String user_code, @Field("user_altercode") String user_altercode, @Field("chemist_id") String chemist_id, @Field("gstvno") String gstvno);
 
-    @FormUrlEncoded
-    @POST("drd_master_api/api01/upload_delivery_order_completed_api")
-    Call<ResponseBody> upload_delivery_order_completed_api(@Field("api_key") String api_key,@Field("user_code") String user_code,@Field("user_altercode") String user_altercode,@Field("chemist_id") String chemist_id,@Field("gstvno") String gstvno,@Field("message") String message,@Field("latitude") String latitude,@Field("longitude") String longitude);
+    @Multipart
+    @POST("drd_master_api/api01/upload_delivery_order_photo_api")
+    Call<ResponseBody> upload_delivery_order_photo_api(
+            @Part("api_key") RequestBody api_key,
+            @Part("user_code") RequestBody user_code,
+            @Part("user_altercode") RequestBody user_altercode,
+            @Part("latitude") RequestBody latitude,
+            @Part("longitude") RequestBody longitude,
+            @Part("chemist_id") RequestBody chemist_id,
+            @Part("gstvno") RequestBody gstvno,
+            @Part("message") RequestBody message,
+            @Part MultipartBody.Part image1,
+            @Part MultipartBody.Part image2,
+            @Part MultipartBody.Part image3,
+            @Part MultipartBody.Part image4
+    );
 
     @FormUrlEncoded
     @POST("drd_master_api/api01/upload_attendance_api")
@@ -71,7 +84,7 @@ public interface ApiService {
             @Part("user_altercode") RequestBody user_altercode,
             @Part("latitude") RequestBody latitude,
             @Part("longitude") RequestBody longitude,
-            @Part("meter_text") RequestBody meter_text,
+            @Part("message") RequestBody message,
             @Part MultipartBody.Part image
     );
 
