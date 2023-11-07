@@ -315,6 +315,7 @@ public class Meter_photo extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         // Image uploaded successfully
                         // Handle the response, if any
+
                         try {
                             JSONArray jArray = new JSONArray(response.body().string());
                             for (int i = 0; i < jArray.length(); i++) {
