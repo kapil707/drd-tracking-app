@@ -66,8 +66,8 @@ public class HomeFragment extends Fragment {
 
         slider_api();
 
-        final TextView textView = binding.textHome;
-        textView.setText("Login User : " + user_altercode);
+//        final TextView textView = binding.textHome;
+//        textView.setText("Login User : " + user_altercode);
         return root;
     }
 
@@ -107,9 +107,10 @@ public class HomeFragment extends Fragment {
             JSONArray jArray = new JSONArray(response);
             for (int i = 0; i < jArray.length(); i++) {
                 JSONObject jsonObject = jArray.getJSONObject(i);
+                String title = jsonObject.getString("title");
                 String image = jsonObject.getString("image");
 
-                imageList.add(new SlideModel(image, "The animal population decreased by 58 percent in 42 years.", ScaleTypes.FIT));
+                imageList.add(new SlideModel(image, title, ScaleTypes.FIT));
 
             }
             ImageSlider imageSlider = binding.imageSlider;

@@ -26,8 +26,8 @@ public interface ApiService {
     Call<ResponseBody> get_slider_api(@Field("api_key") String api_key);
 
     @FormUrlEncoded
-    @POST("drd_master_api/api01/update_firebase_token_api")
-    Call<ResponseBody> update_firebase_token_api(@Field("api_key") String api_key, @Field("user_code") String user_code, @Field("user_altercode") String user_altercode, @Field("firebase_token") String firebase_token, @Field("latitude") String latitude, @Field("longitude") String longitude);
+    @POST("drd_master_api/api01/home_page_api")
+    Call<ResponseBody> home_page_api(@Field("api_key") String api_key, @Field("user_code") String user_code, @Field("user_altercode") String user_altercode, @Field("firebase_token") String firebase_token, @Field("latitude") String latitude, @Field("longitude") String longitude, @Field("versioncode") String versioncode, @Field("versionname") String versionname);
 
     @FormUrlEncoded
     @POST("drd_master_api/api01/update_tracking_api")

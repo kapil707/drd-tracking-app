@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -22,6 +23,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.text.Html;
 import android.text.format.DateFormat;
 import android.util.Base64;
 import android.util.Log;
@@ -107,6 +109,9 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
     public static final int CAMERA_PERM_CODE = 101;
     public static final int CAMERA_REQUEST_CODE = 102;
     public static final int GALLERY_REQUEST_CODE = 105;
+
+    String m_versionName = "";
+    int m_versionCode = 0 ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -163,6 +168,26 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
         user_fname = user.get(UserSessionManager.KEY_USERNAME);
         user_image = user.get(UserSessionManager.KEY_USERIMAGE);
         firebase_token = user.get(UserSessionManager.KEY_FIREBASE_TOKEN);
+
+        PackageManager packageManager = getPackageManager();
+
+        try {
+            // Get the package information
+            PackageInfo packageInfo = packageManager.getPackageInfo(getPackageName(), 0);
+
+            // Retrieve the version information
+            String versionName = packageInfo.versionName;
+            int versionCode = packageInfo.versionCode;
+
+            m_versionCode = versionCode;
+            m_versionName = versionName;
+
+            Toast.makeText(getBaseContext(), String.valueOf(versionName), Toast.LENGTH_SHORT).show();
+
+
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
         /*********************************************************/
 
         View header = navigationView.getHeaderView(0);
@@ -173,13 +198,13 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
         nav_user_email.setText("Code : " + user_altercode);
 
         nav_user_image = header.findViewById(R.id.nav_user_image);
-//        try {
-//            Picasso.get().load(user_image).into(nav_user_image);
-//        } catch (Exception e) {
-//            // TODO: handle exception
-//            //mProgressDialog.dismiss();
-//            Toast.makeText(getBaseContext(), "error load image", Toast.LENGTH_SHORT).show();
-//        }
+        try {
+            Picasso.get().load(user_image).into(nav_user_image);
+        } catch (Exception e) {
+            // TODO: handle exception
+            //mProgressDialog.dismiss();
+            Toast.makeText(getBaseContext(), "error load image", Toast.LENGTH_SHORT).show();
+        }
 
         TextView edit_profile_btn = header.findViewById(R.id.edit_profile_btn);
         edit_profile_btn.setOnClickListener(new View.OnClickListener() {
@@ -187,6 +212,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
             @Override
             public void onClick(View v) {
                 askCameraPermissions();
+                //update_app("hello","ram ram sa");
             }
         });
     }
@@ -369,9 +395,9 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
         super.onResume();
 
 //        startService(new Intent(this, BackgroundLocationUpdateService.class));
-//        insert_firebase_token();
+        home_page_api();
     }
-    void insert_firebase_token(){
+    void home_page_api(){
         if (firebase_token.length() == 0) {
             Log.d("Bg-service", "firebase_token error");
         }else {
@@ -390,20 +416,35 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
             mGPS_info(); // locacation ati ha iss say scnner open kartay he
 
             ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-            Call<ResponseBody> call = apiService.update_firebase_token_api("98c08565401579448aad7c64033dcb4081906dcb", user_code,user_altercode,firebase_token,getlatitude,getlongitude);
+            Call<ResponseBody> call = apiService.home_page_api("98c08565401579448aad7c64033dcb4081906dcb", user_code,user_altercode,firebase_token,getlatitude,getlongitude,String.valueOf(m_versionCode),m_versionName);
             //Call<ResponseBody> call = apiService.testing("loginRequest");
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
-                        // Handle success response
-                        // response.body() contains the response data
+                        try {
+                            JSONArray jArray = new JSONArray(response.body().string());
+                            for (int i = 0; i < jArray.length(); i++) {
 
-//                        try {
-//                            writeTv(response.body().string());
-//                        } catch (IOException e) {
-//                            throw new RuntimeException(e);
-//                        }
+                                JSONObject jsonObject = jArray.getJSONObject(i);
+                                String return_id = jsonObject.getString("return_id");
+                                String return_title = jsonObject.getString("return_title");
+                                String return_message = jsonObject.getString("return_message");
+                                String return_url = jsonObject.getString("return_url");
+
+                                if (return_title.equals("")) {
+                                    //finish();
+                                    //session.createUserLoginSession(user_session,user_code,user_altercode,user_password,user_fname,user_image1,firebase_token);
+                                }else{
+                                    update_app(return_title,return_message,return_url);
+                                }
+                                //Toast.makeText(Home_page.this, return_message.toString(), Toast.LENGTH_LONG).show();
+                            }
+                        } catch (Exception e) {
+                            // TODO: handle exception
+                            Log.e("Bg-service", "Error parsing data" + e.toString());
+                            Toast.makeText(Home_page.this, "Error " + e.toString(), Toast.LENGTH_LONG).show();
+                        }
                     } else {
                         // Handle error response
                     }
@@ -430,7 +471,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
             if (resultCode == Activity.RESULT_OK) {
                 File f = new File(currentPhotoPath);
                 nav_user_image.setImageURI(Uri.fromFile(f));
-                Upload();
+                upload_profile_image_api();
                 Log.d("tag", "ABsolute Url of Image is " + Uri.fromFile(f));
 
                 Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
@@ -507,7 +548,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
         }
     }
 
-    private void Upload() {
+    private void upload_profile_image_api() {
         try {
 
             selectedPath = compressImage(currentPhotoPath);
@@ -542,9 +583,11 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
                                 JSONObject jsonObject = jArray.getJSONObject(i);
                                 String return_id = jsonObject.getString("return_id");
                                 String return_message = jsonObject.getString("return_message");
+                                String user_image1 = jsonObject.getString("user_image");
 
                                 if (return_id.equals("1")) {
                                     //finish();
+                                    session.createUserLoginSession(user_session,user_code,user_altercode,user_password,user_fname,user_image1,firebase_token);
                                 }
                                 Toast.makeText(Home_page.this, return_message.toString(), Toast.LENGTH_LONG).show();
                             }
@@ -735,5 +778,34 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
         }
         String uriSting = (file.getAbsolutePath() + "/" + System.currentTimeMillis() + ".png");
         return uriSting;
+    }
+
+    public void update_app(String broadcast_title, String broadcast,String myurl) {
+        //AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(Html.fromHtml(broadcast_title));
+        builder.setMessage(Html.fromHtml(broadcast));
+        builder.setPositiveButton("Cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        builder.setNegativeButton("Update", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+//                Intent it = new Intent(android.content.Intent.ACTION_VIEW);
+//                it.setData(Uri.parse(myurl));
+//                startActivity(it);
+                //finish();
+                String apkUrl = myurl;
+                String title = "Your App Update";
+                String description = "Downloading the latest version of Your App";
+
+                ApkDownloader apkDownloader = new ApkDownloader(Home_page.this);
+                apkDownloader.downloadAndInstallApk(apkUrl, title, description);
+            }
+        });
+        builder.setCancelable(false);
+        builder.show();
     }
 }
