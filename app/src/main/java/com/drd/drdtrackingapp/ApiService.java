@@ -88,6 +88,16 @@ public interface ApiService {
             @Part MultipartBody.Part image
     );
 
+    @Multipart
+    //@FormUrlEncoded
+    @POST("drd_master_api/api01/upload_profile_image_api")
+    Call<ResponseBody> upload_profile_image_api(
+            @Part("api_key") RequestBody api_key,
+            @Part("user_code") RequestBody user_code,
+            @Part("user_altercode") RequestBody user_altercode,
+            @Part MultipartBody.Part image
+    );
+
 
     @Multipart
     @POST("drd_master_api/api01/test_upload")
