@@ -56,6 +56,8 @@ public interface ApiService {
             @Part("chemist_id") RequestBody chemist_id,
             @Part("gstvno") RequestBody gstvno,
             @Part("message") RequestBody message,
+            @Part("payment_message") RequestBody payment_message,
+            @Part("payment_type") RequestBody payment_type,
             @Part MultipartBody.Part image1,
             @Part MultipartBody.Part image2,
             @Part MultipartBody.Part image3,

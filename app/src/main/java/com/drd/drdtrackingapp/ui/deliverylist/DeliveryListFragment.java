@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.drd.drdtrackingapp.ApiService;
 import com.drd.drdtrackingapp.RetrofitClient;
-import com.drd.drdtrackingapp.Delivery_chemist_page;
+import com.drd.drdtrackingapp.Delivery_chemist_photo;
 import com.drd.drdtrackingapp.UserSessionManager;
 import com.drd.drdtrackingapp.Delivery_list_Adapter;
 import com.drd.drdtrackingapp.Delivery_list_get_or_set;
@@ -73,7 +73,7 @@ public class DeliveryListFragment extends Fragment {
                 //alertMessage_selected_acm();
 
                 Intent in = new Intent();
-                in.setClass(getContext(), Delivery_chemist_page.class);
+                in.setClass(getContext(), Delivery_chemist_photo.class);
                 in.putExtra("chemist_id", chemist_id);
                 in.putExtra("gstvno", gstvno);
                 in.putExtra("edit_yes_no", "yes");

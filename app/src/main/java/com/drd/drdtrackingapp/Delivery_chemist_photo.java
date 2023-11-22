@@ -1,6 +1,5 @@
 package com.drd.drdtrackingapp;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,7 +8,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,25 +22,24 @@ import android.graphics.Paint;
 import android.graphics.drawable.GradientDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,28 +48,15 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -81,7 +65,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Delivery_chemist_page extends AppCompatActivity {
+public class Delivery_chemist_photo extends AppCompatActivity {
     ProgressBar menu_loading1;
     UserSessionManager session;
     String user_code = "", user_altercode = "";
@@ -91,9 +75,10 @@ public class Delivery_chemist_page extends AppCompatActivity {
     String currentPhotoPath1="",currentPhotoPath2="",currentPhotoPath3="",currentPhotoPath4="",
             selectedPath1="",selectedPath2="",selectedPath3="",selectedPath4="";
     Button photo_btn1, photo_btn2, photo_btn3, photo_btn4;
-    TextView tv_error1, tv_error2, tv_error3, tv_error4, enter_remarks_error,enter_remarks_tv;
+    TextView tv_error1, tv_error2, tv_error3, tv_error4, enter_remarks_error,enter_remarks_error2,enter_remarks_tv,enter_remarks_tv2;
     Button buttonUpload, buttonUpload1;
-    EditText enter_message;
+    EditText enter_message,enter_message2;
+    Spinner spinner;
 
     //    GridView gridview;
 //    Delivery_chemist_photo_Adapter adapter;
@@ -120,10 +105,14 @@ public class Delivery_chemist_page extends AppCompatActivity {
             }
 
             LinearLayout textbox_bg1 = findViewById(R.id.textbox_bg1);
+            LinearLayout textbox_bg2 = findViewById(R.id.textbox_bg2);
             textbox_bg1.setBackgroundResource(R.drawable.textbox_shap);
+            textbox_bg2.setBackgroundResource(R.drawable.textbox_shap);
 
-            GradientDrawable drawable2 = (GradientDrawable) textbox_bg1.getBackground();
+            GradientDrawable drawable1 = (GradientDrawable) textbox_bg1.getBackground();
+            GradientDrawable drawable2 = (GradientDrawable) textbox_bg2.getBackground();
             if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
+                drawable1.setColor(getResources().getColor(R.color.textbox_bg_dark));
                 drawable2.setColor(getResources().getColor(R.color.textbox_bg_dark));
             }
         }
@@ -170,14 +159,20 @@ public class Delivery_chemist_page extends AppCompatActivity {
         photo_btn4 = findViewById(R.id.pg_photo_btn4);
 
         enter_message = findViewById(R.id.enter_message);
+        enter_message2 = findViewById(R.id.enter_message2);
         enter_remarks_error = findViewById(R.id.enter_remarks_error);
+        enter_remarks_error2 = findViewById(R.id.enter_remarks_error2);
         enter_remarks_tv = findViewById(R.id.enter_remarks_tv);
+        enter_remarks_tv2= findViewById(R.id.enter_remarks_tv2);
+
+        spinner = findViewById(R.id.spinner);
 
         tv_error1.setVisibility(View.GONE);
         tv_error2.setVisibility(View.GONE);
         tv_error3.setVisibility(View.GONE);
         tv_error4.setVisibility(View.GONE);
         enter_remarks_error.setVisibility(View.GONE);
+        enter_remarks_error2.setVisibility(View.GONE);
 
         buttonUpload = findViewById(R.id.buttonUpload);
         buttonUpload1 = findViewById(R.id.buttonUpload1);
@@ -218,13 +213,23 @@ public class Delivery_chemist_page extends AppCompatActivity {
         buttonUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String message = enter_message.getText().toString();
+
                 int work = 0;
+                String message = enter_message.getText().toString();
                 if (message.length() > 0) {
                     enter_remarks_error.setVisibility(View.GONE);
                 } else {
                     work++;
                     enter_remarks_error.setVisibility(View.VISIBLE);
+                    //Toast.makeText(Delivery_chemist_page.this, "Enter Message", Toast.LENGTH_LONG).show();
+                }
+
+                String message2 = enter_message2.getText().toString();
+                if (message2.length() > 0) {
+                    enter_remarks_error2.setVisibility(View.GONE);
+                } else {
+                    work++;
+                    enter_remarks_error2.setVisibility(View.VISIBLE);
                     //Toast.makeText(Delivery_chemist_page.this, "Enter Message", Toast.LENGTH_LONG).show();
                 }
 
@@ -265,6 +270,25 @@ public class Delivery_chemist_page extends AppCompatActivity {
                 }
             }
         });
+
+        // Spinner element
+        //spinner = findViewById(R.id.spinner);
+
+        // Spinner click listener
+        //spinner.setOnItemSelectedListener(this);
+
+        // Spinner Drop down elements
+        List<String> categories = new ArrayList<String>();
+        categories.add("Cash");
+        categories.add("Cheque");
+        categories.add("Online");
+
+        // Creating adapter for spinner
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // attaching data adapter to spinner
+        spinner.setAdapter(dataAdapter);
     }
 
     private void askCameraPermissions1() {
@@ -420,8 +444,16 @@ public class Delivery_chemist_page extends AppCompatActivity {
             enter_message.setVisibility(View.GONE);
             enter_remarks_error.setVisibility(View.GONE);
 
+            enter_message2.setVisibility(View.GONE);
+            enter_remarks_error2.setVisibility(View.GONE);
+
+            spinner.setVisibility(View.GONE);
+
             LinearLayout textbox_bg1 = findViewById(R.id.textbox_bg1);
             textbox_bg1.setVisibility(View.GONE);
+
+            LinearLayout textbox_bg2 = findViewById(R.id.textbox_bg2);
+            textbox_bg2.setVisibility(View.GONE);
 
             buttonUpload.setVisibility(View.GONE);
             buttonUpload1.setVisibility(View.GONE);
@@ -445,7 +477,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
                             Upload();
                         } catch (Exception e) {
                             // TODO: handle exception
-                            Toast.makeText(Delivery_chemist_page.this, "alertMessage_complete_order error", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Delivery_chemist_photo.this, "alertMessage_complete_order error", Toast.LENGTH_SHORT).show();
                         }
                         break;
 
@@ -499,6 +531,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
                             String image3 =  jsonObject.getString("image3");
                             String image4 =  jsonObject.getString("image4");
                             String message =  jsonObject.getString("message");
+                            String message2 =  jsonObject.getString("message2");
 
                             Picasso.get().load(image1).into(photo1);
                             Picasso.get().load(image2).into(photo2);
@@ -506,6 +539,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
                             Picasso.get().load(image4).into(photo4);
 
                             enter_remarks_tv.setText(message);
+                            enter_remarks_tv2.setText(message2);
 
                             edit_or_not("no");
                         }
@@ -526,7 +560,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
                 // Handle network failures or other errors
                 menu_loading1.setVisibility(View.GONE);
                 Log.e("Bg-service-onFailure", " " + t.toString());
-                Toast.makeText(Delivery_chemist_page.this, "show_rider_chemist_photo_api onFailure", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Delivery_chemist_photo.this, "show_rider_chemist_photo_api onFailure", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -534,7 +568,9 @@ public class Delivery_chemist_page extends AppCompatActivity {
     private void Upload() {
         menu_loading1.setVisibility(View.VISIBLE);
         try {
+            String payment_type = String.valueOf(spinner.getSelectedItem());
             String message = enter_message.getText().toString();
+            String payment_message = enter_message2.getText().toString();
 
             String latitude = getlatitude;
             String longitude = getlongitude;
@@ -566,6 +602,8 @@ public class Delivery_chemist_page extends AppCompatActivity {
             RequestBody chemist_id1 = RequestBody.create(MultipartBody.FORM, chemist_id);
             RequestBody gstvno1 = RequestBody.create(MultipartBody.FORM, gstvno);
             RequestBody message1 = RequestBody.create(MultipartBody.FORM, message);
+            RequestBody payment_message1 = RequestBody.create(MultipartBody.FORM, payment_message);
+            RequestBody payment_type1 = RequestBody.create(MultipartBody.FORM, payment_type);
 
             ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
             Call<ResponseBody> call = apiService.upload_delivery_order_photo_api(
@@ -577,6 +615,8 @@ public class Delivery_chemist_page extends AppCompatActivity {
                     chemist_id1,
                     gstvno1,
                     message1,
+                    payment_message1,
+                    payment_type1,
                     image1,
                     image2,
                     image3,
@@ -602,7 +642,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
                                     //finish();
                                     get_delivery_order_photo_api();
                                 }
-                                Toast.makeText(Delivery_chemist_page.this, return_message.toString(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(Delivery_chemist_photo.this, return_message.toString(), Toast.LENGTH_LONG).show();
                             }
 
                             delete_image(currentPhotoPath1);
@@ -617,7 +657,7 @@ public class Delivery_chemist_page extends AppCompatActivity {
                             // TODO: handle exception
                             menu_loading1.setVisibility(View.GONE);
                             Log.e("Bg-service", "Error parsing data" + e.toString());
-                            Toast.makeText(Delivery_chemist_page.this, "Error " + e.toString(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(Delivery_chemist_photo.this, "Error " + e.toString(), Toast.LENGTH_LONG).show();
                         }
                     } else {
                         // Handle the error

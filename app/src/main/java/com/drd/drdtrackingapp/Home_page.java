@@ -3,7 +3,9 @@ package com.drd.drdtrackingapp;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -22,6 +24,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.format.DateFormat;
@@ -93,13 +96,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Home_page extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class Home_page extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityHomePageBinding binding;
     NavController navController;
     UserSessionManager session;
-    String user_session="",user_code="",user_altercode="",user_password="",user_fname="",user_image="",firebase_token="";
+    String user_session = "", user_code = "", user_altercode = "", user_password = "", user_fname = "", user_image = "", firebase_token = "";
     ImageView nav_user_image;
 
     GPSTracker mGPS;
@@ -109,9 +112,11 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
     public static final int CAMERA_PERM_CODE = 101;
     public static final int CAMERA_REQUEST_CODE = 102;
     public static final int GALLERY_REQUEST_CODE = 105;
-
+    private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 1;
+    private static final int INSTALL_PACKAGES_REQUEST_CODE = 2;
     String m_versionName = "";
-    int m_versionCode = 0 ;
+    int m_versionCode = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -215,6 +220,8 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
                 //update_app("hello","ram ram sa");
             }
         });
+        OpenNewVersion();
+        //set_parmission();
     }
 
     @Override
@@ -282,7 +289,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
     }
 
     // iss say qr code ka json response ata ha
-    private void open_qr_scanner(){
+    private void open_qr_scanner() {
         mGPS_info(); // locacation ati ha iss say scnner open kartay he
 
         IntentIntegrator intentIntegrator = new IntentIntegrator(Home_page.this);
@@ -291,7 +298,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
         intentIntegrator.initiateScan();
     }
 
-    public void attendance_upload(int requestCode, int resultCode,Intent data){
+    public void attendance_upload(int requestCode, int resultCode, Intent data) {
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         // if the intentResult is null then
         // toast a message as "cancelled"
@@ -312,7 +319,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
 
                         mGPS_info(); // locacation ati ha iss say scnner open kartay he
 
-                        if(return_id.equals("1")) {
+                        if (return_id.equals("1")) {
                             upload_attendance_api(getlatitude, getlongitude, date, time, token_key);
                         }
                     }
@@ -334,9 +341,9 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
         getlongitude = String.valueOf(longitude1);
     }
 
-    private void upload_attendance_api(String latitude,String longitude,String date,String time,String token_key){
+    private void upload_attendance_api(String latitude, String longitude, String date, String time, String token_key) {
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-        Call<ResponseBody> call = apiService.upload_attendance_api("98c08565401579448aad7c64033dcb4081906dcb", user_code,user_altercode,latitude,longitude,date,time,token_key);
+        Call<ResponseBody> call = apiService.upload_attendance_api("98c08565401579448aad7c64033dcb4081906dcb", user_code, user_altercode, latitude, longitude, date, time, token_key);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -348,8 +355,8 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
                         for (int i = 0; i < jArray.length(); i++) {
 
                             JSONObject jsonObject = jArray.getJSONObject(i);
-                            String return_id =  jsonObject.getString("return_id");
-                            String return_message =  jsonObject.getString("return_message");
+                            String return_id = jsonObject.getString("return_id");
+                            String return_message = jsonObject.getString("return_message");
 
 //                            if(return_id.equals("1")){
 //                                finish();
@@ -359,7 +366,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
                     } catch (Exception e) {
                         // TODO: handle exception
                         Log.e("Bg-service", "Error parsing data" + e.toString());
-                        Toast.makeText(getApplicationContext(),"upload_attendance_api error2", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "upload_attendance_api error2", Toast.LENGTH_LONG).show();
                     }
                 } else {
                     // Handle error response
@@ -397,10 +404,11 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
 //        startService(new Intent(this, BackgroundLocationUpdateService.class));
         home_page_api();
     }
-    void home_page_api(){
+
+    void home_page_api() {
         if (firebase_token.length() == 0) {
             Log.d("Bg-service", "firebase_token error");
-        }else {
+        } else {
 
             java.util.Date noteTS = Calendar.getInstance().getTime();
 
@@ -416,7 +424,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
             mGPS_info(); // locacation ati ha iss say scnner open kartay he
 
             ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-            Call<ResponseBody> call = apiService.home_page_api("98c08565401579448aad7c64033dcb4081906dcb", user_code,user_altercode,firebase_token,getlatitude,getlongitude,String.valueOf(m_versionCode),m_versionName);
+            Call<ResponseBody> call = apiService.home_page_api("98c08565401579448aad7c64033dcb4081906dcb", user_code, user_altercode, firebase_token, getlatitude, getlongitude, String.valueOf(m_versionCode), m_versionName);
             //Call<ResponseBody> call = apiService.testing("loginRequest");
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
@@ -435,8 +443,8 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
                                 if (return_title.equals("")) {
                                     //finish();
                                     //session.createUserLoginSession(user_session,user_code,user_altercode,user_password,user_fname,user_image1,firebase_token);
-                                }else{
-                                    update_app(return_title,return_message,return_url);
+                                } else {
+                                    update_app(return_title, return_message, return_url);
                                 }
                                 //Toast.makeText(Home_page.this, return_message.toString(), Toast.LENGTH_LONG).show();
                             }
@@ -463,7 +471,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
     /*********image upload*********************/
     @SuppressLint("MissingSuperCall")
     @Override
-    protected void onActivityResult(int requestCode, int resultCode,Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //Toast.makeText(getBaseContext(),String.valueOf(requestCode), Toast.LENGTH_LONG).show();
 
@@ -491,6 +499,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
             dispatchTakePictureIntent();
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @android.support.annotation.NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -499,6 +508,14 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
                 dispatchTakePictureIntent();
             } else {
                 Toast.makeText(this, "Camera Permission is Required to Use camera.", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        if (requestCode == REQUEST_WRITE_EXTERNAL_STORAGE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, continue with your app logic
+            } else {
+                // Permission denied, handle accordingly (e.g., show a message)
             }
         }
     }
@@ -587,7 +604,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
 
                                 if (return_id.equals("1")) {
                                     //finish();
-                                    session.createUserLoginSession(user_session,user_code,user_altercode,user_password,user_fname,user_image1,firebase_token);
+                                    session.createUserLoginSession(user_session, user_code, user_altercode, user_password, user_fname, user_image1, firebase_token);
                                 }
                                 Toast.makeText(Home_page.this, return_message.toString(), Toast.LENGTH_LONG).show();
                             }
@@ -603,6 +620,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
                         Toast.makeText(getApplicationContext(), "Some error occurred...", Toast.LENGTH_LONG).show();
                     }
                 }
+
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     // Handle network errors or exceptions
@@ -780,7 +798,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
         return uriSting;
     }
 
-    public void update_app(String broadcast_title, String broadcast,String myurl) {
+    public void update_app(String broadcast_title, String broadcast, String myurl) {
         //AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialogStyle);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(Html.fromHtml(broadcast_title));
@@ -807,5 +825,72 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
         });
         builder.setCancelable(false);
         builder.show();
+    }
+
+    public void set_parmission() {
+
+//        Intent intent = new Intent(Intent.ACTION_VIEW);
+//        intent.setDataAndType(Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/download/" + "YourApp.apk")), "application/vnd.android.package-archive");
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        startActivity(intent);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                // Permission is not granted, request it
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        REQUEST_WRITE_EXTERNAL_STORAGE);
+            } else {
+                // Permission already granted
+                // Continue with your app logic
+            }
+        } else {
+            // Permission not needed for lower versions
+            // Continue with your app logic
+        }
+    }
+
+    void OpenNewVersion() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (!getPackageManager().canRequestPackageInstalls()) {
+                    // Request the user to grant INSTALL_PACKAGES permission
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:" + getPackageName()));
+                    startActivityForResult(intent, INSTALL_PACKAGES_REQUEST_CODE);
+                }
+            }
+        }
+
+        try {
+            Context context = this;
+            String PATH = Environment.getExternalStorageDirectory() + "/Download/";
+            String fileName = "YourApp.apk";
+
+            File apkFile = new File(PATH, fileName);
+
+            if (apkFile.exists()) {
+                Uri uri = FileProvider.getUriForFile(context, context.getPackageName() + ".provider", apkFile);
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(uri, "application/vnd.android.package-archive");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                try {
+                    context.startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
+                    // Handle the exception, e.g., show a message to the user
+                }
+            } else {
+                // Handle the case where the APK file does not exist
+                Toast.makeText(getApplicationContext(), "file not found", Toast.LENGTH_LONG).show();
+
+            }
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
+        }
     }
 }

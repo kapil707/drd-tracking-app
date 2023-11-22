@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Delivery_chemist_page"
+    tools:context=".Delivery_chemist_photo"
     android:layout_centerHorizontal="true">
 
     <include layout="@layout/menu"></include>
@@ -227,14 +227,69 @@
                 </LinearLayout>
             </LinearLayout>
 
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="15dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/enter_remarks_tv2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/page_textclr_theme"
+                    android:layout_marginBottom="10dp"
+                    android:textSize="18dip"
+                    android:text="Select Payment Type"/>
+
+                <Spinner
+                    android:id="@+id/spinner"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/textbox_bg2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dip"
+                    android:orientation="horizontal"
+                    android:background="@drawable/textbox_shap"
+                    android:elevation="2dp">
+                    <EditText
+                        android:id="@+id/enter_message2"
+                        android:hint="Enter Payment"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="10dip"
+                        android:background="@null"
+                        android:ems="10"
+                        style="@style/textbox_theme"/>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/enter_remarks_error2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textSize="16dip"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:theme="@style/page_textclr_error_theme"
+                    android:text="Enter Remarks"/>
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/enter_remarks_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:theme="@style/page_textclr_theme"
-                android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip"
-                android:layout_marginTop="20dp"
+                android:layout_marginLeft="15dip"
+                android:layout_marginRight="15dip"
+                android:layout_marginTop="15dip"
                 android:textSize="18dip"
                 android:text="Message"/>
 
@@ -242,7 +297,7 @@
                 android:id="@+id/textbox_bg1"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="20dip"
+                android:layout_marginTop="10dip"
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="10dip"
                 android:orientation="horizontal"
@@ -264,7 +319,7 @@
                 android:id="@+id/enter_remarks_error"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:textSize="16dip"
                 android:gravity="center"
                 android:layout_gravity="center"
