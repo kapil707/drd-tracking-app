@@ -136,7 +136,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.drd.drdtrackingapp.FileProvider"
+            android:authorities="com.drd.drdtrackingapp.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -146,7 +146,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
+            android:authorities="${applicationId}.FileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

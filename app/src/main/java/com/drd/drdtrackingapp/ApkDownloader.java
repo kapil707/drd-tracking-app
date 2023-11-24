@@ -32,7 +32,7 @@ public class ApkDownloader {
         request.setDescription(description);
 
         // Set the destination directory for the downloaded file
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "YourApp.apk");
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "1.2-drd-master.apk");
 
         // Enqueue the download
         DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
@@ -102,7 +102,7 @@ public class ApkDownloader {
             installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(installIntent);
         } catch (Exception e) {
-            Log.e("InstallApk", "Error installing APK: " + e.getMessage());
+            Log.e("InstallApk", "Error installing APK1: " + e.getMessage());
             Toast.makeText(context, "Error installing APK "+e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -111,10 +111,11 @@ public class ApkDownloader {
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setDataAndType(Uri.parse(downloadPath), "application/vnd.android.package-archive");
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         } catch (Exception e) {
-            Log.e("InstallApk", "Error installing APK: " + e.getMessage());
+            Log.e("InstallApk", "Error installing APK2: " + e.getMessage());
             Toast.makeText(context, "Error installing APK" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }

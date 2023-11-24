@@ -221,7 +221,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
                 //update_app("hello","ram ram sa");
             }
         });
-        OpenNewVersion();
+        //OpenNewVersion();
         //set_parmission();
     }
 
