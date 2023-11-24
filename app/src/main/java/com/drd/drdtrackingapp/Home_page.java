@@ -114,6 +114,7 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
     public static final int GALLERY_REQUEST_CODE = 105;
     private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 1;
     private static final int INSTALL_PACKAGES_REQUEST_CODE = 2;
+
     String m_versionName = "";
     int m_versionCode = 0;
 
