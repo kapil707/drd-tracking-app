@@ -14,39 +14,43 @@ import retrofit2.http.Part;
 public interface ApiService {
 
     @FormUrlEncoded
-    @POST("drd_master_api/api01/test")
+    @POST("test")
     Call<ResponseBody> testing(@Field("test") String test);
 
     @FormUrlEncoded
-    @POST("drd_master_api/api01/get_login_api")
+    @POST("get_login_api")
     Call<ResponseBody> get_login_api(@Field("api_key") String api_key, @Field("user_name") String user_name, @Field("password") String password, @Field("firebase_token") String firebase_token);
 
     @FormUrlEncoded
-    @POST("drd_master_api/api01/get_slider_api")
+    @POST("get_slider_api")
     Call<ResponseBody> get_slider_api(@Field("api_key") String api_key);
 
     @FormUrlEncoded
-    @POST("drd_master_api/api01/home_page_api")
-    Call<ResponseBody> home_page_api(@Field("api_key") String api_key, @Field("user_code") String user_code, @Field("user_altercode") String user_altercode, @Field("firebase_token") String firebase_token, @Field("latitude") String latitude, @Field("longitude") String longitude, @Field("versioncode") String versioncode, @Field("versionname") String versionname);
+    @POST("home_page_api")
+    Call<ResponseBody> home_page_api(@Field("api_key") String api_key,
+                                     @Field("user_code") String user_code,
+                                     @Field("user_altercode") String user_altercode, @Field("firebase_token") String firebase_token, @Field("latitude") String latitude, @Field("longitude") String longitude, @Field("versioncode") String versioncode,
+                                     @Field("versionname") String versionname,
+                                     @Field("useremail") String useremail);
 
     @FormUrlEncoded
-    @POST("drd_master_api/api01/update_tracking_api")
+    @POST("update_tracking_api")
     Call<ResponseBody> update_tracking_api(@Field("api_key") String api_key, @Field("user_code") String user_code, @Field("user_altercode") String user_altercode, @Field("firebase_token") String firebase_token, @Field("latitude") String latitude, @Field("longitude") String longitude, @Field("getdate") String getdate, @Field("gettime") String gettime);
 
     @FormUrlEncoded
-    @POST("drd_master_api/api01/get_delivery_order_api")
+    @POST("get_delivery_order_api")
     Call<ResponseBody> get_delivery_order_api(@Field("api_key") String api_key, @Field("user_code") String user_code, @Field("user_altercode") String user_altercode);
 
     @FormUrlEncoded
-    @POST("drd_master_api/api01/get_delivery_order_done_api")
+    @POST("get_delivery_order_done_api")
     Call<ResponseBody> get_delivery_order_done_api(@Field("api_key") String api_key, @Field("user_code") String user_code, @Field("user_altercode") String user_altercode);
 
     @FormUrlEncoded
-    @POST("drd_master_api/api01/get_delivery_order_photo_api")
+    @POST("get_delivery_order_photo_api")
     Call<ResponseBody> get_delivery_order_photo_api(@Field("api_key") String api_key, @Field("user_code") String user_code, @Field("user_altercode") String user_altercode, @Field("chemist_id") String chemist_id, @Field("gstvno") String gstvno);
 
     @Multipart
-    @POST("drd_master_api/api01/upload_delivery_order_photo_api")
+    @POST("upload_delivery_order_photo_api")
     Call<ResponseBody> upload_delivery_order_photo_api(
             @Part("api_key") RequestBody api_key,
             @Part("user_code") RequestBody user_code,
@@ -65,7 +69,7 @@ public interface ApiService {
     );
 
     @FormUrlEncoded
-    @POST("drd_master_api/api01/upload_attendance_api")
+    @POST("upload_attendance_api")
     Call<ResponseBody> upload_attendance_api(
             @Field("api_key") String api_key,
             @Field("user_code") String user_code,
@@ -79,7 +83,7 @@ public interface ApiService {
 
     @Multipart
     //@FormUrlEncoded
-    @POST("drd_master_api/api01/upload_meter_photo_api")
+    @POST("upload_meter_photo_api")
     Call<ResponseBody> upload_meter_photo_api(
             @Part("api_key") RequestBody api_key,
             @Part("user_code") RequestBody user_code,
@@ -92,7 +96,7 @@ public interface ApiService {
 
     @Multipart
     //@FormUrlEncoded
-    @POST("drd_master_api/api01/upload_profile_image_api")
+    @POST("upload_profile_image_api")
     Call<ResponseBody> upload_profile_image_api(
             @Part("api_key") RequestBody api_key,
             @Part("user_code") RequestBody user_code,
@@ -102,7 +106,7 @@ public interface ApiService {
 
 
     @Multipart
-    @POST("drd_master_api/api01/test_upload")
+    @POST("test_upload")
     Call<ResponseBody> uploadImage(
             @Part MultipartBody.Part image
     );

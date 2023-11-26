@@ -2,37 +2,38 @@ package com.drd.drdtrackingapp;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
     UserSessionManager session;
     Database db;
     SQLiteDatabase sql;
-    Button btn1,btn2;
+    Button btn1, btn2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         session = new UserSessionManager(getApplicationContext());
+
+//        String[] permission = {
+//                Manifest.permission.READ_PHONE_NUMBERS
+//        };
+//
+//        requestPermissions(permission, 1199);
+
         if (session.checkLogin()) {
             finish();
         }else{
@@ -121,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                 ignoreBatteryOptimization();
                 Log.e("BackgroundSyncWorker", "start2");*/
 
-                //https://www.digitalocean.com/community/tutorials/android-broadcastreceiver-example-tutorial
+        //https://www.digitalocean.com/community/tutorials/android-broadcastreceiver-example-tutorial
 
                 /*ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
                 Call<ResponseBody> call = apiService.update_api("chemist","v153","123");
@@ -157,8 +158,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
     }
-
-
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void ignoreBatteryOptimization() {

@@ -1,6 +1,8 @@
 package com.drd.drdtrackingapp;
 
 import android.Manifest;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -26,6 +28,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.format.DateFormat;
 import android.util.Base64;
@@ -111,10 +114,12 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
     String currentPhotoPath, selectedPath;
     public static final int CAMERA_PERM_CODE = 101;
     public static final int CAMERA_REQUEST_CODE = 102;
-    public static final int GALLERY_REQUEST_CODE = 105;
+    public static final int REQUEST_CODE_GET_ACCOUNTS = 105;
+    private static final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 106;
     private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 1;
     private static final int INSTALL_PACKAGES_REQUEST_CODE = 2;
 
+    String useremail = "";
     String m_versionName = "";
     int m_versionCode = 0;
 
@@ -188,12 +193,22 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
             m_versionCode = versionCode;
             m_versionName = versionName;
 
-            Toast.makeText(getBaseContext(), String.valueOf(versionName), Toast.LENGTH_SHORT).show();
-
-
+            //Toast.makeText(getBaseContext(), String.valueOf(versionName), Toast.LENGTH_SHORT).show();
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
+
+
+        // Check if the app has the GET_ACCOUNTS permission
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                checkSelfPermission("android.permission.GET_ACCOUNTS") == PackageManager.PERMISSION_GRANTED) {
+            // If the permission is granted, get the user's email
+            useremail = getUserEmail(this);
+        } else {
+            // Request the GET_ACCOUNTS permission
+            requestPermissions(new String[]{"android.permission.GET_ACCOUNTS"}, REQUEST_CODE_GET_ACCOUNTS);
+        }
+
         /*********************************************************/
 
         View header = navigationView.getHeaderView(0);
@@ -331,6 +346,18 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
         }
     }
 
+    private String getUserEmail(Context context) {
+        AccountManager accountManager = AccountManager.get(context);
+        Account[] accounts = accountManager.getAccountsByType("com.google");
+
+        if (accounts.length > 0) {
+            // Assuming the first account is the primary Google account on the device
+            return accounts[0].name;
+        } else {
+            return null; // No Google account found
+        }
+    }
+
     public void mGPS_info() {
         mGPS = new GPSTracker(this);
         mGPS.getLocation();
@@ -425,7 +452,9 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
             mGPS_info(); // locacation ati ha iss say scnner open kartay he
 
             ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-            Call<ResponseBody> call = apiService.home_page_api("98c08565401579448aad7c64033dcb4081906dcb", user_code, user_altercode, firebase_token, getlatitude, getlongitude, String.valueOf(m_versionCode), m_versionName);
+            Call<ResponseBody> call = apiService.home_page_api("98c08565401579448aad7c64033dcb4081906dcb",
+                    user_code, user_altercode, firebase_token, getlatitude, getlongitude,
+                    String.valueOf(m_versionCode), m_versionName,useremail);
             //Call<ResponseBody> call = apiService.testing("loginRequest");
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
@@ -440,6 +469,12 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
                                 String return_title = jsonObject.getString("return_title");
                                 String return_message = jsonObject.getString("return_message");
                                 String return_url = jsonObject.getString("return_url");
+                                String return_logout = jsonObject.getString("return_logout");
+
+                                if(return_logout.equals("1")){
+                                    session.logoutUser();
+                                    finish();
+                                }
 
                                 if (return_title.equals("")) {
                                     //finish();
@@ -504,6 +539,16 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
     @Override
     public void onRequestPermissionsResult(int requestCode, @android.support.annotation.NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE_GET_ACCOUNTS) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, get the user's email
+                useremail = getUserEmail(this);
+                // Use the userEmail as needed
+            } else {
+                // Permission denied, handle accordingly
+            }
+        }
+
         if (requestCode == CAMERA_PERM_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 dispatchTakePictureIntent();
@@ -517,6 +562,18 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
                 // Permission granted, continue with your app logic
             } else {
                 // Permission denied, handle accordingly (e.g., show a message)
+            }
+        }
+
+        if (requestCode == MY_PERMISSIONS_REQUEST_READ_PHONE_STATE) {
+            // in the below line, we are checking if permission is granted.
+            if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // if permissions are granted we are displaying below toast message.
+                Toast.makeText(this, "Permission granted.", Toast.LENGTH_SHORT).show();
+            } else {
+                // in the below line, we are displaying toast message
+                // if permissions are not granted.
+                Toast.makeText(this, "Permission denied.", Toast.LENGTH_SHORT).show();
             }
         }
     }
