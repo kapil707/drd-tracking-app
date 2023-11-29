@@ -7,7 +7,6 @@ public class RetrofitClient {
 
     public static Retrofit retrofit;
 
-
     public static Retrofit getRetrofitInstance(){
         if(retrofit==null){
             retrofit = new Retrofit.Builder()
