@@ -39,7 +39,10 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("get_delivery_order_api")
-    Call<ResponseBody> get_delivery_order_api(@Field("api_key") String api_key, @Field("user_code") String user_code, @Field("user_altercode") String user_altercode);
+    Call<ResponseBody> get_delivery_order_api(
+            @Field("api_key") String api_key,
+            @Field("user_code") String user_code,
+            @Field("user_altercode") String user_altercode);
 
     @FormUrlEncoded
     @POST("get_delivery_order_done_api")
