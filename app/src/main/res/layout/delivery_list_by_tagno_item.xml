@@ -77,6 +77,16 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/select_medicine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="right"
+                android:text="Medium Text"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="16dp" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -149,6 +159,16 @@
                     android:textColor="#ffffff"/>
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/select_medicine1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="right"
+                android:text="Medium Text"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="16dp" />
 
         </LinearLayout>
     </LinearLayout>

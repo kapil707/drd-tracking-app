@@ -3,24 +3,30 @@ package com.drd.drdtrackingapp;
 import java.util.ArrayList;
 
 public class Delivery_list_by_tagno_get_or_set {
-    private String mytagno,mydate,mytime,intid;
+    private String gstvno,mydate,chemist_code,chemist_name,amount,medicine_items,intid;
     public Delivery_list_by_tagno_get_or_set() {
     }
 
-    public Delivery_list_by_tagno_get_or_set(String mytagno, String mydate, String mytime, String intid,
+    public Delivery_list_by_tagno_get_or_set(String gstvno,
+                                             String mydate, String chemist_code,
+                                             String chemist_name,String amount,
+                                             String medicine_items,String intid,
                                              ArrayList<String> genre) {
-        this.mytagno = mytagno;
+        this.gstvno = gstvno;
         this.mydate = mydate;
-        this.mytime = mytime;
+        this.chemist_code = chemist_code;
+        this.chemist_name = chemist_name;
+        this.amount = amount;
+        this.medicine_items = medicine_items;
         this.intid = intid;
     }
 
-    public String mytagno() {
-        return mytagno;
+    public String gstvno() {
+        return gstvno;
     }
 
-    public void mytagno(String mytagno) {
-        this.mytagno = mytagno;
+    public void gstvno(String gstvno) {
+        this.gstvno = gstvno;
     }
 
     public String mydate() {
@@ -31,14 +37,36 @@ public class Delivery_list_by_tagno_get_or_set {
         this.mydate = mydate;
     }
 
-    public String mytime() {
-        return mytime;
+    public String chemist_code() {
+        return chemist_code;
     }
 
-    public void mytime(String mytime) {
-        this.mytime = mytime;
+    public void chemist_code(String chemist_code) {
+        this.chemist_code = chemist_code;
     }
-    
+    public String chemist_name() {
+        return chemist_name;
+    }
+
+    public void chemist_name(String chemist_name) {
+        this.chemist_name = chemist_name;
+    }
+    public String amount() {
+        return amount;
+    }
+
+    public void amount(String amount) {
+        this.amount = amount;
+    }
+
+    public String medicine_items() {
+        return medicine_items;
+    }
+
+    public void medicine_items(String medicine_items) {
+        this.medicine_items = medicine_items;
+    }
+
     public String intid() {
         return intid;
     }

@@ -45,6 +45,14 @@ public interface ApiService {
             @Field("user_altercode") String user_altercode);
 
     @FormUrlEncoded
+    @POST("get_delivery_order_by_tagno_api")
+    Call<ResponseBody> get_delivery_order_by_tagno_api(
+            @Field("api_key") String api_key,
+            @Field("user_code") String user_code,
+            @Field("user_altercode") String user_altercode,
+            @Field("tagno") String tagno);
+
+    @FormUrlEncoded
     @POST("get_delivery_order_done_api")
     Call<ResponseBody> get_delivery_order_done_api(@Field("api_key") String api_key, @Field("user_code") String user_code, @Field("user_altercode") String user_altercode);
 
