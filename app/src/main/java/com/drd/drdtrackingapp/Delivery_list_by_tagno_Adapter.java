@@ -15,17 +15,17 @@ public class Delivery_list_by_tagno_Adapter extends BaseAdapter {
 
     Context context;
     LayoutInflater inflater;
-    private List<Delivery_list_get_or_set> movieItems;
+    private List<Delivery_list_by_tagno_get_or_set> arrayitems;
 
-    public Delivery_list_by_tagno_Adapter(Context context, List<Delivery_list_get_or_set> arraylist)
+    public Delivery_list_by_tagno_Adapter(Context context, List<Delivery_list_by_tagno_get_or_set> arraylist)
     {
         this.context = context;
-        this.movieItems = arraylist;
+        this.arrayitems = arraylist;
     }
  
     @Override
 	public int getCount() {
-		return movieItems.size();
+		return arrayitems.size();
 	}
     
    
@@ -36,7 +36,7 @@ public class Delivery_list_by_tagno_Adapter extends BaseAdapter {
        
         LayoutInflater abc = ((Activity) context).getLayoutInflater();
 		View itemView = abc.inflate(R.layout.delivery_list_item, null,true);
-		final Delivery_list_get_or_set m = movieItems.get(position);
+		final Delivery_list_by_tagno_get_or_set m = arrayitems.get(position);
 
         LinearLayout select_chemist_LinearLayout = (LinearLayout) itemView.findViewById(R.id.select_chemist_LinearLayout);
         TextView select_chemist_name = (TextView) itemView.findViewById(R.id.select_chemist_name);
