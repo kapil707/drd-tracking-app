@@ -66,8 +66,8 @@ public class DeliveryDoneListFragment extends Fragment {
                                     int arg2, long arg3) {
                 // TODO Auto-generated method stub
                 Delivery_list_get_or_set clickedCategory = get_set.get(arg2);
-                String chemist_id = clickedCategory.chemist_id();
-                String gstvno = clickedCategory.gstvno();
+                String chemist_id = clickedCategory.mytagno();
+                String gstvno = clickedCategory.mydate();
 
                 //alertMessage_selected_acm();
 
@@ -131,10 +131,9 @@ public class DeliveryDoneListFragment extends Fragment {
                 String gstvno = jsonObject.getString("gstvno");
 
                 Delivery_list_get_or_set mylist = new Delivery_list_get_or_set();
-                mylist.chemist_id(chemist_id);
-                mylist.name(name);
-                mylist.amt(amt);
-                mylist.gstvno(gstvno);
+                mylist.mytagno(chemist_id);
+                mylist.mydate(name);
+                mylist.mytime(amt);
                 mylist.intid(String.valueOf(intid++));
                 get_set.add(mylist);
             }

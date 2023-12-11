@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.drd.drdtrackingapp.ApiService;
+import com.drd.drdtrackingapp.Delivery_list_by_tagno;
 import com.drd.drdtrackingapp.RetrofitClient;
 import com.drd.drdtrackingapp.Delivery_chemist_photo;
 import com.drd.drdtrackingapp.UserSessionManager;
@@ -67,16 +68,13 @@ public class DeliveryListFragment extends Fragment {
                                     int arg2, long arg3) {
                 // TODO Auto-generated method stub
                 Delivery_list_get_or_set clickedCategory = movieList.get(arg2);
-                String chemist_id = clickedCategory.chemist_id();
-                String gstvno = clickedCategory.gstvno();
+                String mytagno = clickedCategory.mytagno();
 
                 //alertMessage_selected_acm();
 
                 Intent in = new Intent();
-                in.setClass(getContext(), Delivery_chemist_photo.class);
-                in.putExtra("chemist_id", chemist_id);
-                in.putExtra("gstvno", gstvno);
-                in.putExtra("edit_yes_no", "yes");
+                in.setClass(getContext(), Delivery_list_by_tagno.class);
+                in.putExtra("mytagno", mytagno);
                 startActivity(in);
             }
         });
@@ -126,16 +124,14 @@ public class DeliveryListFragment extends Fragment {
             for (int i = 0; i < jArray.length(); i++) {
 
                 JSONObject jsonObject = jArray.getJSONObject(i);
-                String chemist_id = jsonObject.getString("chemist_id");
-                String name = jsonObject.getString("name");
-                String amt = jsonObject.getString("amt");
-                String gstvno = jsonObject.getString("gstvno");
+                String tagno = jsonObject.getString("tagno");
+                String date = jsonObject.getString("date");
+                String time = jsonObject.getString("time");
 
                 Delivery_list_get_or_set movie = new Delivery_list_get_or_set();
-                movie.chemist_id(chemist_id);
-                movie.name(name);
-                movie.amt(amt);
-                movie.gstvno(gstvno);
+                movie.mytagno(tagno);
+                movie.mydate(date);
+                movie.mytime(time);
                 movie.intid(String.valueOf(intid++));
                 movieList.add(movie);
             }

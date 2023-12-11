@@ -11,7 +11,7 @@ public class RetrofitClient {
     public static Retrofit getRetrofitInstance(){
         if(retrofit==null){
             retrofit = new Retrofit.Builder()
-                    .baseUrl("https://www.drdweb.co.in/drd_master_api/api02/")
+                    .baseUrl("https://www.drdweb.co.in/drd_master_api/api03/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }

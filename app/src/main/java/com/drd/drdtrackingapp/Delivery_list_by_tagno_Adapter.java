@@ -11,13 +11,13 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class Delivery_list_Adapter extends BaseAdapter {
+public class Delivery_list_by_tagno_Adapter extends BaseAdapter {
 
     Context context;
     LayoutInflater inflater;
     private List<Delivery_list_get_or_set> movieItems;
 
-    public Delivery_list_Adapter(Context context, List<Delivery_list_get_or_set> arraylist)
+    public Delivery_list_by_tagno_Adapter(Context context, List<Delivery_list_get_or_set> arraylist)
     {
         this.context = context;
         this.movieItems = arraylist;
