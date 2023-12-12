@@ -69,12 +69,16 @@ public class DeliveryListFragment extends Fragment {
                 // TODO Auto-generated method stub
                 Delivery_list_get_or_set clickedCategory = movieList.get(arg2);
                 String mytagno = clickedCategory.mytagno();
+                String mydate = clickedCategory.mydate();
+                String mytime = clickedCategory.mytime();
 
                 //alertMessage_selected_acm();
 
                 Intent in = new Intent();
                 in.setClass(getContext(), Delivery_list_by_tagno.class);
                 in.putExtra("mytagno", mytagno);
+                in.putExtra("mydate", mydate);
+                in.putExtra("mytime", mytime);
                 startActivity(in);
             }
         });

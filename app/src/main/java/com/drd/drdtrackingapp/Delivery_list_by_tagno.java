@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -40,7 +41,7 @@ public class Delivery_list_by_tagno extends AppCompatActivity {
     ListView listview1;
     Delivery_list_by_tagno_Adapter adapter;
     List<Delivery_list_by_tagno_get_or_set> arrayList = new ArrayList<Delivery_list_by_tagno_get_or_set>();
-    String tagno ="";
+    String mytagno ="",mydate="",mytime="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +53,9 @@ public class Delivery_list_by_tagno extends AppCompatActivity {
         user_altercode = user.get(UserSessionManager.KEY_USERALTERCODE);
 
         Intent in = getIntent();
-        tagno = in.getStringExtra("mytagno");
+        mytagno = in.getStringExtra("mytagno");
+        mydate = in.getStringExtra("mydate");
+        mytime = in.getStringExtra("mytime");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -68,9 +71,9 @@ public class Delivery_list_by_tagno extends AppCompatActivity {
         }
 
         TextView action_bar_title1 = (TextView) findViewById(R.id.action_bar_title);
-        action_bar_title1.setText(tagno);
+        action_bar_title1.setText("Tagno : " +mytagno);
         TextView action_bar_title11 = (TextView) findViewById(R.id.action_bar_title1);
-        action_bar_title11.setText(tagno);
+        action_bar_title11.setText(mydate+" - " +mytime);
         action_bar_title11.setVisibility(View.VISIBLE);
         ImageButton imageButton = findViewById(R.id.action_bar_back);
         imageButton.setOnClickListener(new View.OnClickListener() {
@@ -86,20 +89,42 @@ public class Delivery_list_by_tagno extends AppCompatActivity {
         adapter = new Delivery_list_by_tagno_Adapter(Delivery_list_by_tagno.this, arrayList);
         listview1.setAdapter(adapter);
 
+        listview1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1,
+                                    int arg2, long arg3) {
+                // TODO Auto-generated method stub
+                Delivery_list_by_tagno_get_or_set clickedCategory = arrayList.get(arg2);
+                String chemist_code = clickedCategory.chemist_code();
+                String gstvno = clickedCategory.gstvno();
+
+                //alertMessage_selected_acm();
+
+                Intent in = new Intent();
+                in.setClass(Delivery_list_by_tagno.this, Delivery_chemist_photo.class);
+                in.putExtra("chemist_id", chemist_code);
+                in.putExtra("gstvno", gstvno);
+                in.putExtra("edit_yes_no", "yes");
+                startActivity(in);
+            }
+        });
+
         get_delivery_order_by_tagno_api();
         //Toast.makeText(Delivery_list_by_tagno.this, mytagno, Toast.LENGTH_LONG).show();
     }
 
     private void get_delivery_order_by_tagno_api() {
+        menu_loading1.setVisibility(View.VISIBLE);
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
         Call<ResponseBody> call = apiService.get_delivery_order_by_tagno_api(
                 "98c08565401579448aad7c64033dcb4081906dcb",
                 user_code,
                 user_altercode,
-                tagno);
+                mytagno);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                menu_loading1.setVisibility(View.GONE);
                 if (response.isSuccessful()) {
                     //Toast.makeText(Delivery_list_by_tagno.this,"deliver_list_api onResponse",Toast.LENGTH_SHORT).show();
                     try {
@@ -113,6 +138,7 @@ public class Delivery_list_by_tagno extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                menu_loading1.setVisibility(View.GONE);
                 // Handle network failures or other errors
                 Log.e("Bg-service-onFailure", " " + t.toString());
                 Toast.makeText(Delivery_list_by_tagno.this, "get_delivery_order_api onFailure : " + t.toString(), Toast.LENGTH_SHORT).show();
