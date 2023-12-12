@@ -69,14 +69,8 @@ public interface ApiService {
             @Field("api_key") String api_key,
             @Field("user_code") String user_code,
             @Field("user_altercode") String user_altercode,
-            @Field("tagno") String tagno);
-
-    @FormUrlEncoded
-    @POST("get_delivery_order_done_api")
-    Call<ResponseBody> get_delivery_order_done_api(
-            @Field("api_key") String api_key,
-            @Field("user_code") String user_code,
-            @Field("user_altercode") String user_altercode);
+            @Field("tagno") String tagno,
+            @Field("status") String status);
 
     @FormUrlEncoded
     @POST("get_delivery_order_photo_api")
@@ -84,7 +78,7 @@ public interface ApiService {
             @Field("api_key") String api_key,
             @Field("user_code") String user_code,
             @Field("user_altercode") String user_altercode,
-            @Field("chemist_id") String chemist_id,
+            @Field("chemist_code") String chemist_code,
             @Field("gstvno") String gstvno);
 
     @Multipart
@@ -95,7 +89,7 @@ public interface ApiService {
             @Part("user_altercode") RequestBody user_altercode,
             @Part("latitude") RequestBody latitude,
             @Part("longitude") RequestBody longitude,
-            @Part("chemist_id") RequestBody chemist_id,
+            @Part("chemist_code") RequestBody chemist_code,
             @Part("gstvno") RequestBody gstvno,
             @Part("message") RequestBody message,
             @Part("payment_message") RequestBody payment_message,

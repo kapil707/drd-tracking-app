@@ -69,7 +69,7 @@ public class Delivery_chemist_photo extends AppCompatActivity {
     ProgressBar menu_loading1;
     UserSessionManager session;
     String user_code = "", user_altercode = "";
-    String chemist_id = "", gstvno = "";
+    String chemist_code = "", gstvno = "";
     private ImageView photo1, photo2, photo3, photo4;
     public static final int CAMERA_PERM_CODE = 101;
     String currentPhotoPath1="",currentPhotoPath2="",currentPhotoPath3="",currentPhotoPath4="",
@@ -98,7 +98,7 @@ public class Delivery_chemist_photo extends AppCompatActivity {
         user_altercode = user.get(UserSessionManager.KEY_USERALTERCODE);
 
         Intent in = getIntent();
-        chemist_id = in.getStringExtra("chemist_id");
+        chemist_code = in.getStringExtra("chemist_code");
         gstvno = in.getStringExtra("gstvno");
         String edit_yes_no = in.getStringExtra("edit_yes_no");
 
@@ -128,7 +128,7 @@ public class Delivery_chemist_photo extends AppCompatActivity {
         }
 
         TextView action_bar_title1 = (TextView) findViewById(R.id.action_bar_title);
-        action_bar_title1.setText("Update image (" + chemist_id + ")");
+        action_bar_title1.setText("Update image (" + chemist_code + ")");
         TextView action_bar_title11 = (TextView) findViewById(R.id.action_bar_title1);
         action_bar_title11.setText(gstvno);
         action_bar_title11.setVisibility(View.VISIBLE);
@@ -512,7 +512,12 @@ public class Delivery_chemist_photo extends AppCompatActivity {
     private void get_delivery_order_photo_api() {
         menu_loading1.setVisibility(View.VISIBLE);
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-        Call<ResponseBody> call = apiService.get_delivery_order_photo_api("98c08565401579448aad7c64033dcb4081906dcb", user_code, user_altercode, chemist_id, gstvno);
+        Call<ResponseBody> call = apiService.get_delivery_order_photo_api(
+                "98c08565401579448aad7c64033dcb4081906dcb",
+                user_code,
+                user_altercode,
+                chemist_code,
+                gstvno);
         //Call<ResponseBody> call = apiService.testing("loginRequest");
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -599,7 +604,7 @@ public class Delivery_chemist_photo extends AppCompatActivity {
             RequestBody user_altercode1 = RequestBody.create(MultipartBody.FORM, user_altercode);
             RequestBody latitude11 = RequestBody.create(MultipartBody.FORM, latitude);
             RequestBody longitude11 = RequestBody.create(MultipartBody.FORM, longitude);
-            RequestBody chemist_id1 = RequestBody.create(MultipartBody.FORM, chemist_id);
+            RequestBody chemist_code1 = RequestBody.create(MultipartBody.FORM, chemist_code);
             RequestBody gstvno1 = RequestBody.create(MultipartBody.FORM, gstvno);
             RequestBody message1 = RequestBody.create(MultipartBody.FORM, message);
             RequestBody payment_message1 = RequestBody.create(MultipartBody.FORM, payment_message);
@@ -612,7 +617,7 @@ public class Delivery_chemist_photo extends AppCompatActivity {
                     user_altercode1,
                     latitude11,
                     longitude11,
-                    chemist_id1,
+                    chemist_code1,
                     gstvno1,
                     message1,
                     payment_message1,

@@ -85,35 +85,8 @@ public class DeliveryDoneListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        delivery_done_api();
     }
 
-    private void delivery_done_api() {
-        ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-        Call<ResponseBody> call = apiService.get_delivery_order_done_api("98c08565401579448aad7c64033dcb4081906dcb", user_code, user_altercode);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    //Toast.makeText(getContext(),"deliver_list_api onResponse",Toast.LENGTH_SHORT).show();
-                    try {
-                        writeTv(response.body().string());
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                } else {
-                    // Handle error response
-                }
-            }
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // Handle network failures or other errors
-                Log.e("Bg-service-onFailure", " " + t.toString());
-                Toast.makeText(getContext(), "get_delivery_order_done_api onFailure : " + t.toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     private void writeTv(String response) {
         //https://demonuts.com/retrofit-android-get-json/

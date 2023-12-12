@@ -68,6 +68,9 @@ public class Delivery_order_list extends AppCompatActivity {
 
         TextView action_bar_title1 = (TextView) findViewById(R.id.action_bar_title);
         action_bar_title1.setText("Delivery Order List");
+        if(status.equals("1")){
+            action_bar_title1.setText("Delivery Order Done List");
+        }
         TextView action_bar_title11 = (TextView) findViewById(R.id.action_bar_title1);
         //action_bar_title11.setText(mydate+" - " +mytime);
         action_bar_title11.setVisibility(View.GONE);
@@ -103,6 +106,7 @@ public class Delivery_order_list extends AppCompatActivity {
                 in.putExtra("mydate", mydate);
                 in.putExtra("mytime",mytime);
                 in.putExtra("mytime",mytime);
+                in.putExtra("status",status);
                 startActivity(in);
             }
         });

@@ -39,7 +39,7 @@ public class Delivery_order_list_tagno extends AppCompatActivity {
     ListView listview1;
     Delivery_order_list_tagno_Adapter adapter;
     List<Delivery_order_list_tagno_get_or_set> arrayList = new ArrayList<Delivery_order_list_tagno_get_or_set>();
-    String mytagno ="",mydate="",mytime="";
+    String mytagno ="",mydate="",mytime="",status="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +54,8 @@ public class Delivery_order_list_tagno extends AppCompatActivity {
         mytagno = in.getStringExtra("mytagno");
         mydate = in.getStringExtra("mydate");
         mytime = in.getStringExtra("mytime");
+        status = in.getStringExtra("status");
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -100,9 +102,13 @@ public class Delivery_order_list_tagno extends AppCompatActivity {
 
                 Intent in = new Intent();
                 in.setClass(Delivery_order_list_tagno.this, Delivery_chemist_photo.class);
-                in.putExtra("chemist_id", chemist_code);
+                in.putExtra("chemist_code", chemist_code);
                 in.putExtra("gstvno", gstvno);
-                in.putExtra("edit_yes_no", "yes");
+                if(status.equals("1")){
+                    in.putExtra("edit_yes_no", "no");
+                }else {
+                    in.putExtra("edit_yes_no", "yes");
+                }
                 startActivity(in);
             }
         });
@@ -118,7 +124,8 @@ public class Delivery_order_list_tagno extends AppCompatActivity {
                 "98c08565401579448aad7c64033dcb4081906dcb",
                 user_code,
                 user_altercode,
-                mytagno);
+                mytagno,
+                status);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
