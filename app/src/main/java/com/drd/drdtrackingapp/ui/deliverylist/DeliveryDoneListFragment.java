@@ -17,8 +17,8 @@ import com.drd.drdtrackingapp.ApiService;
 import com.drd.drdtrackingapp.RetrofitClient;
 import com.drd.drdtrackingapp.Delivery_chemist_photo;
 import com.drd.drdtrackingapp.UserSessionManager;
-import com.drd.drdtrackingapp.Delivery_list_Adapter;
-import com.drd.drdtrackingapp.Delivery_list_get_or_set;
+import com.drd.drdtrackingapp.Delivery_order_list_Adapter;
+import com.drd.drdtrackingapp.Delivery_order_list_get_or_set;
 import com.drd.drdtrackingapp.databinding.FragmentDeliveryListBinding;
 
 import org.json.JSONArray;
@@ -42,8 +42,8 @@ public class DeliveryDoneListFragment extends Fragment {
     String user_code = "", user_altercode = "";
 
     ListView listview;
-    Delivery_list_Adapter adapter;
-    List<Delivery_list_get_or_set> get_set = new ArrayList<Delivery_list_get_or_set>();
+    Delivery_order_list_Adapter adapter;
+    List<Delivery_order_list_get_or_set> get_set = new ArrayList<Delivery_order_list_get_or_set>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -57,7 +57,7 @@ public class DeliveryDoneListFragment extends Fragment {
         user_altercode = user.get(UserSessionManager.KEY_USERALTERCODE);
 
         listview = binding.DeliveryListListView;
-        adapter = new Delivery_list_Adapter(getContext(), get_set);
+        adapter = new Delivery_order_list_Adapter(getContext(), get_set);
         listview.setAdapter(adapter);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -65,7 +65,7 @@ public class DeliveryDoneListFragment extends Fragment {
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int arg2, long arg3) {
                 // TODO Auto-generated method stub
-                Delivery_list_get_or_set clickedCategory = get_set.get(arg2);
+                Delivery_order_list_get_or_set clickedCategory = get_set.get(arg2);
                 String chemist_id = clickedCategory.mytagno();
                 String gstvno = clickedCategory.mydate();
 
@@ -130,7 +130,7 @@ public class DeliveryDoneListFragment extends Fragment {
                 String amt = jsonObject.getString("amt");
                 String gstvno = jsonObject.getString("gstvno");
 
-                Delivery_list_get_or_set mylist = new Delivery_list_get_or_set();
+                Delivery_order_list_get_or_set mylist = new Delivery_order_list_get_or_set();
                 mylist.mytagno(chemist_id);
                 mylist.mydate(name);
                 mylist.mytime(amt);

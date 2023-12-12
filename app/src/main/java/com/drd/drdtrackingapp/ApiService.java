@@ -19,34 +19,53 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("get_login_api")
-    Call<ResponseBody> get_login_api(@Field("api_key") String api_key, @Field("user_name") String user_name, @Field("password") String password, @Field("firebase_token") String firebase_token);
+    Call<ResponseBody> get_login_api(
+            @Field("api_key") String api_key,
+            @Field("user_name") String user_name,
+            @Field("password") String password,
+            @Field("firebase_token") String firebase_token);
 
     @FormUrlEncoded
     @POST("get_slider_api")
-    Call<ResponseBody> get_slider_api(@Field("api_key") String api_key);
+    Call<ResponseBody> get_slider_api(
+            @Field("api_key") String api_key);
 
     @FormUrlEncoded
     @POST("home_page_api")
-    Call<ResponseBody> home_page_api(@Field("api_key") String api_key,
-                                     @Field("user_code") String user_code,
-                                     @Field("user_altercode") String user_altercode, @Field("firebase_token") String firebase_token, @Field("latitude") String latitude, @Field("longitude") String longitude, @Field("versioncode") String versioncode,
-                                     @Field("versionname") String versionname,
-                                     @Field("useremail") String useremail);
+    Call<ResponseBody> home_page_api(
+            @Field("api_key") String api_key,
+            @Field("user_code") String user_code,
+            @Field("user_altercode") String user_altercode,
+            @Field("firebase_token") String firebase_token,
+            @Field("latitude") String latitude,
+            @Field("longitude") String longitude,
+            @Field("versioncode") String versioncode,
+            @Field("versionname") String versionname,
+            @Field("useremail") String useremail);
 
     @FormUrlEncoded
     @POST("update_tracking_api")
-    Call<ResponseBody> update_tracking_api(@Field("api_key") String api_key, @Field("user_code") String user_code, @Field("user_altercode") String user_altercode, @Field("firebase_token") String firebase_token, @Field("latitude") String latitude, @Field("longitude") String longitude, @Field("getdate") String getdate, @Field("gettime") String gettime);
-
-    @FormUrlEncoded
-    @POST("get_delivery_order_api")
-    Call<ResponseBody> get_delivery_order_api(
+    Call<ResponseBody> update_tracking_api(
             @Field("api_key") String api_key,
             @Field("user_code") String user_code,
-            @Field("user_altercode") String user_altercode);
+            @Field("user_altercode") String user_altercode,
+            @Field("firebase_token") String firebase_token,
+            @Field("latitude") String latitude,
+            @Field("longitude") String longitude,
+            @Field("getdate") String getdate,
+            @Field("gettime") String gettime);
 
     @FormUrlEncoded
-    @POST("get_delivery_order_by_tagno_api")
-    Call<ResponseBody> get_delivery_order_by_tagno_api(
+    @POST("get_delivery_order_list_api")
+    Call<ResponseBody> get_delivery_order_list_api(
+            @Field("api_key") String api_key,
+            @Field("user_code") String user_code,
+            @Field("user_altercode") String user_altercode,
+            @Field("status") String status);
+
+    @FormUrlEncoded
+    @POST("get_delivery_order_list_tag_api")
+    Call<ResponseBody> get_delivery_order_list_tag_api(
             @Field("api_key") String api_key,
             @Field("user_code") String user_code,
             @Field("user_altercode") String user_altercode,
@@ -54,11 +73,19 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("get_delivery_order_done_api")
-    Call<ResponseBody> get_delivery_order_done_api(@Field("api_key") String api_key, @Field("user_code") String user_code, @Field("user_altercode") String user_altercode);
+    Call<ResponseBody> get_delivery_order_done_api(
+            @Field("api_key") String api_key,
+            @Field("user_code") String user_code,
+            @Field("user_altercode") String user_altercode);
 
     @FormUrlEncoded
     @POST("get_delivery_order_photo_api")
-    Call<ResponseBody> get_delivery_order_photo_api(@Field("api_key") String api_key, @Field("user_code") String user_code, @Field("user_altercode") String user_altercode, @Field("chemist_id") String chemist_id, @Field("gstvno") String gstvno);
+    Call<ResponseBody> get_delivery_order_photo_api(
+            @Field("api_key") String api_key,
+            @Field("user_code") String user_code,
+            @Field("user_altercode") String user_altercode,
+            @Field("chemist_id") String chemist_id,
+            @Field("gstvno") String gstvno);
 
     @Multipart
     @POST("upload_delivery_order_photo_api")

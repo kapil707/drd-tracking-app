@@ -14,12 +14,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.drd.drdtrackingapp.ApiService;
-import com.drd.drdtrackingapp.Delivery_list_by_tagno;
+import com.drd.drdtrackingapp.Delivery_order_list_tagno;
 import com.drd.drdtrackingapp.RetrofitClient;
-import com.drd.drdtrackingapp.Delivery_chemist_photo;
 import com.drd.drdtrackingapp.UserSessionManager;
-import com.drd.drdtrackingapp.Delivery_list_Adapter;
-import com.drd.drdtrackingapp.Delivery_list_get_or_set;
+import com.drd.drdtrackingapp.Delivery_order_list_Adapter;
+import com.drd.drdtrackingapp.Delivery_order_list_get_or_set;
 import com.drd.drdtrackingapp.databinding.FragmentDeliveryListBinding;
 
 import org.json.JSONArray;
@@ -44,8 +43,8 @@ public class DeliveryListFragment extends Fragment {
     String user_code = "", user_altercode = "";
 
     ListView listview;
-    Delivery_list_Adapter adapter;
-    List<Delivery_list_get_or_set> movieList = new ArrayList<Delivery_list_get_or_set>();
+    Delivery_order_list_Adapter adapter;
+    List<Delivery_order_list_get_or_set> movieList = new ArrayList<Delivery_order_list_get_or_set>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -59,7 +58,7 @@ public class DeliveryListFragment extends Fragment {
         user_altercode = user.get(UserSessionManager.KEY_USERALTERCODE);
 
         listview = binding.DeliveryListListView;
-        adapter = new Delivery_list_Adapter(getContext(), movieList);
+        adapter = new Delivery_order_list_Adapter(getContext(), movieList);
         listview.setAdapter(adapter);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -67,7 +66,7 @@ public class DeliveryListFragment extends Fragment {
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int arg2, long arg3) {
                 // TODO Auto-generated method stub
-                Delivery_list_get_or_set clickedCategory = movieList.get(arg2);
+                Delivery_order_list_get_or_set clickedCategory = movieList.get(arg2);
                 String mytagno = clickedCategory.mytagno();
                 String mydate = clickedCategory.mydate();
                 String mytime = clickedCategory.mytime();
@@ -75,7 +74,7 @@ public class DeliveryListFragment extends Fragment {
                 //alertMessage_selected_acm();
 
                 Intent in = new Intent();
-                in.setClass(getContext(), Delivery_list_by_tagno.class);
+                in.setClass(getContext(), Delivery_order_list_tagno.class);
                 in.putExtra("mytagno", mytagno);
                 in.putExtra("mydate", mydate);
                 in.putExtra("mytime", mytime);
@@ -94,7 +93,7 @@ public class DeliveryListFragment extends Fragment {
 
     private void deliver_list_api() {
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-        Call<ResponseBody> call = apiService.get_delivery_order_api("98c08565401579448aad7c64033dcb4081906dcb", user_code, user_altercode);
+        Call<ResponseBody> call = apiService.get_delivery_order_list_api("98c08565401579448aad7c64033dcb4081906dcb", user_code, user_altercode,"");
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -132,7 +131,7 @@ public class DeliveryListFragment extends Fragment {
                 String date = jsonObject.getString("date");
                 String time = jsonObject.getString("time");
 
-                Delivery_list_get_or_set movie = new Delivery_list_get_or_set();
+                Delivery_order_list_get_or_set movie = new Delivery_order_list_get_or_set();
                 movie.mytagno(tagno);
                 movie.mydate(date);
                 movie.mytime(time);

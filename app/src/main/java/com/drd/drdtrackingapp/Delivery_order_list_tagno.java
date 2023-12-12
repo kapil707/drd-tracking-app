@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,7 +12,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -32,22 +30,22 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Delivery_list_by_tagno extends AppCompatActivity {
+public class Delivery_order_list_tagno extends AppCompatActivity {
 
     ProgressBar menu_loading1;
     UserSessionManager session;
     String user_code = "", user_altercode = "";
 
     ListView listview1;
-    Delivery_list_by_tagno_Adapter adapter;
-    List<Delivery_list_by_tagno_get_or_set> arrayList = new ArrayList<Delivery_list_by_tagno_get_or_set>();
+    Delivery_order_list_tagno_Adapter adapter;
+    List<Delivery_order_list_tagno_get_or_set> arrayList = new ArrayList<Delivery_order_list_tagno_get_or_set>();
     String mytagno ="",mydate="",mytime="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.delivery_list_by_tagno);
 
-        session = new UserSessionManager(Delivery_list_by_tagno.this);
+        session = new UserSessionManager(Delivery_order_list_tagno.this);
         HashMap<String, String> user = session.getUserDetails();
         user_code = user.get(UserSessionManager.KEY_USERCODE);
         user_altercode = user.get(UserSessionManager.KEY_USERALTERCODE);
@@ -86,7 +84,7 @@ public class Delivery_list_by_tagno extends AppCompatActivity {
         menu_loading1 = (ProgressBar) findViewById(R.id.menu_loading1);
 
         listview1 = findViewById(R.id.Listview1);
-        adapter = new Delivery_list_by_tagno_Adapter(Delivery_list_by_tagno.this, arrayList);
+        adapter = new Delivery_order_list_tagno_Adapter(Delivery_order_list_tagno.this, arrayList);
         listview1.setAdapter(adapter);
 
         listview1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -94,14 +92,14 @@ public class Delivery_list_by_tagno extends AppCompatActivity {
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int arg2, long arg3) {
                 // TODO Auto-generated method stub
-                Delivery_list_by_tagno_get_or_set clickedCategory = arrayList.get(arg2);
+                Delivery_order_list_tagno_get_or_set clickedCategory = arrayList.get(arg2);
                 String chemist_code = clickedCategory.chemist_code();
                 String gstvno = clickedCategory.gstvno();
 
                 //alertMessage_selected_acm();
 
                 Intent in = new Intent();
-                in.setClass(Delivery_list_by_tagno.this, Delivery_chemist_photo.class);
+                in.setClass(Delivery_order_list_tagno.this, Delivery_chemist_photo.class);
                 in.putExtra("chemist_id", chemist_code);
                 in.putExtra("gstvno", gstvno);
                 in.putExtra("edit_yes_no", "yes");
@@ -116,7 +114,7 @@ public class Delivery_list_by_tagno extends AppCompatActivity {
     private void get_delivery_order_by_tagno_api() {
         menu_loading1.setVisibility(View.VISIBLE);
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-        Call<ResponseBody> call = apiService.get_delivery_order_by_tagno_api(
+        Call<ResponseBody> call = apiService.get_delivery_order_list_tag_api(
                 "98c08565401579448aad7c64033dcb4081906dcb",
                 user_code,
                 user_altercode,
@@ -141,7 +139,7 @@ public class Delivery_list_by_tagno extends AppCompatActivity {
                 menu_loading1.setVisibility(View.GONE);
                 // Handle network failures or other errors
                 Log.e("Bg-service-onFailure", " " + t.toString());
-                Toast.makeText(Delivery_list_by_tagno.this, "get_delivery_order_api onFailure : " + t.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(Delivery_order_list_tagno.this, "get_delivery_order_api onFailure : " + t.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -163,7 +161,7 @@ public class Delivery_list_by_tagno extends AppCompatActivity {
                 String amount = jsonObject.getString("amount");
                 String medicine_items = jsonObject.getString("medicine_items");
 
-                Delivery_list_by_tagno_get_or_set mylist = new Delivery_list_by_tagno_get_or_set();
+                Delivery_order_list_tagno_get_or_set mylist = new Delivery_order_list_tagno_get_or_set();
                 mylist.gstvno(gstvno);
                 mylist.mydate(mydate);
                 mylist.chemist_code(chemist_code);

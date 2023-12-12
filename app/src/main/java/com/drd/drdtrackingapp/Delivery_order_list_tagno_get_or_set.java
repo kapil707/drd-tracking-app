@@ -2,16 +2,16 @@ package com.drd.drdtrackingapp;
 
 import java.util.ArrayList;
 
-public class Delivery_list_by_tagno_get_or_set {
+public class Delivery_order_list_tagno_get_or_set {
     private String gstvno,mydate,chemist_code,chemist_name,amount,medicine_items,intid;
-    public Delivery_list_by_tagno_get_or_set() {
+    public Delivery_order_list_tagno_get_or_set() {
     }
 
-    public Delivery_list_by_tagno_get_or_set(String gstvno,
-                                             String mydate, String chemist_code,
-                                             String chemist_name,String amount,
-                                             String medicine_items,String intid,
-                                             ArrayList<String> genre) {
+    public Delivery_order_list_tagno_get_or_set(String gstvno,
+                                                String mydate, String chemist_code,
+                                                String chemist_name, String amount,
+                                                String medicine_items, String intid,
+                                                ArrayList<String> genre) {
         this.gstvno = gstvno;
         this.mydate = mydate;
         this.chemist_code = chemist_code;

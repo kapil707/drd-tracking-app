@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Delivery_order_list_tagno"
+    tools:context=".Delivery_order_list"
     android:layout_centerHorizontal="true">
 
     <include layout="@layout/menu"></include>

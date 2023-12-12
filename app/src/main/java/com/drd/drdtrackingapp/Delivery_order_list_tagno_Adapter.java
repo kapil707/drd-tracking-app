@@ -13,13 +13,13 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class Delivery_list_by_tagno_Adapter extends BaseAdapter {
+public class Delivery_order_list_tagno_Adapter extends BaseAdapter {
 
     Context context;
     LayoutInflater inflater;
-    private List<Delivery_list_by_tagno_get_or_set> arrayitems;
+    private List<Delivery_order_list_tagno_get_or_set> arrayitems;
 
-    public Delivery_list_by_tagno_Adapter(Context context, List<Delivery_list_by_tagno_get_or_set> arraylist)
+    public Delivery_order_list_tagno_Adapter(Context context, List<Delivery_order_list_tagno_get_or_set> arraylist)
     {
         this.context = context;
         this.arrayitems = arraylist;
@@ -38,7 +38,7 @@ public class Delivery_list_by_tagno_Adapter extends BaseAdapter {
        
         LayoutInflater abc = ((Activity) context).getLayoutInflater();
 		View itemView = abc.inflate(R.layout.delivery_list_by_tagno_item, null,true);
-		final Delivery_list_by_tagno_get_or_set m = arrayitems.get(position);
+		final Delivery_order_list_tagno_get_or_set m = arrayitems.get(position);
 
         LinearLayout select_chemist_LinearLayout = (LinearLayout) itemView.findViewById(R.id.select_chemist_LinearLayout);
         TextView select_b_lbl1 = (TextView) itemView.findViewById(R.id.select_b_lbl1);

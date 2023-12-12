@@ -2,12 +2,12 @@ package com.drd.drdtrackingapp;
 
 import java.util.ArrayList;
 
-public class Dilivery_chemist_photo_get_or_set {
+public class Delivery_chemist_photo_get_or_set {
     private String id,image,time,intid;
-    public Dilivery_chemist_photo_get_or_set() {
+    public Delivery_chemist_photo_get_or_set() {
     }
 
-    public Dilivery_chemist_photo_get_or_set(String id, String image, String time, String intid,
+    public Delivery_chemist_photo_get_or_set(String id, String image, String time, String intid,
                                              ArrayList<String> genre) {
         this.id     = id;
         this.image  = image;

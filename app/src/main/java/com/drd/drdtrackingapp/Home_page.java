@@ -245,22 +245,42 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.logout_btn) {
+        if (id == R.id.nav_delivery_list) {
             //Toast.makeText(getBaseContext(), "Cancelled", Toast.LENGTH_SHORT).show();
-            alertMessage_logoutUser();
+            //alertMessage_logoutUser();
+
+            Intent in = new Intent();
+            in.setClass(getBaseContext(), Delivery_order_list.class);
+            in.putExtra("status","0");
+            startActivity(in);
         } else {
-            if (id == R.id.attendance_btn) {
-                open_qr_scanner();
+            if (id == R.id.nav_delivery_done_list) {
+                //Toast.makeText(getBaseContext(), "Cancelled", Toast.LENGTH_SHORT).show();
+                //alertMessage_logoutUser();
+
+                Intent in = new Intent();
+                in.setClass(getBaseContext(), Delivery_order_list.class);
+                in.putExtra("status", "1");
+                startActivity(in);
             } else {
-                if (id == R.id.meter_btn) {
-                    Intent in = new Intent();
-                    in.setClass(getBaseContext(), Meter_photo.class);
-                    //in.putExtra("","");
-                    startActivity(in);
+                if (id == R.id.logout_btn) {
+                    //Toast.makeText(getBaseContext(), "Cancelled", Toast.LENGTH_SHORT).show();
+                    alertMessage_logoutUser();
                 } else {
-                    // Make your navController object final above
-                    // or call Navigation.findNavController() again here
-                    NavigationUI.onNavDestinationSelected(item, navController);
+                    if (id == R.id.attendance_btn) {
+                        open_qr_scanner();
+                    } else {
+                        if (id == R.id.meter_btn) {
+                            Intent in = new Intent();
+                            in.setClass(getBaseContext(), Meter_photo.class);
+                            //in.putExtra("","");
+                            startActivity(in);
+                        } else {
+                            // Make your navController object final above
+                            // or call Navigation.findNavController() again here
+                            NavigationUI.onNavDestinationSelected(item, navController);
+                        }
+                    }
                 }
             }
         }

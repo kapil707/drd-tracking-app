@@ -18,9 +18,9 @@ public class Delivery_chemist_photo_Adapter extends BaseAdapter {
 
     Context context;
     LayoutInflater inflater;
-    private List<Dilivery_chemist_photo_get_or_set> movieItems;
+    private List<Delivery_chemist_photo_get_or_set> movieItems;
 
-    public Delivery_chemist_photo_Adapter(Context context, List<Dilivery_chemist_photo_get_or_set> arraylist)
+    public Delivery_chemist_photo_Adapter(Context context, List<Delivery_chemist_photo_get_or_set> arraylist)
     {
         this.context = context;
         this.movieItems = arraylist;
@@ -39,7 +39,7 @@ public class Delivery_chemist_photo_Adapter extends BaseAdapter {
        
         LayoutInflater abc = ((Activity) context).getLayoutInflater();
 		View itemView = abc.inflate(R.layout.delivery_chemist_photo_item, null,true);
-		final Dilivery_chemist_photo_get_or_set m = movieItems.get(position);
+		final Delivery_chemist_photo_get_or_set m = movieItems.get(position);
 
         LinearLayout upload_chemist_img_LinearLayout = (LinearLayout) itemView.findViewById(R.id.upload_chemist_img_LinearLayout);
         TextView upload_time = (TextView) itemView.findViewById(R.id.upload_time);

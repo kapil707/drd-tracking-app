@@ -41,7 +41,10 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="24">
         <activity
-            android:name=".Delivery_list_by_tagno"
+            android:name=".Delivery_order_list"
+            android:exported="false" />
+        <activity
+            android:name=".Delivery_order_list_tagno"
             android:exported="false" />
         <activity
             android:name=".Testme11"
@@ -147,16 +150,17 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.drd.drdtrackingapp.provider"
+            android:authorities="com.drd.drdtrackingapp.FileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.FileProvider"
+            android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
