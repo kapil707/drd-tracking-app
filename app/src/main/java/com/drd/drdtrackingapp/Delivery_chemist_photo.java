@@ -102,6 +102,7 @@ public class Delivery_chemist_photo extends AppCompatActivity {
         gstvno = in.getStringExtra("gstvno");
         String edit_yes_no = in.getStringExtra("edit_yes_no");
 
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
