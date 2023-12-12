@@ -41,19 +41,19 @@ public class Delivery_list_by_tagno_Adapter extends BaseAdapter {
 		final Delivery_list_by_tagno_get_or_set m = arrayitems.get(position);
 
         LinearLayout select_chemist_LinearLayout = (LinearLayout) itemView.findViewById(R.id.select_chemist_LinearLayout);
-        TextView select_chemist_name = (TextView) itemView.findViewById(R.id.select_chemist_name);
-        TextView select_chemist_altercode = (TextView) itemView.findViewById(R.id.select_chemist_altercode);
-        TextView select_amt = (TextView) itemView.findViewById(R.id.select_amt);
-        TextView select_gstvno = (TextView) itemView.findViewById(R.id.select_gstvno);
-        TextView select_medicine = (TextView) itemView.findViewById(R.id.select_medicine);
+        TextView select_b_lbl1 = (TextView) itemView.findViewById(R.id.select_b_lbl1);
+        TextView select_b_lbl2 = (TextView) itemView.findViewById(R.id.select_b_lbl2);
+        TextView select_b_lbl3 = (TextView) itemView.findViewById(R.id.select_b_lbl3);
+        TextView select_b_lbl4 = (TextView) itemView.findViewById(R.id.select_b_lbl4);
+        TextView select_b_lbl5 = (TextView) itemView.findViewById(R.id.select_b_lbl5);
 
 
         LinearLayout select_chemist_LinearLayout1 = (LinearLayout) itemView.findViewById(R.id.select_chemist_LinearLayout1);
-        TextView select_chemist_name1 = (TextView) itemView.findViewById(R.id.select_chemist_name1);
-        TextView select_chemist_altercode1 = (TextView) itemView.findViewById(R.id.select_chemist_altercode1);
-        TextView select_amt1 = (TextView) itemView.findViewById(R.id.select_amt1);
-        TextView select_gstvno1 = (TextView) itemView.findViewById(R.id.select_gstvno1);
-        TextView select_medicine1 = (TextView) itemView.findViewById(R.id.select_medicine1);
+        TextView select_w_lbl1 = (TextView) itemView.findViewById(R.id.select_w_lbl1);
+        TextView select_w_lbl2 = (TextView) itemView.findViewById(R.id.select_w_lbl2);
+        TextView select_w_lbl3 = (TextView) itemView.findViewById(R.id.select_w_lbl3);
+        TextView select_w_lbl4 = (TextView) itemView.findViewById(R.id.select_w_lbl4);
+        TextView select_w_lbl5 = (TextView) itemView.findViewById(R.id.select_w_lbl5);
         int intid = 0;
         intid = Integer.valueOf(m.intid());
         if(intid%2==0)
@@ -65,25 +65,25 @@ public class Delivery_list_by_tagno_Adapter extends BaseAdapter {
             select_chemist_LinearLayout1.setVisibility(View.VISIBLE);
         }
 
-        select_chemist_name.setText(m.gstvno());
-        select_chemist_altercode.setText(m.mydate());
-        select_gstvno.setText(m.chemist_code());
-        select_amt.setText(m.amount());
+        select_b_lbl1.setText(m.gstvno());
+        select_b_lbl2.setText(m.mydate());
+        select_b_lbl3.setText(m.chemist_code()+"-"+m.chemist_name());
+        select_b_lbl4.setText("Amount :" +m.amount() +"/-");
         //select_medicine.setText(m.medicine_items());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            select_medicine.setText(Html.fromHtml(m.medicine_items(), Html.FROM_HTML_MODE_COMPACT));
+            select_b_lbl5.setText(Html.fromHtml(m.medicine_items(), Html.FROM_HTML_MODE_COMPACT));
         } else {
-            select_medicine.setText(Html.fromHtml(m.medicine_items()));
+            select_b_lbl5.setText(Html.fromHtml(m.medicine_items()));
         }
 
-        select_chemist_name1.setText(m.gstvno());
-        select_chemist_altercode1.setText(m.mydate());
-        select_gstvno1.setText(m.chemist_code());
-        select_amt1.setText(m.amount());
+        select_w_lbl1.setText(m.gstvno());
+        select_w_lbl2.setText(m.mydate());
+        select_w_lbl3.setText(m.chemist_code()+"-"+m.chemist_name());
+        select_w_lbl4.setText("Amount :" +m.amount() +"/-");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            select_medicine1.setText(Html.fromHtml(m.medicine_items(), Html.FROM_HTML_MODE_COMPACT));
+            select_w_lbl5.setText(Html.fromHtml(m.medicine_items(), Html.FROM_HTML_MODE_COMPACT));
         } else {
-            select_medicine1.setText(Html.fromHtml(m.medicine_items()));
+            select_w_lbl5.setText(Html.fromHtml(m.medicine_items()));
         }
 
         return itemView;

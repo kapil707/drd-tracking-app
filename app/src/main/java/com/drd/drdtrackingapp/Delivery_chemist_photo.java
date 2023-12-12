@@ -92,6 +92,16 @@ public class Delivery_chemist_photo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.delivery_chemist_photo);
 
+        session = new UserSessionManager(getApplicationContext());
+        HashMap<String, String> user = session.getUserDetails();
+        user_code = user.get(UserSessionManager.KEY_USERCODE);
+        user_altercode = user.get(UserSessionManager.KEY_USERALTERCODE);
+
+        Intent in = getIntent();
+        chemist_id = in.getStringExtra("chemist_id");
+        gstvno = in.getStringExtra("gstvno");
+        String edit_yes_no = in.getStringExtra("edit_yes_no");
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -117,11 +127,6 @@ public class Delivery_chemist_photo extends AppCompatActivity {
             }
         }
 
-        Intent in = getIntent();
-        chemist_id = in.getStringExtra("chemist_id");
-        gstvno = in.getStringExtra("gstvno");
-        String edit_yes_no = in.getStringExtra("edit_yes_no");
-
         TextView action_bar_title1 = (TextView) findViewById(R.id.action_bar_title);
         action_bar_title1.setText("Update image (" + chemist_id + ")");
         TextView action_bar_title11 = (TextView) findViewById(R.id.action_bar_title1);
@@ -136,11 +141,6 @@ public class Delivery_chemist_photo extends AppCompatActivity {
         });
 
         menu_loading1 = (ProgressBar) findViewById(R.id.menu_loading1);
-
-        session = new UserSessionManager(getApplicationContext());
-        HashMap<String, String> user = session.getUserDetails();
-        user_code = user.get(UserSessionManager.KEY_USERCODE);
-        user_altercode = user.get(UserSessionManager.KEY_USERALTERCODE);
 
         photo1 = findViewById(R.id.pg_photo1);
         tv_error1 = findViewById(R.id.pg_photo_error1);

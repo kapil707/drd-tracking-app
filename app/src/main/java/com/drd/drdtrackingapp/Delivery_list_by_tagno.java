@@ -3,9 +3,19 @@ package com.drd.drdtrackingapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -23,7 +33,7 @@ import retrofit2.Response;
 
 public class Delivery_list_by_tagno extends AppCompatActivity {
 
-
+    ProgressBar menu_loading1;
     UserSessionManager session;
     String user_code = "", user_altercode = "";
 
@@ -41,12 +51,40 @@ public class Delivery_list_by_tagno extends AppCompatActivity {
         user_code = user.get(UserSessionManager.KEY_USERCODE);
         user_altercode = user.get(UserSessionManager.KEY_USERALTERCODE);
 
+        Intent in = getIntent();
+        tagno = in.getStringExtra("mytagno");
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+            int nightModeFlags = getApplicationContext().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+            if (nightModeFlags == Configuration.UI_MODE_NIGHT_NO || nightModeFlags == Configuration.UI_MODE_NIGHT_UNDEFINED) {
+                window.setStatusBarColor(getResources().getColor(R.color.header_bg_light));
+            }
+            if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
+                window.setStatusBarColor(getResources().getColor(R.color.header_bg_dark));
+            }
+        }
+
+        TextView action_bar_title1 = (TextView) findViewById(R.id.action_bar_title);
+        action_bar_title1.setText(tagno);
+        TextView action_bar_title11 = (TextView) findViewById(R.id.action_bar_title1);
+        action_bar_title11.setText(tagno);
+        action_bar_title11.setVisibility(View.VISIBLE);
+        ImageButton imageButton = findViewById(R.id.action_bar_back);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        menu_loading1 = (ProgressBar) findViewById(R.id.menu_loading1);
+
         listview1 = findViewById(R.id.Listview1);
         adapter = new Delivery_list_by_tagno_Adapter(Delivery_list_by_tagno.this, arrayList);
         listview1.setAdapter(adapter);
-
-        Intent in = getIntent();
-        tagno = in.getStringExtra("mytagno");
 
         get_delivery_order_by_tagno_api();
         //Toast.makeText(Delivery_list_by_tagno.this, mytagno, Toast.LENGTH_LONG).show();
