@@ -90,6 +90,8 @@ public interface ApiService {
             @Part("latitude") RequestBody latitude,
             @Part("longitude") RequestBody longitude,
             @Part("chemist_code") RequestBody chemist_code,
+            @Part("id") RequestBody id,
+            @Part("tagno") RequestBody tagno,
             @Part("gstvno") RequestBody gstvno,
             @Part("message") RequestBody message,
             @Part("payment_message") RequestBody payment_message,

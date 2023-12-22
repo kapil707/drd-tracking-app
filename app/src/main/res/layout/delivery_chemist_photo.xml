@@ -237,7 +237,6 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/enter_remarks_tv2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:theme="@style/page_textclr_theme"
@@ -283,7 +282,6 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/enter_remarks_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:theme="@style/page_textclr_theme"
@@ -335,7 +333,7 @@
                 android:layout_marginRight="10dip"
                 android:layout_marginBottom="10dip"
                 android:background="@drawable/button_shap"
-                android:text="Upload Photo"
+                android:text="Submit"
                 android:textAllCaps="false"
                 android:textColor="#ffffff" />
 
@@ -348,7 +346,7 @@
                 android:layout_marginRight="10dip"
                 android:layout_marginBottom="10dip"
                 android:background="@drawable/button_dis_shap"
-                android:text="Upload Photo"
+                android:text="Submit"
                 android:textAllCaps="false"
                 android:textColor="#ffffff"
                 android:visibility="gone" />

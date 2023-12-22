@@ -9,9 +9,11 @@ import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -69,16 +71,19 @@ public class Delivery_chemist_photo extends AppCompatActivity {
     ProgressBar menu_loading1;
     UserSessionManager session;
     String user_code = "", user_altercode = "";
-    String chemist_code = "", gstvno = "";
+    String chemist_code = "", gstvno = "",mytagno="";
     private ImageView photo1, photo2, photo3, photo4;
     public static final int CAMERA_PERM_CODE = 101;
     String currentPhotoPath1="",currentPhotoPath2="",currentPhotoPath3="",currentPhotoPath4="",
             selectedPath1="",selectedPath2="",selectedPath3="",selectedPath4="";
     Button photo_btn1, photo_btn2, photo_btn3, photo_btn4;
-    TextView tv_error1, tv_error2, tv_error3, tv_error4, enter_remarks_error,enter_remarks_error2,enter_remarks_tv,enter_remarks_tv2;
+    TextView tv_error1, tv_error2, tv_error3, tv_error4, enter_remarks_error,enter_remarks_error2;
     Button buttonUpload, buttonUpload1;
     EditText enter_message,enter_message2;
     Spinner spinner;
+    ArrayAdapter<String> dataAdapter;
+    String _id = "0";
+    String image_path1="",image_path2="",image_path3="",image_path4="";
 
     //    GridView gridview;
 //    Delivery_chemist_photo_Adapter adapter;
@@ -100,6 +105,7 @@ public class Delivery_chemist_photo extends AppCompatActivity {
         Intent in = getIntent();
         chemist_code = in.getStringExtra("chemist_code");
         gstvno = in.getStringExtra("gstvno");
+        mytagno = in.getStringExtra("mytagno");
         String edit_yes_no = in.getStringExtra("edit_yes_no");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -162,8 +168,7 @@ public class Delivery_chemist_photo extends AppCompatActivity {
         enter_message2 = findViewById(R.id.enter_message2);
         enter_remarks_error = findViewById(R.id.enter_remarks_error);
         enter_remarks_error2 = findViewById(R.id.enter_remarks_error2);
-        enter_remarks_tv = findViewById(R.id.enter_remarks_tv);
-        enter_remarks_tv2= findViewById(R.id.enter_remarks_tv2);
+
 
         spinner = findViewById(R.id.spinner);
 
@@ -233,39 +238,47 @@ public class Delivery_chemist_photo extends AppCompatActivity {
                     //Toast.makeText(Delivery_chemist_page.this, "Enter Message", Toast.LENGTH_LONG).show();
                 }
 
-                if (currentPhotoPath1.isEmpty()) {
-                    work++;
-                    tv_error1.setVisibility(View.VISIBLE);
-                    //Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
-                }else{
-                    tv_error1.setVisibility(View.GONE);
+                if (image_path1.equals("")) {
+                    if (currentPhotoPath1.isEmpty()) {
+                        work++;
+                        tv_error1.setVisibility(View.VISIBLE);
+                        //Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
+                    } else {
+                        tv_error1.setVisibility(View.GONE);
+                    }
                 }
 
-                if (currentPhotoPath2.isEmpty()) {
-                    work++;
-                    tv_error2.setVisibility(View.VISIBLE);
-                    //Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
-                }else{
-                    tv_error2.setVisibility(View.GONE);
+                if (image_path2.equals("")) {
+                    if (currentPhotoPath2.isEmpty()) {
+                        work++;
+                        tv_error2.setVisibility(View.VISIBLE);
+                        //Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
+                    } else {
+                        tv_error2.setVisibility(View.GONE);
+                    }
                 }
 
-                if (currentPhotoPath3.isEmpty()) {
-                    work++;
-                    tv_error3.setVisibility(View.VISIBLE);
-                    //Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
-                }else{
-                    tv_error3.setVisibility(View.GONE);
+                if (image_path3.equals("")) {
+                    if (currentPhotoPath3.isEmpty()) {
+                        work++;
+                        tv_error3.setVisibility(View.VISIBLE);
+                        //Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
+                    } else {
+                        tv_error3.setVisibility(View.GONE);
+                    }
                 }
 
-                if (currentPhotoPath4.isEmpty()) {
-                    work++;
-                    tv_error4.setVisibility(View.VISIBLE);
-                    //Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
-                }else{
-                    tv_error4.setVisibility(View.GONE);
+                if (image_path4.equals("")) {
+                    if (currentPhotoPath4.isEmpty()) {
+                        work++;
+                        tv_error4.setVisibility(View.VISIBLE);
+                        //Toast.makeText(Delivery_chemist_page.this, "Select Material photo1", Toast.LENGTH_LONG).show();
+                    } else {
+                        tv_error4.setVisibility(View.GONE);
+                    }
                 }
 
-                if(work==0) {
+                if (work == 0) {
                     alertMessage_complete_order();
                 }
             }
@@ -284,11 +297,14 @@ public class Delivery_chemist_photo extends AppCompatActivity {
         categories.add("Online");
 
         // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // attaching data adapter to spinner
         spinner.setAdapter(dataAdapter);
+
+        // page load
+        get_delivery_order_photo_api();
     }
 
     private void askCameraPermissions1() {
@@ -463,7 +479,7 @@ public class Delivery_chemist_photo extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        get_delivery_order_photo_api();
+        //get_delivery_order_photo_api();
     }
 
     public void alertMessage_complete_order() {
@@ -527,32 +543,54 @@ public class Delivery_chemist_photo extends AppCompatActivity {
                     // response.body() contains the response data
                     try {
                         menu_loading1.setVisibility(View.GONE);
-                        JSONArray jArray = new JSONArray(response.body().string());
-                        for (int i = 0; i < jArray.length(); i++) {
+                        //JSONArray jArray = new JSONArray(response.body().string());
 
-                            JSONObject jsonObject = jArray.getJSONObject(i);
-                            String image1 =  jsonObject.getString("image1");
-                            String image2 =  jsonObject.getString("image2");
-                            String image3 =  jsonObject.getString("image3");
-                            String image4 =  jsonObject.getString("image4");
+                        JSONArray jArray0 = new JSONArray(response.body().string());
+                        JSONObject jsonObject0 = jArray0.getJSONObject(0);
+                        String items = jsonObject0.getString("items");
+
+                        //Toast.makeText(getApplicationContext(),items.toString(), Toast.LENGTH_LONG).show();
+
+                        JSONArray jArray_items = new JSONArray(items);
+                        for (int i = 0; i < jArray_items.length(); i++) {
+
+                            JSONObject jsonObject = jArray_items.getJSONObject(i);
+                            _id =  jsonObject.getString("id");
+                            image_path1 =  jsonObject.getString("image1");
+                            image_path2 =  jsonObject.getString("image2");
+                            image_path3 =  jsonObject.getString("image3");
+                            image_path4 =  jsonObject.getString("image4");
                             String message =  jsonObject.getString("message");
-                            String message2 =  jsonObject.getString("message2");
+                            String payment_type =  jsonObject.getString("payment_type");
+                            String payment_message =  jsonObject.getString("payment_message");
 
-                            Picasso.get().load(image1).into(photo1);
-                            Picasso.get().load(image2).into(photo2);
-                            Picasso.get().load(image3).into(photo3);
-                            Picasso.get().load(image4).into(photo4);
+                            Picasso.get().load(image_path1).into(photo1);
+                            Picasso.get().load(image_path2).into(photo2);
+                            Picasso.get().load(image_path3).into(photo3);
+                            Picasso.get().load(image_path4).into(photo4);
 
-                            enter_remarks_tv.setText(message);
-                            enter_remarks_tv2.setText(message2);
+                            enter_message.setText(message);
+                            enter_message2.setText(payment_message);
 
-                            edit_or_not("no");
+                            spinner.setSelection(dataAdapter.getPosition(payment_type));
+
+                            if(_id.equals("0")){
+
+                            }else{
+                                buttonUpload.setText("Update");
+                                buttonUpload1.setText("Update");
+                            }
+
+//                            enter_remarks_tv.setText(message);
+//                            enter_remarks_tv2.setText(message2);
+
+                            //edit_or_not("no");
                         }
                     } catch (Exception e) {
                         // TODO: handle exception
                         menu_loading1.setVisibility(View.GONE);
                         Log.e("Bg-service", "Error parsing data" + e.toString());
-                        Toast.makeText(getApplicationContext(),"get_delivery_order_photo_api error2", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),e.toString(), Toast.LENGTH_LONG).show();
                     }
                 } else {
                     // Handle the error
@@ -580,14 +618,26 @@ public class Delivery_chemist_photo extends AppCompatActivity {
             String latitude = getlatitude;
             String longitude = getlongitude;
 
-            selectedPath1 = compressImage(currentPhotoPath1);
-            selectedPath2 = compressImage(currentPhotoPath2);
-            selectedPath3 = compressImage(currentPhotoPath3);
-            selectedPath4 = compressImage(currentPhotoPath4);
-            File imageFile1 = new File(selectedPath1);
-            File imageFile2 = new File(selectedPath2);
-            File imageFile3 = new File(selectedPath3);
-            File imageFile4 = new File(selectedPath4);
+            Context context = getApplicationContext();
+            AssetManager assetManager = context.getAssets();
+            File imageFile1 = File.createTempFile("temp_image", null, getCacheDir());
+            File imageFile2 = File.createTempFile("temp_image", null, getCacheDir());
+            File imageFile3 = File.createTempFile("temp_image", null, getCacheDir());
+            File imageFile4 = File.createTempFile("temp_image", null, getCacheDir());
+
+            if(!currentPhotoPath1.isEmpty()) {
+                selectedPath1 = compressImage(currentPhotoPath1);
+                imageFile1      = new File(selectedPath1);
+            }if(!currentPhotoPath2.isEmpty()) {
+                selectedPath2 = compressImage(currentPhotoPath2);
+                imageFile2      = new File(selectedPath2);
+            }if(!currentPhotoPath3.isEmpty()) {
+                selectedPath3 = compressImage(currentPhotoPath3);
+                imageFile3      = new File(selectedPath3);
+            }if(!currentPhotoPath4.isEmpty()) {
+                selectedPath4 = compressImage(currentPhotoPath4);
+                imageFile4     = new File(selectedPath4);
+            }
 
             RequestBody requestFile1 = RequestBody.create(MultipartBody.FORM, imageFile1);
             MultipartBody.Part image1 = MultipartBody.Part.createFormData("image1", imageFile1.getName(), requestFile1);
@@ -605,6 +655,8 @@ public class Delivery_chemist_photo extends AppCompatActivity {
             RequestBody latitude11 = RequestBody.create(MultipartBody.FORM, latitude);
             RequestBody longitude11 = RequestBody.create(MultipartBody.FORM, longitude);
             RequestBody chemist_code1 = RequestBody.create(MultipartBody.FORM, chemist_code);
+            RequestBody id1 = RequestBody.create(MultipartBody.FORM, _id);
+            RequestBody tagno1 = RequestBody.create(MultipartBody.FORM, mytagno);
             RequestBody gstvno1 = RequestBody.create(MultipartBody.FORM, gstvno);
             RequestBody message1 = RequestBody.create(MultipartBody.FORM, message);
             RequestBody payment_message1 = RequestBody.create(MultipartBody.FORM, payment_message);
@@ -618,6 +670,8 @@ public class Delivery_chemist_photo extends AppCompatActivity {
                     latitude11,
                     longitude11,
                     chemist_code1,
+                    id1,
+                    tagno1,
                     gstvno1,
                     message1,
                     payment_message1,
@@ -675,12 +729,12 @@ public class Delivery_chemist_photo extends AppCompatActivity {
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     // Handle network errors or exceptions
                     menu_loading1.setVisibility(View.GONE);
-                    Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "e1 " + t.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
         } catch (Exception e) {
             menu_loading1.setVisibility(View.GONE);
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "e2 " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 

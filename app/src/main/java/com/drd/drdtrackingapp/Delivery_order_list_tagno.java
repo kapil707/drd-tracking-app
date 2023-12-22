@@ -103,12 +103,14 @@ public class Delivery_order_list_tagno extends AppCompatActivity {
                 Intent in = new Intent();
                 in.setClass(Delivery_order_list_tagno.this, Delivery_chemist_photo.class);
                 in.putExtra("chemist_code", chemist_code);
+                in.putExtra("mytagno", mytagno);
                 in.putExtra("gstvno", gstvno);
-                if(status.equals("1")){
-                    in.putExtra("edit_yes_no", "no");
-                }else {
-                    in.putExtra("edit_yes_no", "yes");
-                }
+                in.putExtra("edit_yes_no", "yes");
+//                if(status.equals("1")){
+//                    in.putExtra("edit_yes_no", "no");
+//                }else {
+//                    in.putExtra("edit_yes_no", "yes");
+//                }
                 startActivity(in);
             }
         });
