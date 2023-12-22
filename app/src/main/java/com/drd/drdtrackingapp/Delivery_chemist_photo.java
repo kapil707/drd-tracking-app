@@ -620,6 +620,7 @@ public class Delivery_chemist_photo extends AppCompatActivity {
 
             Context context = getApplicationContext();
             AssetManager assetManager = context.getAssets();
+
             File imageFile1 = File.createTempFile("temp_image", null, getCacheDir());
             File imageFile2 = File.createTempFile("temp_image", null, getCacheDir());
             File imageFile3 = File.createTempFile("temp_image", null, getCacheDir());
