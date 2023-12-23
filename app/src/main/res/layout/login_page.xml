@@ -171,6 +171,29 @@
 
             </LinearLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="15dip"
+                android:layout_marginTop="15dip"
+                android:layout_marginRight="15dip"
+                android:theme="@style/page_textclr_theme"
+                android:textSize="20dip"
+                android:text="D.R. Distributor"/>
+
+            <TextView
+                android:id="@+id/version_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="15dip"
+                android:layout_marginTop="15dip"
+                android:layout_marginRight="15dip"
+                android:theme="@style/page_textclr_theme"
+                android:textSize="20dip"
+                android:text="D.R. Distributor"/>
+
         </LinearLayout>
 
     </ScrollView>

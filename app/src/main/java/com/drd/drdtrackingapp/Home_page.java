@@ -198,6 +198,8 @@ public class Home_page extends AppCompatActivity implements NavigationView.OnNav
             e.printStackTrace();
         }
 
+        TextView version_code = findViewById(R.id.version_code);
+        version_code.setText("Version : " + m_versionName);
 
         // Check if the app has the GET_ACCOUNTS permission
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&

@@ -8,6 +8,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.drawable.GradientDrawable;
@@ -62,7 +63,8 @@ public class Login_page extends AppCompatActivity {
     EditText user_name, password;
     String user_name1 = "", password1 = "", firebase_token = "";
     UserSessionManager session;
-
+    String m_versionName = "";
+    int m_versionCode = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,6 +111,24 @@ public class Login_page extends AppCompatActivity {
         getLastLocation();
         /*******************************************/
 
+        PackageManager packageManager = getPackageManager();
+
+        try {
+            // Get the package information
+            PackageInfo packageInfo = packageManager.getPackageInfo(getPackageName(), 0);
+
+            // Retrieve the version information
+            String versionName = packageInfo.versionName;
+            int versionCode = packageInfo.versionCode;
+
+            m_versionCode = versionCode;
+            m_versionName = versionName;
+
+            //Toast.makeText(getBaseContext(), String.valueOf(versionName), Toast.LENGTH_SHORT).show();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
         progressBar2 = findViewById(R.id.progressBar2);
         progressBar2.setVisibility(View.GONE);
 
@@ -118,6 +138,8 @@ public class Login_page extends AppCompatActivity {
         alert = findViewById(R.id.user_alert);
         user_name = findViewById(R.id.user_name);
         password = findViewById(R.id.user_password);
+        TextView version_code = findViewById(R.id.version_code);
+        version_code.setText("Version : " + m_versionName);
 
         final ImageView eyes = findViewById(R.id.eyes);
         final ImageView eyes1 = findViewById(R.id.eyes1);
