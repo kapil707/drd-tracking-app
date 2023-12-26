@@ -90,61 +90,6 @@
                         android:textSize="18dip"
                         android:gravity="center"
                         android:layout_gravity="center"
-                        android:text="Material photo2"/>
-
-                    <ImageView
-                        android:id="@+id/pg_photo2"
-                        android:layout_width="fill_parent"
-                        android:layout_height="120dp"
-                        android:layout_above="@+id/editTextImageName"
-                        android:layout_below="@+id/buttonSelect"
-                        android:src="@drawable/attendance_svgrepo_com"/>
-
-                    <TextView
-                        android:id="@+id/pg_photo_error2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:theme="@style/page_textclr_error_theme"
-                        android:textSize="16dip"
-                        android:gravity="center"
-                        android:layout_gravity="center"
-                        android:text="Select Material photo2"/>
-
-                    <Button
-                        android:id="@+id/pg_photo_btn2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:gravity="center"
-                        android:layout_gravity="center"
-                        android:background="@drawable/button_shap"
-                        android:text="Material photo2"
-                        android:textAllCaps="false"
-                        android:textColor="#ffffff"
-                        android:drawableLeft="@drawable/baseline_camera_alt_24" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:orientation="horizontal"
-                android:layout_marginTop="20dip">
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:theme="@style/page_textclr_theme"
-                        android:textSize="18dip"
-                        android:gravity="center"
-                        android:layout_gravity="center"
                         android:text="Payment Detail"/>
 
                     <ImageView
@@ -179,7 +124,66 @@
                         android:drawableLeft="@drawable/baseline_camera_alt_24" />
 
                 </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dip">
+
                 <LinearLayout
+                    android:id="@+id/at_a"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:theme="@style/page_textclr_theme"
+                        android:textSize="18dip"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:text="Material photo2"/>
+
+                    <ImageView
+                        android:id="@+id/pg_photo2"
+                        android:layout_width="fill_parent"
+                        android:layout_height="120dp"
+                        android:layout_above="@+id/editTextImageName"
+                        android:layout_below="@+id/buttonSelect"
+                        android:src="@drawable/attendance_svgrepo_com"/>
+
+                    <TextView
+                        android:id="@+id/pg_photo_error2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:theme="@style/page_textclr_error_theme"
+                        android:textSize="16dip"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:text="Select Material photo2"/>
+
+                    <Button
+                        android:id="@+id/pg_photo_btn2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:background="@drawable/button_shap"
+                        android:text="Material photo2"
+                        android:textAllCaps="false"
+                        android:textColor="#ffffff"
+                        android:drawableLeft="@drawable/baseline_camera_alt_24" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/nrx"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -225,6 +229,7 @@
                         android:textColor="#ffffff"
                         android:drawableLeft="@drawable/baseline_camera_alt_24" />
                 </LinearLayout>
+
             </LinearLayout>
 
 

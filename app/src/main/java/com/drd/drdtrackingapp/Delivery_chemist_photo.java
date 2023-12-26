@@ -564,6 +564,9 @@ public class Delivery_chemist_photo extends AppCompatActivity {
                             String payment_type =  jsonObject.getString("payment_type");
                             String payment_message =  jsonObject.getString("payment_message");
                             String is_edit =  jsonObject.getString("is_edit");
+                            String at_a = jsonObject.getString("at_a");
+                            String nrx = jsonObject.getString("nrx");
+
 
                             Picasso.get().load(image_path1).into(photo1);
                             Picasso.get().load(image_path2).into(photo2);
@@ -581,6 +584,15 @@ public class Delivery_chemist_photo extends AppCompatActivity {
                                 buttonUpload.setText("Update");
                                 buttonUpload1.setText("Update");
                             }
+
+                            if(at_a.equals("1")){
+
+                            }
+
+                            if(nrx.equals("1")){
+
+                            }
+
 
                             if(is_edit.equals("1")){
                                 edit_or_not("no");
