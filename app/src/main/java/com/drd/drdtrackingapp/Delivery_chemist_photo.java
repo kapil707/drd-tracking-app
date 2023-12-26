@@ -446,7 +446,7 @@ public class Delivery_chemist_photo extends AppCompatActivity {
     }
 
     public void edit_or_not(String ii){
-        if(ii.equals("no")){
+        if(ii.equals("no")) {
             tv_error1.setVisibility(View.GONE);
             tv_error2.setVisibility(View.GONE);
             tv_error3.setVisibility(View.GONE);
@@ -563,6 +563,7 @@ public class Delivery_chemist_photo extends AppCompatActivity {
                             String message =  jsonObject.getString("message");
                             String payment_type =  jsonObject.getString("payment_type");
                             String payment_message =  jsonObject.getString("payment_message");
+                            String is_edit =  jsonObject.getString("is_edit");
 
                             Picasso.get().load(image_path1).into(photo1);
                             Picasso.get().load(image_path2).into(photo2);
@@ -581,10 +582,13 @@ public class Delivery_chemist_photo extends AppCompatActivity {
                                 buttonUpload1.setText("Update");
                             }
 
-//                            enter_remarks_tv.setText(message);
-//                            enter_remarks_tv2.setText(message2);
-
-                            //edit_or_not("no");
+                            if(is_edit.equals("1")){
+                                edit_or_not("no");
+                                TextView payment_tv = findViewById(R.id.payment_tv);
+                                payment_tv.setText(payment_type + " / "+payment_message);
+                                TextView message_tv = findViewById(R.id.message_tv);
+                                message_tv.setText(message);
+                            }
                         }
                     } catch (Exception e) {
                         // TODO: handle exception

@@ -244,6 +244,13 @@
                     android:textSize="18dip"
                     android:text="Select Payment Type"/>
 
+                <TextView
+                    android:id="@+id/payment_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/page_textclr_theme"
+                    android:textSize="18dip"/>
+
                 <Spinner
                     android:id="@+id/spinner"
                     android:layout_width="fill_parent"
@@ -288,14 +295,23 @@
                 android:layout_marginLeft="15dip"
                 android:layout_marginRight="15dip"
                 android:layout_marginTop="15dip"
+                android:layout_marginBottom="10dip"
                 android:textSize="18dip"
                 android:text="Message"/>
+
+            <TextView
+                android:id="@+id/message_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:theme="@style/page_textclr_theme"
+                android:textSize="18dip"
+                android:layout_marginLeft="15dip"
+                android:layout_marginRight="15dip"/>
 
             <LinearLayout
                 android:id="@+id/textbox_bg1"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dip"
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="10dip"
                 android:orientation="horizontal"
