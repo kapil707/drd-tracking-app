@@ -480,6 +480,7 @@ public class Delivery_chemist_photo extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         //get_delivery_order_photo_api();
+
     }
 
     public void alertMessage_complete_order() {
