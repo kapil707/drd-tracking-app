@@ -70,6 +70,7 @@ public class Delivery_order_list_tagno extends AppCompatActivity {
             }
         }
 
+
         TextView action_bar_title1 = (TextView) findViewById(R.id.action_bar_title);
         action_bar_title1.setText("Tagno : " +mytagno);
         TextView action_bar_title11 = (TextView) findViewById(R.id.action_bar_title1);
