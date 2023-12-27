@@ -138,6 +138,17 @@ public interface ApiService {
             @Part MultipartBody.Part image
     );
 
+    @Multipart
+    @POST("upload_delivery_order_photo_more_api")
+    Call<ResponseBody> upload_delivery_order_photo_more_api(
+            @Part("api_key") RequestBody api_key,
+            @Part("user_code") RequestBody user_code,
+            @Part("user_altercode") RequestBody user_altercode,
+            @Part("chemist_code") RequestBody chemist_code,
+            @Part("gstvno") RequestBody gstvno,
+            @Part MultipartBody.Part image
+    );
+
 
     @Multipart
     @POST("test_upload")

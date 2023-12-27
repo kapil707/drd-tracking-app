@@ -73,10 +73,10 @@ public class Delivery_chemist_photo extends AppCompatActivity {
     UserSessionManager session;
     String user_code = "", user_altercode = "";
     String chemist_code = "", gstvno = "",mytagno="";
-    private ImageView photo1, photo2, photo3, photo4;
+    private ImageView photo0,photo1, photo2, photo3, photo4;
     public static final int CAMERA_PERM_CODE = 101;
-    String currentPhotoPath1="",currentPhotoPath2="",currentPhotoPath3="",currentPhotoPath4="",
-            selectedPath1="",selectedPath2="",selectedPath3="",selectedPath4="";
+    String currentPhotoPath0="",currentPhotoPath1="",currentPhotoPath2="",currentPhotoPath3="",currentPhotoPath4="",
+            selectedPath0="",selectedPath1="",selectedPath2="",selectedPath3="",selectedPath4="";
     Button photo_btn1, photo_btn2, photo_btn3, photo_btn4;
     TextView tv_error1, tv_error2, tv_error3, tv_error4, enter_remarks_error,enter_remarks_error2;
     Button buttonUpload, buttonUpload1;
@@ -151,6 +151,7 @@ public class Delivery_chemist_photo extends AppCompatActivity {
         menu_camera_btn = findViewById(R.id.menu_camera_btn);
 
         menu_camera_btn.setVisibility(View.VISIBLE);
+        photo0 = findViewById(R.id.pg_photo0);
 
         photo1 = findViewById(R.id.pg_photo1);
         tv_error1 = findViewById(R.id.pg_photo_error1);
@@ -187,6 +188,15 @@ public class Delivery_chemist_photo extends AppCompatActivity {
         buttonUpload1 = findViewById(R.id.buttonUpload1);
 
         edit_or_not(edit_yes_no);
+
+        menu_camera_btn.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View view) {
+                askCameraPermissions0();
+            }
+        });
+
         photo_btn1.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -311,6 +321,14 @@ public class Delivery_chemist_photo extends AppCompatActivity {
         get_delivery_order_photo_api();
     }
 
+    private void askCameraPermissions0() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
+        } else {
+            dispatchTakePictureIntent("0",1990);
+        }
+    }
+
     private void askCameraPermissions1() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
@@ -369,7 +387,7 @@ public class Delivery_chemist_photo extends AppCompatActivity {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_" + id + "_";
-//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        // File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
@@ -378,6 +396,9 @@ public class Delivery_chemist_photo extends AppCompatActivity {
         );
 
         // Save a file: path for use with ACTION_VIEW intents
+        if(id.equals("0")) {
+            currentPhotoPath0 = image.getAbsolutePath();
+        }
         if(id.equals("1")) {
             currentPhotoPath1 = image.getAbsolutePath();
         }
@@ -396,6 +417,22 @@ public class Delivery_chemist_photo extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1990) {
+            if (resultCode == Activity.RESULT_OK) {
+                File f = new File(currentPhotoPath0);
+                photo0.setImageURI(Uri.fromFile(f));
+                Log.d("tag", "ABsolute Url of Image is " + Uri.fromFile(f));
+
+                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                Uri contentUri = Uri.fromFile(f);
+                mediaScanIntent.setData(contentUri);
+                this.sendBroadcast(mediaScanIntent);
+
+                Upload_more();
+            }
+        }
+
         if (requestCode == 1991) {
             if (resultCode == Activity.RESULT_OK) {
                 File f = new File(currentPhotoPath1);
@@ -528,8 +565,6 @@ public class Delivery_chemist_photo extends AppCompatActivity {
         getlongitude = String.valueOf(longitude1);
     }
 
-
-
     private void get_delivery_order_photo_api() {
         menu_loading1.setVisibility(View.VISIBLE);
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
@@ -647,12 +682,16 @@ public class Delivery_chemist_photo extends AppCompatActivity {
 
             Context context = getApplicationContext();
             AssetManager assetManager = context.getAssets();
+            File imageFile0 = File.createTempFile("temp_image", null, getCacheDir());
             File imageFile1 = File.createTempFile("temp_image", null, getCacheDir());
             File imageFile2 = File.createTempFile("temp_image", null, getCacheDir());
             File imageFile3 = File.createTempFile("temp_image", null, getCacheDir());
             File imageFile4 = File.createTempFile("temp_image", null, getCacheDir());
 
-            if(!currentPhotoPath1.isEmpty()) {
+            if(!currentPhotoPath0.isEmpty()) {
+                selectedPath0 = compressImage(currentPhotoPath0);
+                imageFile0      = new File(selectedPath0);
+            }if(!currentPhotoPath1.isEmpty()) {
                 selectedPath1 = compressImage(currentPhotoPath1);
                 imageFile1      = new File(selectedPath1);
             }if(!currentPhotoPath2.isEmpty()) {
@@ -739,6 +778,75 @@ public class Delivery_chemist_photo extends AppCompatActivity {
                             delete_image(selectedPath3);
                             delete_image(currentPhotoPath4);
                             delete_image(selectedPath4);
+                        } catch (Exception e) {
+                            // TODO: handle exception
+                            menu_loading1.setVisibility(View.GONE);
+                            Log.e("Bg-service", "Error parsing data" + e.toString());
+                            Toast.makeText(Delivery_chemist_photo.this, "Error " + e.toString(), Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        // Handle the error
+                        menu_loading1.setVisibility(View.GONE);
+                        Toast.makeText(getApplicationContext(), "Some error occurred...", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    // Handle network errors or exceptions
+                    menu_loading1.setVisibility(View.GONE);
+                    Toast.makeText(getApplicationContext(), "e1 " + t.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (Exception e) {
+            menu_loading1.setVisibility(View.GONE);
+            Toast.makeText(getApplicationContext(), "e2 " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void Upload_more() {
+        menu_loading1.setVisibility(View.VISIBLE);
+        try {
+            Context context = getApplicationContext();
+            AssetManager assetManager = context.getAssets();
+            File imageFile0 = File.createTempFile("temp_image", null, getCacheDir());
+
+            if(!currentPhotoPath0.isEmpty()) {
+                selectedPath0 = compressImage(currentPhotoPath0);
+                imageFile0      = new File(selectedPath0);
+            }
+
+            RequestBody requestFile1 = RequestBody.create(MultipartBody.FORM, imageFile0);
+            MultipartBody.Part image0 = MultipartBody.Part.createFormData("image", imageFile0.getName(), requestFile1);
+
+            // add another part within the multipart request
+            RequestBody api_key1 = RequestBody.create(MultipartBody.FORM, "98c08565401579448aad7c64033dcb4081906dcb");
+            RequestBody user_code1 = RequestBody.create(MultipartBody.FORM, user_code);
+            RequestBody user_altercode1 = RequestBody.create(MultipartBody.FORM, user_altercode);
+            RequestBody chemist_code1 = RequestBody.create(MultipartBody.FORM, chemist_code);
+            RequestBody gstvno1 = RequestBody.create(MultipartBody.FORM, gstvno);
+
+            ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
+            Call<ResponseBody> call = apiService.upload_delivery_order_photo_more_api(
+                    api_key1,
+                    user_code1,
+                    user_altercode1,
+                    chemist_code1,
+                    gstvno1,
+                    image0);
+
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful()) {
+                        // Image uploaded successfully
+                        // Handle the response, if any
+                        try {
+                            Toast.makeText(Delivery_chemist_photo.this, response.body().string(), Toast.LENGTH_LONG).show();
+                            menu_loading1.setVisibility(View.GONE);
+
+                            delete_image(currentPhotoPath0);
+                            delete_image(selectedPath0);
                         } catch (Exception e) {
                             // TODO: handle exception
                             menu_loading1.setVisibility(View.GONE);
