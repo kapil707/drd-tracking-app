@@ -192,6 +192,21 @@ public class Delivery_chemist_photo extends AppCompatActivity {
         adapter = new Delivery_chemist_photo_Adapter(Delivery_chemist_photo.this, arrayList);
         listview1.setAdapter(adapter);
         listview1.setVisibility(View.GONE);
+        listview1.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+                                           int arg2, long arg3) {
+                // TODO Auto-generated method stub
+
+                Delivery_chemist_photo_get_or_set clickedCategory = arrayList.get(arg2);
+                String myid = clickedCategory.id();
+
+                //Toast.makeText(Delivery_chemist_photo.this, myid, Toast.LENGTH_LONG).show();
+
+                alertMessage_delete_delivery_order_photo_more(myid);
+                return true;
+            }
+        });
 
         edit_or_not(edit_yes_no);
 
@@ -435,7 +450,7 @@ public class Delivery_chemist_photo extends AppCompatActivity {
                 mediaScanIntent.setData(contentUri);
                 this.sendBroadcast(mediaScanIntent);
 
-                Upload_more();
+                upload_delivery_order_photo_more();
             }
         }
 
@@ -538,7 +553,7 @@ public class Delivery_chemist_photo extends AppCompatActivity {
                         // Yes button clicked
                         try {
                             mGPS_info();
-                            Upload();
+                            upload_delivery_order_photo();
                         } catch (Exception e) {
                             // TODO: handle exception
                             Toast.makeText(Delivery_chemist_photo.this, "alertMessage_complete_order error", Toast.LENGTH_SHORT).show();
@@ -705,7 +720,7 @@ public class Delivery_chemist_photo extends AppCompatActivity {
         });
     }
 
-    private void Upload() {
+    private void upload_delivery_order_photo() {
         menu_loading1.setVisibility(View.VISIBLE);
         buttonUpload.setVisibility(View.GONE);
         buttonUpload1.setVisibility(View.VISIBLE);
@@ -815,89 +830,6 @@ public class Delivery_chemist_photo extends AppCompatActivity {
                             delete_image(selectedPath3);
                             delete_image(currentPhotoPath4);
                             delete_image(selectedPath4);
-                        } catch (Exception e) {
-                            // TODO: handle exception
-                            menu_loading1.setVisibility(View.GONE);
-                            Log.e("Bg-service", "Error parsing data" + e.toString());
-                            Toast.makeText(Delivery_chemist_photo.this, "Error " + e.toString(), Toast.LENGTH_LONG).show();
-                        }
-                    } else {
-                        // Handle the error
-                        menu_loading1.setVisibility(View.GONE);
-                        Toast.makeText(getApplicationContext(), "Some error occurred...", Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    // Handle network errors or exceptions
-                    menu_loading1.setVisibility(View.GONE);
-                    Toast.makeText(getApplicationContext(), "e1 " + t.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            });
-        } catch (Exception e) {
-            menu_loading1.setVisibility(View.GONE);
-            Toast.makeText(getApplicationContext(), "e2 " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void Upload_more() {
-        Toast.makeText(Delivery_chemist_photo.this,"Uploading Start", Toast.LENGTH_LONG).show();
-
-        menu_loading1.setVisibility(View.VISIBLE);
-        try {
-            Context context = getApplicationContext();
-            AssetManager assetManager = context.getAssets();
-            File imageFile0 = File.createTempFile("temp_image", null, getCacheDir());
-
-            if(!currentPhotoPath0.isEmpty()) {
-                selectedPath0 = compressImage(currentPhotoPath0);
-                imageFile0      = new File(selectedPath0);
-            }
-
-            RequestBody requestFile0 = RequestBody.create(MultipartBody.FORM, imageFile0);
-            MultipartBody.Part image0 = MultipartBody.Part.createFormData("image", imageFile0.getName(), requestFile0);
-
-            // add another part within the multipart request
-            RequestBody api_key1 = RequestBody.create(MultipartBody.FORM, "98c08565401579448aad7c64033dcb4081906dcb");
-            RequestBody user_code1 = RequestBody.create(MultipartBody.FORM, user_code);
-            RequestBody user_altercode1 = RequestBody.create(MultipartBody.FORM, user_altercode);
-            RequestBody chemist_code1 = RequestBody.create(MultipartBody.FORM, chemist_code);
-            RequestBody gstvno1 = RequestBody.create(MultipartBody.FORM, gstvno);
-
-            ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-            Call<ResponseBody> call = apiService.upload_delivery_order_photo_more_api(
-                    api_key1,
-                    user_code1,
-                    user_altercode1,
-                    chemist_code1,
-                    gstvno1,
-                    image0);
-
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    if (response.isSuccessful()) {
-                        // Image uploaded successfully
-                        // Handle the response, if any
-                        try {
-                            //Toast.makeText(Delivery_chemist_photo.this, response.body().string(), Toast.LENGTH_LONG).show();
-                            menu_loading1.setVisibility(View.GONE);
-                            JSONArray jArray = new JSONArray(response.body().string());
-                            for (int i = 0; i < jArray.length(); i++) {
-
-                                JSONObject jsonObject = jArray.getJSONObject(i);
-                                String return_id = jsonObject.getString("return_id");
-                                String return_message = jsonObject.getString("return_message");
-
-                                if (return_id.equals("1")) {
-                                    //finish();
-                                    get_delivery_order_photo_api();
-                                }
-                                Toast.makeText(Delivery_chemist_photo.this, return_message.toString(), Toast.LENGTH_LONG).show();
-                            }
-                            delete_image(currentPhotoPath0);
-                            delete_image(selectedPath0);
                         } catch (Exception e) {
                             // TODO: handle exception
                             menu_loading1.setVisibility(View.GONE);
@@ -1089,4 +1021,191 @@ public class Delivery_chemist_photo extends AppCompatActivity {
         String uriSting = (file.getAbsolutePath() + "/" + System.currentTimeMillis() + ".png");
         return uriSting;
     }
+
+
+
+    private void upload_delivery_order_photo_more() {
+        Toast.makeText(Delivery_chemist_photo.this,"Uploading Start", Toast.LENGTH_LONG).show();
+
+        menu_loading1.setVisibility(View.VISIBLE);
+        try {
+            Context context = getApplicationContext();
+            AssetManager assetManager = context.getAssets();
+            File imageFile0 = File.createTempFile("temp_image", null, getCacheDir());
+
+            if(!currentPhotoPath0.isEmpty()) {
+                selectedPath0 = compressImage(currentPhotoPath0);
+                imageFile0      = new File(selectedPath0);
+            }
+
+            RequestBody requestFile0 = RequestBody.create(MultipartBody.FORM, imageFile0);
+            MultipartBody.Part image0 = MultipartBody.Part.createFormData("image", imageFile0.getName(), requestFile0);
+
+            // add another part within the multipart request
+            RequestBody api_key1 = RequestBody.create(MultipartBody.FORM, "98c08565401579448aad7c64033dcb4081906dcb");
+            RequestBody user_code1 = RequestBody.create(MultipartBody.FORM, user_code);
+            RequestBody user_altercode1 = RequestBody.create(MultipartBody.FORM, user_altercode);
+            RequestBody chemist_code1 = RequestBody.create(MultipartBody.FORM, chemist_code);
+            RequestBody gstvno1 = RequestBody.create(MultipartBody.FORM, gstvno);
+
+            ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
+            Call<ResponseBody> call = apiService.upload_delivery_order_photo_more_api(
+                    api_key1,
+                    user_code1,
+                    user_altercode1,
+                    chemist_code1,
+                    gstvno1,
+                    image0);
+
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful()) {
+                        // Image uploaded successfully
+                        // Handle the response, if any
+                        try {
+                            //Toast.makeText(Delivery_chemist_photo.this, response.body().string(), Toast.LENGTH_LONG).show();
+                            menu_loading1.setVisibility(View.GONE);
+                            JSONArray jArray = new JSONArray(response.body().string());
+                            for (int i = 0; i < jArray.length(); i++) {
+
+                                JSONObject jsonObject = jArray.getJSONObject(i);
+                                String return_id = jsonObject.getString("return_id");
+                                String return_message = jsonObject.getString("return_message");
+
+                                if (return_id.equals("1")) {
+                                    //finish();
+                                    get_delivery_order_photo_api();
+                                }
+                                Toast.makeText(Delivery_chemist_photo.this, return_message.toString(), Toast.LENGTH_LONG).show();
+                            }
+                            delete_image(currentPhotoPath0);
+                            delete_image(selectedPath0);
+                        } catch (Exception e) {
+                            // TODO: handle exception
+                            menu_loading1.setVisibility(View.GONE);
+                            Log.e("Bg-service", "Error parsing data" + e.toString());
+                            Toast.makeText(Delivery_chemist_photo.this, "Error " + e.toString(), Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        // Handle the error
+                        menu_loading1.setVisibility(View.GONE);
+                        Toast.makeText(getApplicationContext(), "Some error occurred...", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    // Handle network errors or exceptions
+                    menu_loading1.setVisibility(View.GONE);
+                    Toast.makeText(getApplicationContext(), "e1 " + t.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (Exception e) {
+            menu_loading1.setVisibility(View.GONE);
+            Toast.makeText(getApplicationContext(), "e2 " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void alertMessage_delete_delivery_order_photo_more(String myid) {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        // Yes button clicked
+                        try {
+                            delete_delivery_order_photo_more(myid);
+                        } catch (Exception e) {
+                            // TODO: handle exception
+                            Toast.makeText(Delivery_chemist_photo.this, "alertMessage_delete_delivery_order_photo_more error", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        // No button clicked
+                        // do nothing
+
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure to Delete this photo?")
+                .setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+    }
+
+    private void delete_delivery_order_photo_more(String myid) {
+        Toast.makeText(Delivery_chemist_photo.this, "Loading....", Toast.LENGTH_LONG).show();
+        menu_loading1.setVisibility(View.VISIBLE);
+        try {
+
+            // add another part within the multipart request
+            RequestBody api_key1 = RequestBody.create(MultipartBody.FORM, "98c08565401579448aad7c64033dcb4081906dcb");
+            RequestBody user_code1 = RequestBody.create(MultipartBody.FORM, user_code);
+            RequestBody user_altercode1 = RequestBody.create(MultipartBody.FORM, user_altercode);
+            RequestBody chemist_code1 = RequestBody.create(MultipartBody.FORM, chemist_code);
+            RequestBody gstvno1 = RequestBody.create(MultipartBody.FORM, gstvno);
+            RequestBody myid1 = RequestBody.create(MultipartBody.FORM, myid);
+
+            ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
+            Call<ResponseBody> call = apiService.delete_delivery_order_photo_more_api(
+                    api_key1,
+                    user_code1,
+                    user_altercode1,
+                    chemist_code1,
+                    gstvno1,
+                    myid1);
+
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful()) {
+                        // Image uploaded successfully
+                        // Handle the response, if any
+                        try {
+                            //Toast.makeText(Delivery_chemist_photo.this, response.body().string(), Toast.LENGTH_LONG).show();
+                            menu_loading1.setVisibility(View.GONE);
+                            JSONArray jArray = new JSONArray(response.body().string());
+                            for (int i = 0; i < jArray.length(); i++) {
+
+                                JSONObject jsonObject = jArray.getJSONObject(i);
+                                String return_id = jsonObject.getString("return_id");
+                                String return_message = jsonObject.getString("return_message");
+
+                                if (return_id.equals("1")) {
+                                    //finish();
+                                    get_delivery_order_photo_api();
+                                }
+                                Toast.makeText(Delivery_chemist_photo.this, return_message.toString(), Toast.LENGTH_LONG).show();
+                            }
+                            delete_image(currentPhotoPath0);
+                            delete_image(selectedPath0);
+                        } catch (Exception e) {
+                            // TODO: handle exception
+                            menu_loading1.setVisibility(View.GONE);
+                            Log.e("Bg-service", "Error parsing data" + e.toString());
+                            Toast.makeText(Delivery_chemist_photo.this, "Error " + e.toString(), Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        // Handle the error
+                        menu_loading1.setVisibility(View.GONE);
+                        Toast.makeText(getApplicationContext(), "Some error occurred...", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    // Handle network errors or exceptions
+                    menu_loading1.setVisibility(View.GONE);
+                    Toast.makeText(getApplicationContext(), "e1 " + t.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (Exception e) {
+            menu_loading1.setVisibility(View.GONE);
+            Toast.makeText(getApplicationContext(), "e2 " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
 }

@@ -35,7 +35,6 @@ public class Delivery_order_list extends AppCompatActivity {
     ProgressBar menu_loading1;
     UserSessionManager session;
     String user_code = "", user_altercode = "";
-
     ListView listview1;
     Delivery_order_list_Adapter adapter;
     List<Delivery_order_list_get_or_set> arrayList = new ArrayList<Delivery_order_list_get_or_set>();
