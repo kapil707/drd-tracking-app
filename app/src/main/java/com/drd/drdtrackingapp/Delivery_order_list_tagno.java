@@ -73,7 +73,7 @@ public class Delivery_order_list_tagno extends AppCompatActivity {
         TextView action_bar_title1 = (TextView) findViewById(R.id.action_bar_title);
         action_bar_title1.setText("Tagno : " +mytagno);
         TextView action_bar_title11 = (TextView) findViewById(R.id.action_bar_title1);
-        action_bar_title11.setText(mydate+" - " +mytime);
+        action_bar_title11.setText(mydate+" at " +mytime);
         action_bar_title11.setVisibility(View.VISIBLE);
         ImageButton imageButton = findViewById(R.id.action_bar_back);
         imageButton.setOnClickListener(new View.OnClickListener() {

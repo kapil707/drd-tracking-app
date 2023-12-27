@@ -18,12 +18,27 @@
         android:src="@drawable/attendance_svgrepo_com"
         android:visibility="gone"/>
 
-    <ScrollView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:layout_marginTop="50dip">
+
+        <GridView
+            android:id="@+id/listview_more"
+            android:layout_width="fill_parent"
+            android:layout_height="160dip"
+            android:numColumns="3"
+            android:dividerHeight="0dp"
+            android:listSelector="@drawable/list_selector"
+            android:layout_margin="10dip"></GridView>
+
+        <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="50dip"
         android:paddingTop="10dp"
         tools:ignore="MissingConstraints">
 
@@ -241,18 +256,6 @@
 
             </LinearLayout>
 
-            <GridView
-                android:id="@+id/listview_more"
-                android:layout_width="fill_parent"
-                android:layout_height="0dp"
-                android:layout_marginBottom="5dip"
-                android:layout_weight="1"
-                android:divider="#FFFFFF"
-                android:dividerHeight="0dp"
-                android:listSelector="@drawable/list_selector"
-                tools:ignore="MissingConstraints">
-            </GridView>
-
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -396,4 +399,5 @@
 
         </LinearLayout>
     </ScrollView>
+    </LinearLayout>
 </RelativeLayout>

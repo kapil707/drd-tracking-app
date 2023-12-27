@@ -191,6 +191,7 @@ public class Delivery_chemist_photo extends AppCompatActivity {
         listview1 = findViewById(R.id.listview_more);
         adapter = new Delivery_chemist_photo_Adapter(Delivery_chemist_photo.this, arrayList);
         listview1.setAdapter(adapter);
+        listview1.setVisibility(View.GONE);
 
         edit_or_not(edit_yes_no);
 
@@ -658,6 +659,8 @@ public class Delivery_chemist_photo extends AppCompatActivity {
                             }
                         }
 
+                        listview1.setVisibility(View.GONE);
+                        arrayList.clear();
                         int intid = 0;
                         JSONArray jArray_items_others = new JSONArray(items_others);
                         for (int i = 0; i < jArray_items_others.length(); i++) {
@@ -677,6 +680,9 @@ public class Delivery_chemist_photo extends AppCompatActivity {
                             arrayList.add(mylist);
                         }
                         adapter.notifyDataSetChanged();
+                        if(intid!=0){
+                            listview1.setVisibility(View.VISIBLE);
+                        }
                     } catch (Exception e) {
                         // TODO: handle exception
                         menu_loading1.setVisibility(View.GONE);
