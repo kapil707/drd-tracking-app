@@ -42,7 +42,6 @@ public class Delivery_order_list_Adapter extends BaseAdapter {
         TextView select_b_lbl1 = (TextView) itemView.findViewById(R.id.select_b_lbl1);
         TextView select_b_lbl2 = (TextView) itemView.findViewById(R.id.select_b_lbl2);
 
-
         LinearLayout select_chemist_LinearLayout1 = (LinearLayout) itemView.findViewById(R.id.select_chemist_LinearLayout1);
         TextView select_w_lbl1 = (TextView) itemView.findViewById(R.id.select_w_lbl1);
         TextView select_w_lbl2 = (TextView) itemView.findViewById(R.id.select_w_lbl2);
@@ -59,10 +58,10 @@ public class Delivery_order_list_Adapter extends BaseAdapter {
         }
 
         select_b_lbl1.setText("Tagno : " + m.mytagno());
-        select_b_lbl2.setText(m.mydate() +" - "+m.mytime());
+        select_b_lbl2.setText(m.mydate() +" at "+m.mytime());
 
         select_w_lbl1.setText("Tagno : " + m.mytagno());
-        select_w_lbl2.setText(m.mydate() +" - "+m.mytime());
+        select_w_lbl2.setText(m.mydate() +" at "+m.mytime());
 
         return itemView;
     }

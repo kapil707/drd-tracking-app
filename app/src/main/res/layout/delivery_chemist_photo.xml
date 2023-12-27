@@ -15,7 +15,8 @@
         android:layout_height="120dp"
         android:layout_above="@+id/editTextImageName"
         android:layout_below="@+id/buttonSelect"
-        android:src="@drawable/attendance_svgrepo_com" />
+        android:src="@drawable/attendance_svgrepo_com"
+        android:visibility="gone"/>
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -240,6 +241,17 @@
 
             </LinearLayout>
 
+            <GridView
+                android:id="@+id/listview_more"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="5dip"
+                android:layout_weight="1"
+                android:divider="#FFFFFF"
+                android:dividerHeight="0dp"
+                android:listSelector="@drawable/list_selector"
+                tools:ignore="MissingConstraints">
+            </GridView>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -374,11 +386,13 @@
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="10dip"
                 android:layout_marginBottom="10dip"
+                app:backgroundTint="@null"
                 android:background="@drawable/button_dis_shap"
+                style="@style/button_dis_theme"
                 android:text="Submit"
                 android:textAllCaps="false"
                 android:textColor="#ffffff"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
         </LinearLayout>
     </ScrollView>

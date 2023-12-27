@@ -87,19 +87,19 @@ public interface ApiService {
             @Part("api_key") RequestBody api_key,
             @Part("user_code") RequestBody user_code,
             @Part("user_altercode") RequestBody user_altercode,
-            @Part("latitude") RequestBody latitude,
-            @Part("longitude") RequestBody longitude,
             @Part("chemist_code") RequestBody chemist_code,
+            @Part("gstvno") RequestBody gstvno,
             @Part("id") RequestBody id,
             @Part("tagno") RequestBody tagno,
-            @Part("gstvno") RequestBody gstvno,
             @Part("message") RequestBody message,
             @Part("payment_message") RequestBody payment_message,
             @Part("payment_type") RequestBody payment_type,
             @Part MultipartBody.Part image1,
             @Part MultipartBody.Part image2,
             @Part MultipartBody.Part image3,
-            @Part MultipartBody.Part image4
+            @Part MultipartBody.Part image4,
+            @Part("latitude") RequestBody latitude,
+            @Part("longitude") RequestBody longitude
     );
 
     @FormUrlEncoded

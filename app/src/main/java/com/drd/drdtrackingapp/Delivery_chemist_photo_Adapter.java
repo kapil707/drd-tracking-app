@@ -60,10 +60,10 @@ public class Delivery_chemist_photo_Adapter extends BaseAdapter {
             upload_chemist_img_LinearLayout1.setVisibility(View.VISIBLE);
         }
 
-        upload_time.setText(m.time());
+        upload_time.setText(m.datetime());
         Picasso.get().load(m.image()).into(upload_image);
 
-        upload_time1.setText(m.time());
+        upload_time1.setText(m.datetime());
         Picasso.get().load(m.image()).into(upload_image1);
 
         return itemView;

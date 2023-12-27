@@ -3,15 +3,15 @@ package com.drd.drdtrackingapp;
 import java.util.ArrayList;
 
 public class Delivery_chemist_photo_get_or_set {
-    private String id,image,time,intid;
+    private String id,image,datetime,intid;
     public Delivery_chemist_photo_get_or_set() {
     }
 
-    public Delivery_chemist_photo_get_or_set(String id, String image, String time, String intid,
+    public Delivery_chemist_photo_get_or_set(String id, String image, String datetime, String intid,
                                              ArrayList<String> genre) {
         this.id     = id;
         this.image  = image;
-        this.time   = time;
+        this.datetime   = datetime;
         this.intid  = intid;
     }
 
@@ -31,12 +31,12 @@ public class Delivery_chemist_photo_get_or_set {
         this.image = image;
     }
 
-    public String time() {
-        return time;
+    public String datetime() {
+        return datetime;
     }
 
-    public void time(String time) {
-        this.time = time;
+    public void datetime(String datetime) {
+        this.datetime = datetime;
     }
 
     public String intid() {

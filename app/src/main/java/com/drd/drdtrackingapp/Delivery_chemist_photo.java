@@ -37,9 +37,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -85,13 +87,13 @@ public class Delivery_chemist_photo extends AppCompatActivity {
     ArrayAdapter<String> dataAdapter;
     String _id = "0";
     String image_path1="",image_path2="",image_path3="",image_path4="";
-
-    //    GridView gridview;
-//    Delivery_chemist_photo_Adapter adapter;
-//    List<Dilivery_chemist_photo_get_or_set> get_set = new ArrayList<Dilivery_chemist_photo_get_or_set>();
     GPSTracker mGPS;
     double latitude1, longitude1;
     String getlatitude = "", getlongitude = "";
+
+    GridView listview1;
+    Delivery_chemist_photo_Adapter adapter;
+    List<Delivery_chemist_photo_get_or_set> arrayList = new ArrayList<Delivery_chemist_photo_get_or_set>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,7 +176,6 @@ public class Delivery_chemist_photo extends AppCompatActivity {
         enter_remarks_error = findViewById(R.id.enter_remarks_error);
         enter_remarks_error2 = findViewById(R.id.enter_remarks_error2);
 
-
         spinner = findViewById(R.id.spinner);
 
         tv_error1.setVisibility(View.GONE);
@@ -186,6 +187,10 @@ public class Delivery_chemist_photo extends AppCompatActivity {
 
         buttonUpload = findViewById(R.id.buttonUpload);
         buttonUpload1 = findViewById(R.id.buttonUpload1);
+
+        listview1 = findViewById(R.id.listview_more);
+        adapter = new Delivery_chemist_photo_Adapter(Delivery_chemist_photo.this, arrayList);
+        listview1.setAdapter(adapter);
 
         edit_or_not(edit_yes_no);
 
@@ -588,8 +593,9 @@ public class Delivery_chemist_photo extends AppCompatActivity {
                         JSONArray jArray0 = new JSONArray(response.body().string());
                         JSONObject jsonObject0 = jArray0.getJSONObject(0);
                         String items = jsonObject0.getString("items");
+                        String items_others = jsonObject0.getString("items_others");
 
-                        //Toast.makeText(getApplicationContext(),items.toString(), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(),items_others.toString(), Toast.LENGTH_LONG).show();
 
                         JSONArray jArray_items = new JSONArray(items);
                         for (int i = 0; i < jArray_items.length(); i++) {
@@ -634,6 +640,9 @@ public class Delivery_chemist_photo extends AppCompatActivity {
                             }else{
                                 buttonUpload.setText("Update");
                                 buttonUpload1.setText("Update");
+
+                                buttonUpload.setVisibility(View.VISIBLE);
+                                buttonUpload1.setVisibility(View.GONE);
                             }
 
                             if(at_a.equals("0")){
@@ -648,6 +657,26 @@ public class Delivery_chemist_photo extends AppCompatActivity {
                                 image_path4 = "1"; // yha validation ko rokta ha
                             }
                         }
+
+                        int intid = 0;
+                        JSONArray jArray_items_others = new JSONArray(items_others);
+                        for (int i = 0; i < jArray_items_others.length(); i++) {
+
+                            JSONObject jsonObject = jArray_items_others.getJSONObject(i);
+
+                            String myid = jsonObject.getString("id");
+                            String image = jsonObject.getString("image");
+                            String date = jsonObject.getString("date");
+                            String time = jsonObject.getString("time");
+
+                            Delivery_chemist_photo_get_or_set mylist = new Delivery_chemist_photo_get_or_set();
+                            mylist.id(myid);
+                            mylist.image(image);
+                            mylist.datetime(date + " at " +time);
+                            mylist.intid(String.valueOf(intid++));
+                            arrayList.add(mylist);
+                        }
+                        adapter.notifyDataSetChanged();
                     } catch (Exception e) {
                         // TODO: handle exception
                         menu_loading1.setVisibility(View.GONE);
@@ -672,6 +701,8 @@ public class Delivery_chemist_photo extends AppCompatActivity {
 
     private void Upload() {
         menu_loading1.setVisibility(View.VISIBLE);
+        buttonUpload.setVisibility(View.GONE);
+        buttonUpload1.setVisibility(View.VISIBLE);
         try {
             String payment_type = String.valueOf(spinner.getSelectedItem());
             String message = enter_message.getText().toString();
@@ -733,19 +764,19 @@ public class Delivery_chemist_photo extends AppCompatActivity {
                     api_key1,
                     user_code1,
                     user_altercode1,
-                    latitude11,
-                    longitude11,
                     chemist_code1,
+                    gstvno1,
                     id1,
                     tagno1,
-                    gstvno1,
                     message1,
                     payment_message1,
                     payment_type1,
                     image1,
                     image2,
                     image3,
-                    image4);
+                    image4,
+                    latitude11,
+                    longitude11);
 
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
@@ -805,6 +836,8 @@ public class Delivery_chemist_photo extends AppCompatActivity {
     }
 
     private void Upload_more() {
+        Toast.makeText(Delivery_chemist_photo.this,"Uploading Start", Toast.LENGTH_LONG).show();
+
         menu_loading1.setVisibility(View.VISIBLE);
         try {
             Context context = getApplicationContext();
@@ -816,8 +849,8 @@ public class Delivery_chemist_photo extends AppCompatActivity {
                 imageFile0      = new File(selectedPath0);
             }
 
-            RequestBody requestFile1 = RequestBody.create(MultipartBody.FORM, imageFile0);
-            MultipartBody.Part image0 = MultipartBody.Part.createFormData("image", imageFile0.getName(), requestFile1);
+            RequestBody requestFile0 = RequestBody.create(MultipartBody.FORM, imageFile0);
+            MultipartBody.Part image0 = MultipartBody.Part.createFormData("image", imageFile0.getName(), requestFile0);
 
             // add another part within the multipart request
             RequestBody api_key1 = RequestBody.create(MultipartBody.FORM, "98c08565401579448aad7c64033dcb4081906dcb");
@@ -842,9 +875,21 @@ public class Delivery_chemist_photo extends AppCompatActivity {
                         // Image uploaded successfully
                         // Handle the response, if any
                         try {
-                            Toast.makeText(Delivery_chemist_photo.this, response.body().string(), Toast.LENGTH_LONG).show();
+                            //Toast.makeText(Delivery_chemist_photo.this, response.body().string(), Toast.LENGTH_LONG).show();
                             menu_loading1.setVisibility(View.GONE);
+                            JSONArray jArray = new JSONArray(response.body().string());
+                            for (int i = 0; i < jArray.length(); i++) {
 
+                                JSONObject jsonObject = jArray.getJSONObject(i);
+                                String return_id = jsonObject.getString("return_id");
+                                String return_message = jsonObject.getString("return_message");
+
+                                if (return_id.equals("1")) {
+                                    //finish();
+                                    get_delivery_order_photo_api();
+                                }
+                                Toast.makeText(Delivery_chemist_photo.this, return_message.toString(), Toast.LENGTH_LONG).show();
+                            }
                             delete_image(currentPhotoPath0);
                             delete_image(selectedPath0);
                         } catch (Exception e) {
