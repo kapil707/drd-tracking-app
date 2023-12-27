@@ -69,6 +69,7 @@ import retrofit2.Response;
 
 public class Delivery_chemist_photo extends AppCompatActivity {
     ProgressBar menu_loading1;
+    ImageButton menu_camera_btn;
     UserSessionManager session;
     String user_code = "", user_altercode = "";
     String chemist_code = "", gstvno = "",mytagno="";
@@ -146,7 +147,10 @@ public class Delivery_chemist_photo extends AppCompatActivity {
             }
         });
 
-        menu_loading1 = (ProgressBar) findViewById(R.id.menu_loading1);
+        menu_loading1 = findViewById(R.id.menu_loading1);
+        menu_camera_btn = findViewById(R.id.menu_camera_btn);
+
+        menu_camera_btn.setVisibility(View.VISIBLE);
 
         photo1 = findViewById(R.id.pg_photo1);
         tv_error1 = findViewById(R.id.pg_photo_error1);
@@ -447,6 +451,7 @@ public class Delivery_chemist_photo extends AppCompatActivity {
 
     public void edit_or_not(String ii){
         if(ii.equals("no")) {
+            menu_camera_btn.setVisibility(View.GONE);
             tv_error1.setVisibility(View.GONE);
             tv_error2.setVisibility(View.GONE);
             tv_error3.setVisibility(View.GONE);
@@ -556,27 +561,38 @@ public class Delivery_chemist_photo extends AppCompatActivity {
 
                             JSONObject jsonObject = jArray_items.getJSONObject(i);
                             _id =  jsonObject.getString("id");
-                            image_path1 =  jsonObject.getString("image1");
-                            image_path2 =  jsonObject.getString("image2");
-                            image_path3 =  jsonObject.getString("image3");
-                            image_path4 =  jsonObject.getString("image4");
-                            String message =  jsonObject.getString("message");
-                            String payment_type =  jsonObject.getString("payment_type");
-                            String payment_message =  jsonObject.getString("payment_message");
-                            String is_edit =  jsonObject.getString("is_edit");
+
                             String at_a = jsonObject.getString("at_a");
                             String nrx = jsonObject.getString("nrx");
 
+                            if(!_id.equals("0")) {
+                                image_path1 = jsonObject.getString("image1");
+                                image_path2 = jsonObject.getString("image2");
+                                image_path3 = jsonObject.getString("image3");
+                                image_path4 = jsonObject.getString("image4");
+                                String message = jsonObject.getString("message");
+                                String payment_type = jsonObject.getString("payment_type");
+                                String payment_message = jsonObject.getString("payment_message");
+                                String is_edit = jsonObject.getString("is_edit");
 
-                            Picasso.get().load(image_path1).into(photo1);
-                            Picasso.get().load(image_path2).into(photo2);
-                            Picasso.get().load(image_path3).into(photo3);
-                            Picasso.get().load(image_path4).into(photo4);
+                                Picasso.get().load(image_path1).into(photo1);
+                                Picasso.get().load(image_path2).into(photo2);
+                                Picasso.get().load(image_path3).into(photo3);
+                                Picasso.get().load(image_path4).into(photo4);
 
-                            enter_message.setText(message);
-                            enter_message2.setText(payment_message);
+                                enter_message.setText(message);
+                                enter_message2.setText(payment_message);
 
-                            spinner.setSelection(dataAdapter.getPosition(payment_type));
+                                spinner.setSelection(dataAdapter.getPosition(payment_type));
+
+                                if(is_edit.equals("1")){
+                                    edit_or_not("no");
+                                    TextView payment_tv = findViewById(R.id.payment_tv);
+                                    payment_tv.setText(payment_type + " / "+payment_message);
+                                    TextView message_tv = findViewById(R.id.message_tv);
+                                    message_tv.setText(message);
+                                }
+                            }
 
                             if(_id.equals("0")){
 
@@ -585,21 +601,16 @@ public class Delivery_chemist_photo extends AppCompatActivity {
                                 buttonUpload1.setText("Update");
                             }
 
-                            if(at_a.equals("1")){
-
+                            if(at_a.equals("0")){
+                                LinearLayout lin_at_a = findViewById(R.id.lin_at_a);
+                                lin_at_a.setVisibility(View.GONE);
+                                image_path2 = "1"; // yha validation ko rokta ha
                             }
 
-                            if(nrx.equals("1")){
-
-                            }
-
-
-                            if(is_edit.equals("1")){
-                                edit_or_not("no");
-                                TextView payment_tv = findViewById(R.id.payment_tv);
-                                payment_tv.setText(payment_type + " / "+payment_message);
-                                TextView message_tv = findViewById(R.id.message_tv);
-                                message_tv.setText(message);
+                            if(nrx.equals("0")){
+                                LinearLayout lin_nrx = findViewById(R.id.lin_nrx);
+                                lin_nrx.setVisibility(View.GONE);
+                                image_path4 = "1"; // yha validation ko rokta ha
                             }
                         }
                     } catch (Exception e) {

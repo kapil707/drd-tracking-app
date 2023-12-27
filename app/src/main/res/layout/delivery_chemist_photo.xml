@@ -135,7 +135,7 @@
                 android:layout_marginTop="20dip">
 
                 <LinearLayout
-                    android:id="@+id/at_a"
+                    android:id="@+id/lin_at_a"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -183,7 +183,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/nrx"
+                    android:id="@+id/lin_nrx"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
