@@ -148,7 +148,6 @@ public interface ApiService {
             @Part("gstvno") RequestBody gstvno,
             @Part MultipartBody.Part image
     );
-
     @Multipart
     @POST("delete_delivery_order_photo_more_api")
     Call<ResponseBody> delete_delivery_order_photo_more_api(
